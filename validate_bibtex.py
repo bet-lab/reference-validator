@@ -1713,49 +1713,60 @@ def create_gui_app(
         <!-- Main Content -->
         <div id="mainContent" class="space-y-6 hidden">
             <!-- Summary Card -->
-            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold leading-none tracking-tight">Validation Summary</h3>
-                    </div>
+            <!-- Summary Section -->
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm mb-6">
+                <div class="px-6 py-4 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold leading-none tracking-tight">Validation Summary</h3>
                     
-                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                        <!-- Card: Reviews -->
-                        <div class="rounded-lg border bg-card p-3 shadow-none flex flex-col items-center justify-center py-4">
-                            <div class="flex items-center gap-2 text-muted-foreground text-sm font-medium mb-1">
-                                <i data-lucide="edit-3" class="h-4 w-4 text-blue-500"></i> Reviews
+                    <div class="flex items-center gap-8">
+                        <!-- Reviews -->
+                        <div class="flex items-center gap-2">
+                             <div class="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+                                <i data-lucide="edit-3" class="h-4 w-4"></i>
                             </div>
-                            <div class="text-2xl font-bold" id="summaryReviews">0</div>
+                            <div class="flex flex-col">
+                                <span class="text-xs text-muted-foreground uppercase font-semibold">Reviews</span>
+                                <span class="text-xl font-bold leading-none" id="summaryReviews">0</span>
+                            </div>
                         </div>
 
-                        <!-- Card: Conflicts -->
-                        <div class="rounded-lg border bg-card p-3 shadow-none flex flex-col items-center justify-center py-4">
-                            <div class="flex items-center gap-2 text-muted-foreground text-sm font-medium mb-1">
-                                <i data-lucide="alert-triangle" class="h-4 w-4 text-orange-500"></i> Conflicts
+                        <!-- Conflicts -->
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+                                <i data-lucide="alert-triangle" class="h-4 w-4"></i>
                             </div>
-                            <div class="text-2xl font-bold" id="summaryConflicts">0</div>
+                            <div class="flex flex-col">
+                                <span class="text-xs text-muted-foreground uppercase font-semibold">Conflicts</span>
+                                <span class="text-xl font-bold leading-none" id="summaryConflicts">0</span>
+                            </div>
                         </div>
 
-                         <!-- Card: Differences -->
-                        <div class="rounded-lg border bg-card p-3 shadow-none flex flex-col items-center justify-center py-4">
-                            <div class="flex items-center gap-2 text-muted-foreground text-sm font-medium mb-1">
-                                <i data-lucide="git-compare" class="h-4 w-4 text-yellow-600"></i> Differences
+                        <!-- Differences -->
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400">
+                                <i data-lucide="git-compare" class="h-4 w-4"></i>
                             </div>
-                            <div class="text-2xl font-bold" id="summaryDifferences">0</div>
+                            <div class="flex flex-col">
+                                <span class="text-xs text-muted-foreground uppercase font-semibold">Differences</span>
+                                <span class="text-xl font-bold leading-none" id="summaryDifferences">0</span>
+                            </div>
                         </div>
 
-                         <!-- Card: Identical -->
-                        <div class="rounded-lg border bg-card p-3 shadow-none flex flex-col items-center justify-center py-4">
-                             <div class="flex items-center gap-2 text-muted-foreground text-sm font-medium mb-1">
-                                <i data-lucide="check-circle" class="h-4 w-4 text-green-600"></i> Identical
+                        <!-- Identical -->
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+                                <i data-lucide="check-circle" class="h-4 w-4"></i>
                             </div>
-                            <div class="text-2xl font-bold" id="summaryIdentical">0</div>
+                            <div class="flex flex-col">
+                                <span class="text-xs text-muted-foreground uppercase font-semibold">Identical</span>
+                                <span class="text-xl font-bold leading-none" id="summaryIdentical">0</span>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="mt-4 pt-4 border-t text-center">
-                        <p id="summaryTotalStatus" class="text-sm text-muted-foreground font-medium"></p>
-                    </div>
+                </div>
+                
+                <div class="border-t bg-muted/20 px-6 py-2">
+                     <p id="summaryTotalStatus" class="text-sm text-muted-foreground font-medium text-center"></p>
                 </div>
             </div>
 
@@ -2151,8 +2162,8 @@ def create_gui_app(
                 return `
                     <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                         <td class="p-2 align-middle font-medium text-center">${escapeHtml(f_name)}</td>
-                        <td class="p-2 align-middle font-mono text-xs font-semibold">${bibVal}</td>
-                        <td class="p-2 align-middle font-mono text-xs font-semibold">${apiVal}</td>
+                        <td class="p-2 align-middle font-mono text-xs font-semibold text-center">${bibVal}</td>
+                        <td class="p-2 align-middle font-mono text-xs font-semibold text-center">${apiVal}</td>
                         <td class="p-2 align-middle text-center overflow-visible relative">${sourceBadge}</td>
                         <td class="p-2 align-middle text-center">${getStatusBadge(displayType)}</td>
                         <td class="p-2 align-middle text-center">${actions}</td>
