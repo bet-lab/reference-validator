@@ -1724,11 +1724,11 @@ def create_gui_app(
                         <!-- Entries Attention -->
                         <div class="flex items-center gap-2">
                              <div class="relative h-10 w-10">
-                                <div id="attentionPieChart" class="h-full w-full rounded-full" style="background: conic-gradient(#f87171 0%, #f87171 0%, var(--muted) 0% 100%);"></div>
+                                <div id="attentionPieChart" class="h-full w-full rounded-full" style="background: conic-gradient(#f87171 0%, #f87171 0%, #e5e7eb 0% 100%);"></div>
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Need Attention</span>
-                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryAttention">0/0 (0%)</span>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryAttention">0/0 (0%)</span>
                             </div>
                         </div>
                         <span class="text-border opacity-50 text-2xl font-light">|</span>
@@ -1740,7 +1740,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Reviews</span>
-                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryReviews">0</span>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryReviews">0</span>
                             </div>
                         </div>
 
@@ -1751,7 +1751,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Conflicts</span>
-                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryConflicts">0</span>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryConflicts">0</span>
                             </div>
                         </div>
 
@@ -1762,7 +1762,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Differences</span>
-                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryDifferences">0</span>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryDifferences">0</span>
                             </div>
                         </div>
 
@@ -1773,7 +1773,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Identical</span>
-                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryIdentical">0</span>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryIdentical">0</span>
                             </div>
                         </div>
                     </div>
@@ -2063,7 +2063,7 @@ def create_gui_app(
             
             const chart = document.getElementById('attentionPieChart');
             if (chart) {
-                chart.style.background = `conic-gradient(#f87171 ${percentage}%, hsl(var(--muted)) 0)`;
+                chart.style.background = `conic-gradient(#f87171 ${percentage}%, #e5e7eb 0)`;
             }
         }
 
