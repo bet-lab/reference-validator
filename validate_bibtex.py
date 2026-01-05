@@ -811,7 +811,15 @@ class BibTeXValidator:
         - For title: lowercase for comparison
         - For ISSN: remove hyphens and take first if multiple (0378-7788, 1476-4687 -> 03787788)
         - For DOI: lowercase for comparison
+        - For DOI: lowercase for comparison
         """
+        if not s:
+            return ""
+
+        # Special handling for ENTRYTYPE
+        if field_name == "ENTRYTYPE":
+            return s.lower().strip()
+
         # Handle list format (should be extracted before this, but safety check)
         if isinstance(s, list):
             if len(s) > 0:
@@ -902,6 +910,10 @@ class BibTeXValidator:
                     "ISSN",
                     lambda x: self.extract_string_from_api_value(x) if x else None,
                 ),
+                "ENTRYTYPE": (
+                    "type",
+                    lambda x: self.map_api_type_to_bibtex(x, "crossref"),
+                ),
             }
 
             for bib_field, (api_field, transformer) in field_mapping.items():
@@ -971,6 +983,16 @@ class BibTeXValidator:
 
         elif source == "arxiv":
             # Map arXiv data to BibTeX fields
+            # Check ENTRYTYPE (usually article)
+            bib_type = bib_entry.get("ENTRYTYPE", "misc").strip()
+            api_type = "article"  # Default for arXiv
+            sources["ENTRYTYPE"] = source
+
+            if self.normalize_string_for_comparison(bib_type, "ENTRYTYPE") != api_type:
+                updates["ENTRYTYPE"] = api_type
+            else:
+                identical["ENTRYTYPE"] = bib_type
+
             if "title" in api_data:
                 bib_value = bib_entry.get("title", "").strip()
                 api_value = api_data["title"]
@@ -1061,6 +1083,12 @@ class BibTeXValidator:
                 "volume": ("volume", lambda x: str(x).strip() if x else None),
                 "number": ("number", lambda x: str(x).strip() if x else None),
                 "pages": ("pages", lambda x: str(x).strip() if x else None),
+                "ENTRYTYPE": (
+                    "type",
+                    lambda x: self.map_api_type_to_bibtex(x, source)
+                    if source in ["dblp", "openalex"]
+                    else "misc",
+                ),
             }
 
             for bib_field, (api_field, transformer) in field_mapping.items():
@@ -1139,6 +1167,59 @@ class BibTeXValidator:
         union = len(set1 | set2)
         return intersection / union if union > 0 else 0.0
 
+    def map_api_type_to_bibtex(self, api_type: str, source: str = "crossref") -> str:
+        """
+        Map API entry type to BibTeX entry type
+        """
+        if not api_type:
+            return "misc"
+
+        api_type = str(api_type).lower().strip()
+
+        if source == "crossref":
+            # https://api.crossref.org/types
+            mapping = {
+                "journal-article": "article",
+                "proceedings-article": "inproceedings",
+                "book": "book",
+                "book-chapter": "incollection",  # or inbook
+                "dissertation": "phdthesis",
+                "monograph": "book",
+                "report": "techreport",
+                "reference-entry": "incollection",
+                "posted-content": "misc",  # Preprints
+            }
+            return mapping.get(api_type, "misc")
+
+        elif source == "openalex":
+            mapping = {
+                "article": "article",
+                "book-chapter": "incollection",
+                "book": "book",
+                "dissertation": "phdthesis",
+                "preprint": "misc",
+                "report": "techreport",
+            }
+            return mapping.get(api_type, "misc")
+
+        elif source == "arxiv":
+            return "article"
+
+        elif source == "dblp":
+            # DBLP types: Article, InProceedings, Book, InCollection, PhdThesis, MastersThesis, Proceedings
+            mapping = {
+                "article": "article",
+                "inproceedings": "inproceedings",
+                "book": "book",
+                "incollection": "incollection",
+                "phdthesis": "phdthesis",
+                "mastersthesis": "mastersthesis",
+                "proceedings": "proceedings",
+            }
+            return mapping.get(api_type, "misc")
+
+        return "misc"
+
     def search_google_scholar(self, query: str) -> Optional[Dict]:
         """
         Search Google Scholar for publication information
@@ -1186,8 +1267,11 @@ class BibTeXValidator:
 
         # Store original values for undo functionality
         for field_name, value in entry.items():
-            if field_name not in ["ID", "ENTRYTYPE"] and value:
+            if field_name not in ["ID"] and value:
                 result.original_values[field_name] = str(value)
+        # Explicitly add ENTRYTYPE if not in items (some parsers might keep it separate)
+        if "ENTRYTYPE" in entry:
+            result.original_values["ENTRYTYPE"] = entry["ENTRYTYPE"]
 
         if total > 0:
             logs.append(
