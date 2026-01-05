@@ -1719,6 +1719,18 @@ def create_gui_app(
                     <h3 class="text-lg font-semibold leading-none tracking-tight">Validation Summary</h3>
                     
                     <div class="flex items-center gap-8">
+                        <!-- Entries Attention -->
+                        <div class="flex items-center gap-2">
+                             <div class="relative h-10 w-10">
+                                <div id="attentionPieChart" class="h-full w-full rounded-full" style="background: conic-gradient(var(--primary) 0%, var(--primary) 0%, var(--muted) 0% 100%);"></div>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs text-muted-foreground uppercase font-semibold">Need Attention</span>
+                                <span class="text-xl font-bold leading-none" id="summaryAttention">0/0 (0%)</span>
+                            </div>
+                        </div>
+                        <span class="text-border opacity-50 text-2xl font-light">|</span>
+
                         <!-- Reviews -->
                         <div class="flex items-center gap-2">
                              <div class="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
@@ -1765,9 +1777,7 @@ def create_gui_app(
                     </div>
                 </div>
                 
-                <div class="border-t bg-muted/20 px-6 py-2">
-                     <p id="summaryTotalStatus" class="text-sm text-muted-foreground font-medium text-center"></p>
-                </div>
+                <!-- Footer removed -->
             </div>
 
             <!-- Comparison Table -->
@@ -1850,49 +1860,58 @@ def create_gui_app(
                 const response = await fetch('/api/entries');
                 if (!response.ok) throw new Error('Failed to load entries');
                 const data = await response.json();
+
+                allEntries = data.entries || [];
+                // Sort by key
+                allEntries.sort((a, b) => a.key.localeCompare(b.key));
                 
-                allEntries = data.entries; // Store for global stats
-                updateEntrySelect(data.entries);
-                updateGlobalSummary(); // Initial calculation
+                const select = document.getElementById('entrySelect');
+                const currentValue = select.value;
                 
-                // Auto-select first entry if none selected or just loaded
-                if (data.entries.length > 0 && !document.getElementById('entrySelect').value) {
-                     const firstKey = data.entries[0].key;
-                     document.getElementById('entrySelect').value = firstKey;
+                // Keep the first option
+                select.innerHTML = '<option value="">Select an entry...</option>';
+
+                // Calculate Attention Stats
+                if (typeof updateGlobalSummary === 'function') updateGlobalSummary(); 
+                
+                allEntries.forEach((entry) => {
+                    const option = document.createElement('option');
+                    option.value = entry.key;
+                    
+                    let badges = [];
+                    if (entry.fields_updated && entry.fields_updated.length > 0) badges.push(`+${entry.fields_updated.length}`);
+                    if (entry.fields_conflict && entry.fields_conflict.length > 0) badges.push(`!${entry.fields_conflict.length}`);
+                    
+                    option.textContent = entry.key + (badges.length ? ` (${badges.join(', ')})` : '');
+                    select.appendChild(option);
+                });
+                
+                // Restore selection if possible
+                if (currentValue) {
+                    if (allEntries.some(e => e.key === currentValue)) {
+                        select.value = currentValue;
+                    }
+                }
+                
+                 // Auto-select first entry if none selected or just loaded
+                if (allEntries.length > 0 && !select.value) {
+                     const firstKey = allEntries[0].key;
+                     select.value = firstKey;
                      loadEntry(firstKey);
                 } else {
                     updateNavigationState();
                 }
-            } catch (error) {
-                console.error('Failed to load entries:', error);
-                alert('Failed to load entries. Is the server running?');
+
+            } catch(e) { 
+                console.error(e);
+                alert('Failed to load entries.');
             }
         }
 
         function updateEntrySelect(entries) {
-            const select = document.getElementById('entrySelect');
-            const currentValue = select.value;
-            select.innerHTML = '<option value="">Select an entry...</option>';
-            
-            entries.forEach(entry => {
-                const option = document.createElement('option');
-                option.value = entry.key;
-                
-                let badges = [];
-                if (entry.fields_updated && entry.fields_updated.length > 0) badges.push(`+${entry.fields_updated.length}`);
-                if (entry.fields_conflict && entry.fields_conflict.length > 0) badges.push(`!${entry.fields_conflict.length}`);
-                
-                option.textContent = entry.key + (badges.length ? ` (${badges.join(', ')})` : '');
-                select.appendChild(option);
-            });
-            
-            // Restore selection if possible
-            if (currentValue) {
-                // Check if current value still exists
-                if (entries.some(e => e.key === currentValue)) {
-                    select.value = currentValue;
-                }
-            }
+            // This function is now integrated into loadEntries and is no longer needed as a separate function.
+            // Keeping it here as a placeholder comment for clarity, but it will be removed if not called elsewhere.
+            // The instruction effectively replaced the original loadEntries and removed the call to updateEntrySelect.
         }
 
         async function loadEntry(entryKey) {
@@ -2037,8 +2056,13 @@ def create_gui_app(
             const safeTotal = totalEntries || 0;
             const percentage = safeTotal > 0 ? Math.round((entriesWithIssues / safeTotal) * 100) : 0;
             
-            document.getElementById('summaryTotalStatus').textContent = 
-                `${entriesWithIssues} of ${safeTotal} entries need attention (${percentage}%)`;
+            document.getElementById('summaryAttention').textContent = 
+                `${entriesWithIssues}/${safeTotal} (${percentage}%)`;
+            
+            const chart = document.getElementById('attentionPieChart');
+            if (chart) {
+                chart.style.background = `conic-gradient(hsl(var(--primary)) ${percentage}%, hsl(var(--muted)) 0)`;
+            }
         }
 
         // --- Rendering ---
@@ -2444,9 +2468,34 @@ def create_gui_app(
         }
 
         async function acceptAllGlobal() {
-            if (!confirm("Are you sure you want to accept ALL updates for ALL entries? This action cannot be easily undone.")) {
+            const btn = document.querySelector('button[onclick="acceptAllGlobal()"]');
+            
+            if (!acceptAllGlobalConfirm) {
+                acceptAllGlobalConfirm = true;
+                const originalContent = btn.innerHTML;
+                // createIcons might have messed with innerHTML structure, so safest is to rebuild or save/restore.
+                // But we can just hardcode text.
+                
+                btn.innerHTML = '<i data-lucide="alert-triangle" class="mr-2 h-4 w-4"></i> Click again to confirm';
+                btn.classList.add('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
+                btn.classList.remove('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
+                
+                lucide.createIcons({ root: btn });
+
+                if (acceptAllGlobalTimeout) clearTimeout(acceptAllGlobalTimeout);
+                acceptAllGlobalTimeout = setTimeout(() => {
+                    acceptAllGlobalConfirm = false;
+                    btn.innerHTML = '<i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept Changes';
+                    btn.classList.remove('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
+                    btn.classList.add('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
+                    lucide.createIcons({ root: btn });
+                }, 3000);
                 return;
             }
+            
+            // Confirmed
+            if (acceptAllGlobalTimeout) clearTimeout(acceptAllGlobalTimeout);
+            acceptAllGlobalConfirm = false;
             
             try {
                 // Show global loading indicator if possible, or just alert
@@ -2463,7 +2512,7 @@ def create_gui_app(
                     
                     // Update entries list if provided
                     if (result.entries) {
-                        updateEntrySelect(result.entries);
+                        loadEntries();
                     }
                     
                     // Reload current entry
@@ -2617,6 +2666,7 @@ def create_gui_app(
                     "arxiv_valid": result.arxiv_valid,
                     "fields_updated": list(result.fields_updated.keys()),
                     "fields_conflict": list(result.fields_conflict.keys()),
+                    "fields_different": list(result.fields_different.keys()),
                 }
             )
         return {"entries": entries}
