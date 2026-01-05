@@ -2358,6 +2358,15 @@ def create_gui_app(
                     }, 2000);
                     // Reload
                     await loadEntry(currentData.entry_key);
+
+                    // Update global stats
+                    const entryInGlobal = allEntries.find(e => e.key === currentData.entry_key);
+                    if (entryInGlobal) {
+                        entryInGlobal.fields_updated = entryInGlobal.fields_updated.filter(f => f !== f_name);
+                        entryInGlobal.fields_conflict = entryInGlobal.fields_conflict.filter(f => f !== f_name);
+                        entryInGlobal.fields_different = entryInGlobal.fields_different.filter(f => f !== f_name);
+                        updateGlobalSummary();
+                    }
                 }
             } catch (error) {
                 console.error(error);
@@ -2763,6 +2772,8 @@ def create_gui_app(
                     entry = validator.db.entries_dict[entry_key]
                     for k, v in changes_to_apply.items():
                         entry[k] = v
+                        # Add to identical fields for stats update
+                        result.fields_identical[k] = v
                     modified_count += 1
 
                     # Clear the pending changes in the result object so UI updates
