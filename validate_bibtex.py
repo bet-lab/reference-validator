@@ -1807,7 +1807,8 @@ def create_gui_app(
                         <span class="text-border opacity-50 text-2xl font-light">|</span>
 
                         <!-- Global Action -->
-                         <button onclick="acceptAllGlobal()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">
+                         <!-- Global Action -->
+                         <button id="btnAcceptAllGlobal" onclick="acceptAllGlobal()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">
                              <i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries
                         </button>
 
@@ -1964,6 +1965,9 @@ def create_gui_app(
         let savingFields = new Set();
         let savedFields = new Set();
         let selectedSources = {};
+        
+        let acceptAllGlobalConfirm = false;
+        let acceptAllGlobalTimeout = null;
 
         function escapeHtml(text) {
             if (text === null || text === undefined) return '';
@@ -2632,13 +2636,11 @@ def create_gui_app(
         }
 
         async function acceptAllGlobal() {
-            const btn = document.querySelector('button[onclick="acceptAllGlobal()"]');
+            const btn = document.getElementById('btnAcceptAllGlobal');
             
             if (!acceptAllGlobalConfirm) {
                 acceptAllGlobalConfirm = true;
                 const originalContent = btn.innerHTML;
-                // createIcons might have messed with innerHTML structure, so safest is to rebuild or save/restore.
-                // But we can just hardcode text.
                 
                 btn.innerHTML = '<i data-lucide="alert-triangle" class="mr-2 h-4 w-4"></i> Click again to confirm';
                 btn.classList.add('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
@@ -2663,7 +2665,7 @@ def create_gui_app(
             
             try {
                 // Show global loading indicator if possible, or just alert
-                const btn = document.querySelector('button[onclick="acceptAllGlobal()"]');
+                const btn = document.getElementById('btnAcceptAllGlobal');
                 const originalText = btn.innerHTML;
                 btn.disabled = true;
                 btn.innerHTML = '<i data-lucide="loader-2" class="mr-2 h-4 w-4 animate-spin"></i> Processing...';
