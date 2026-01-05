@@ -25,7 +25,7 @@ This project is managed with [uv](https://github.com/astral-sh/uv).
 1. **Clone the repository**:
 
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/bet-lab/reference-validator.git
    cd reference-validator
    ```
 
@@ -109,9 +109,9 @@ optional arguments:
 
 ## Dependencies
 
-- `bibtexparser`: For reading and writing BibTeX files.
-- `requests`: For making API calls.
-- `scholarly`: For accessing Google Scholar data.
-- `fastapi` & `uvicorn`: For the interactive GUI.
+- `bibtexparser` (>=1.4.0): For reading and writing BibTeX files.
+- `requests` (>=2.31.0): For making API calls.
+- `scholarly` (>=1.7.0): For accessing Google Scholar data.
+- `fastapi` (>=0.104.0) & `uvicorn[standard]` (>=0.24.0): For the interactive GUI.
 
 These are automatically installed when using `uv run` or `uv sync`.
