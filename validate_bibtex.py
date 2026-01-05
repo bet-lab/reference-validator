@@ -1518,9 +1518,9 @@ class BibTeXValidator:
 
         return report_text
 
-    def save_updated_bib(self):
+    def save_updated_bib(self, force=False):
         """Save updated BibTeX file"""
-        if self.update_bib:
+        if self.update_bib or force:
             writer = BibTexWriter()
             writer.indent = "\t"
             writer.comma_first = False
@@ -2304,6 +2304,18 @@ def create_gui_app(
                     }, 2000);
                     // Reload
                     await loadEntry(currentData.entry_key);
+
+                    // Update global stats
+                    const entryInGlobal = allEntries.find(e => e.key === currentData.entry_key);
+                    if (entryInGlobal) {
+                        entryInGlobal.fields_updated = entryInGlobal.fields_updated.filter(f => f !== f_name);
+                        entryInGlobal.fields_conflict = entryInGlobal.fields_conflict.filter(f => f !== f_name);
+                        entryInGlobal.fields_different = entryInGlobal.fields_different.filter(f => f !== f_name);
+                        if (!entryInGlobal.fields_identical.includes(f_name)) {
+                             entryInGlobal.fields_identical.push(f_name);
+                        }
+                        updateGlobalSummary();
+                    }
                 }
             } catch (error) {
                 console.error(error);
@@ -2408,6 +2420,12 @@ def create_gui_app(
                         entryInGlobal.fields_updated = entryInGlobal.fields_updated.filter(f => !fieldsToAccept.includes(f));
                         entryInGlobal.fields_conflict = entryInGlobal.fields_conflict.filter(f => !fieldsToAccept.includes(f));
                         entryInGlobal.fields_different = entryInGlobal.fields_different.filter(f => !fieldsToAccept.includes(f));
+                        // Add to identical
+                        fieldsToAccept.forEach(f => {
+                            if (!entryInGlobal.fields_identical.includes(f)) {
+                                entryInGlobal.fields_identical.push(f);
+                            }
+                        });
                         updateGlobalSummary();
                     }
                 }
@@ -2690,6 +2708,7 @@ def create_gui_app(
                     "fields_updated": list(result.fields_updated.keys()),
                     "fields_conflict": list(result.fields_conflict.keys()),
                     "fields_different": list(result.fields_different.keys()),
+                    "fields_identical": list(result.fields_identical.keys()),
                 }
             )
         return {"entries": entries}
@@ -2752,7 +2771,7 @@ def create_gui_app(
                     result.fields_different = {}
 
         # Save to file
-        validator.save_updated_bib()
+        validator.save_updated_bib(force=True)
 
         # Helper to regenerate entries list
         current_entries = []
@@ -2766,6 +2785,8 @@ def create_gui_app(
                     "arxiv_valid": res.arxiv_valid,
                     "fields_updated": list(res.fields_updated.keys()),
                     "fields_conflict": list(res.fields_conflict.keys()),
+                    "fields_different": list(res.fields_different.keys()),
+                    "fields_identical": list(res.fields_identical.keys()),
                 }
             )
 
