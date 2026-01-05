@@ -6,7 +6,13 @@ A powerful tool to validate and enrich BibTeX entries using metadata from **Cros
 
 - **DOI Validation**: Automatically verifies DOIs against the Crossref API.
 - **arXiv Integration**: Detects arXiv preprints and fetches updated metadata or official publication DOIs.
-- **Smart Enrichment**: Fills in missing fields (e.g., year, journal, author names) using data from multiple academic sources.
+- **Smart Enrichment**: Fills in missing fields using metadata from multiple reliable academic sources:
+  - **Crossref**: For official DOI metadata.
+  - **arXiv**: For preprint information and updates.
+  - **Google Scholar**: For citation and missing metadata (via `scholarly`).
+  - **DBLP**: For computer science bibliography.
+  - **Semantic Scholar**: For AI-powered research paper data.
+  - **PubMed**: For biomedical literature.
 - **Dual Validation**: Compares your local BibTeX data with partial API data to highlight conflicts.
 - **Interactive GUI**: A web-based interface to review, accept, or reject changes visually.
 - **Report Generation**: Produces detailed validation reports.
@@ -76,7 +82,7 @@ Launch the web-based review interface to manually inspect and approve changes.
 uv run bibtex-validator references.bib --gui
 ```
 
-Once running, open your browser at [http://127.0.0.1:8010](http://127.0.0.1:8010) (default port).
+Once running, the web interface will automatically launch in your default browser on your local machine.
 
 - **Green Badges**: Validated data from APIs.
 - **Red/Yellow Highlights**: Conflicts or missing data.
