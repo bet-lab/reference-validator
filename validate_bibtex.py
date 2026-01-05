@@ -1335,6 +1335,106 @@ class BibTeXValidator:
                 fetched_data["openalex"] = data
                 logs.append("  ✓ Found data from OpenAlex")
 
+        # 2.5 Recursive Enrichment (Discover missing identifiers)
+        # If we didn't have a DOI but found one in secondary sources, fetch Crossref/Zenodo/OpenAlex
+        if not doi:
+            new_doi = None
+            source_found = None
+
+            # Check secondary sources for DOI
+            # Priority: DBLP > Semantic Scholar > OpenAlex > PubMed
+            for source in ["dblp", "semantic_scholar", "openalex", "pubmed"]:
+                if source in fetched_data and fetched_data[source].get("doi"):
+                    candidate = fetched_data[source]["doi"]
+                    if candidate:
+                        new_doi = self.normalize_doi(candidate)
+                        source_found = source
+                        break
+
+            if new_doi:
+                logs.append(f"  ➤ Discovered new DOI from {source_found}: {new_doi}")
+                result.has_doi = True
+                result.doi_valid = True  # Assumption
+
+                # Fetch Crossref (if not already fetched - unlikely as we had no DOI)
+                if "crossref" not in fetched_data:
+                    logs.append("  Fetching Crossref (via discovered DOI)...")
+                    data = self.fetch_crossref_data(new_doi)
+                    if data:
+                        fetched_data["crossref"] = data
+                        logs.append("  ✓ Found data from Crossref")
+
+                    # Try Zenodo/DataCite if needed
+                    if "zenodo" in new_doi.lower() and "zenodo" not in fetched_data:
+                        logs.append("  Fetching Zenodo (via discovered DOI)...")
+                        z_data = self.fetch_zenodo_data(new_doi)
+                        if z_data:
+                            fetched_data["zenodo"] = z_data
+                            logs.append("  ✓ Found data from Zenodo")
+
+                    if (
+                        "crossref" not in fetched_data
+                        and "zenodo" not in fetched_data
+                        and "datacite" not in fetched_data
+                    ):
+                        logs.append("  Fetching DataCite (via discovered DOI)...")
+                        d_data = self.fetch_datacite_data(new_doi)
+                        if d_data:
+                            fetched_data["datacite"] = d_data
+                            logs.append("  ✓ Found data from DataCite")
+
+                # Fetch OpenAlex by DOI if we didn't search by title or if title search failed
+                # (OR if we want to ensure we have the DOI-linked record)
+                if "openalex" not in fetched_data:
+                    logs.append("  Fetching OpenAlex (via discovered DOI)...")
+                    data = self.fetch_openalex_data(doi=new_doi)
+                    if data:
+                        fetched_data["openalex"] = data
+                        logs.append("  ✓ Found data from OpenAlex")
+
+        # If we didn't have arXiv ID but found one
+        if not arxiv_id:
+            new_arxiv_id = None
+            source_found = None
+
+            for source in ["dblp", "semantic_scholar", "openalex", "crossref"]:
+                if source in fetched_data:
+                    # Check for arxivId, eprint, or url matching arxiv
+                    data = fetched_data[source]
+                    candidate = data.get("arxiv_id") or data.get("arxivid")
+
+                    if (
+                        not candidate
+                        and "eprint" in data
+                        and "arxiv" in str(data.get("eprinttype", "")).lower()
+                    ):
+                        candidate = data["eprint"]
+
+                    if not candidate and "url" in data and "arxiv" in str(data["url"]):
+                        # Try extract from URL
+                        match = self.ARXIV_URL_PATTERN.search(str(data["url"]))
+                        if match:
+                            candidate = match.group(1)
+
+                    if candidate:
+                        new_arxiv_id = candidate
+                        source_found = source
+                        break
+
+            if new_arxiv_id:
+                logs.append(
+                    f"  ➤ Discovered new arXiv ID from {source_found}: {new_arxiv_id}"
+                )
+                result.has_arxiv = True
+
+                if "arxiv" not in fetched_data:
+                    logs.append(f"  Fetching arXiv (via discovered ID): {new_arxiv_id}")
+                    data = self.fetch_arxiv_data(new_arxiv_id)
+                    if data:
+                        result.arxiv_valid = True
+                        fetched_data["arxiv"] = data
+                        logs.append("  ✓ Found data from arXiv")
+
         # 3. Aggregation & Comparison
         # Priority order for DEFAULT values
         priority_order = [
