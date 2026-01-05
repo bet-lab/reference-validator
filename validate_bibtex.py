@@ -1673,44 +1673,7 @@ def create_gui_app(
         </div>
 
         <!-- Toolbar -->
-        <div class="flex flex-col md:flex-row gap-4 mb-8 items-center justify-between">
-            <div class="flex flex-1 gap-4 items-center w-full">
-                <div class="flex-1 max-w-xl relative flex gap-2">
-                    <button id="btnPrev" onclick="navigateEntry(-1)" class="inline-flex items-center justify-center rounded-md border border-input bg-background h-10 w-10 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" disabled>
-                        <i data-lucide="chevron-left" class="h-4 w-4"></i>
-                    </button>
-                    
-                    <div class="relative flex-1">
-                        <select id="entrySelect" onchange="loadEntry(this.value)" 
-                                class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none">
-                            <option value="">Select an entry...</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none">
-                             <i data-lucide="chevron-down" class="h-4 w-4 opacity-50"></i>
-                        </div>
-                    </div>
-
-                    <button id="btnNext" onclick="navigateEntry(1)" class="inline-flex items-center justify-center rounded-md border border-input bg-background h-10 w-10 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" disabled>
-                        <i data-lucide="chevron-right" class="h-4 w-4"></i>
-                    </button>
-                </div>
-                <div id="statsContainer" class="flex gap-2 text-sm items-center text-muted-foreground hidden whitespace-nowrap">
-                    <span class="flex items-center gap-1"><i data-lucide="file-edit" class="h-3 w-3 text-blue-600"></i> <span id="statsUpdates">0</span> reviews</span>
-                    <span class="separator text-border opacity-50">|</span>
-                    <span class="flex items-center gap-1"><i data-lucide="alert-triangle" class="h-3 w-3 text-orange-600"></i> <span id="statsConflicts">0</span> conflicts</span>
-                    <span class="separator text-border opacity-50">|</span>
-                    <span class="flex items-center gap-1"><i data-lucide="git-compare" class="h-3 w-3 text-yellow-600"></i> <span id="statsDifferences">0</span> differences</span>
-                    <span class="separator text-border opacity-50">|</span>
-                    <span class="flex items-center gap-1"><i data-lucide="check-circle" class="h-3 w-3 text-green-600"></i> <span id="statsIdentical">0</span> identical</span>
-                </div>
-            </div>
-
-            <div class="flex-shrink-0">
-                 <button onclick="acceptAllGlobal()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-4 py-2">
-                    <i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept Changes
-                </button>
-            </div>
-        </div>
+        <!-- Toolbar moved inside mainContent -->
 
         <!-- Main Content -->
         <div id="mainContent" class="space-y-6 hidden">
@@ -1728,7 +1691,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Need Attention</span>
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryAttention">0/0 (0%)</span>
+                                <span class="text-lg font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryAttention">0/0 (0%)</span>
                             </div>
                         </div>
                         <span class="text-border opacity-50 text-2xl font-light">|</span>
@@ -1740,7 +1703,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Reviews</span>
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryReviews">0</span>
+                                <span class="text-lg font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryReviews">0</span>
                             </div>
                         </div>
 
@@ -1751,7 +1714,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Conflicts</span>
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryConflicts">0</span>
+                                <span class="text-lg font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryConflicts">0</span>
                             </div>
                         </div>
 
@@ -1762,7 +1725,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Differences</span>
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryDifferences">0</span>
+                                <span class="text-lg font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryDifferences">0</span>
                             </div>
                         </div>
 
@@ -1773,13 +1736,53 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Identical</span>
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryIdentical">0</span>
+                                <span class="text-lg font-medium text-gray-700 dark:text-gray-300 leading-none" id="summaryIdentical">0</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Footer removed -->
+            </div>
+
+            <!-- Toolbar (Moved) -->
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex flex-1 gap-4 items-center w-full">
+                    <div class="flex-1 max-w-xl relative flex gap-2">
+                        <button id="btnPrev" onclick="navigateEntry(-1)" class="inline-flex items-center justify-center rounded-md border border-input bg-background h-10 w-10 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" disabled>
+                            <i data-lucide="chevron-left" class="h-4 w-4"></i>
+                        </button>
+                        
+                        <div class="relative flex-1">
+                            <select id="entrySelect" onchange="loadEntry(this.value)" 
+                                    class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none">
+                                <option value="">Select an entry...</option>
+                            </select>
+                            <div class="absolute right-3 top-3 pointer-events-none">
+                                 <i data-lucide="chevron-down" class="h-4 w-4 opacity-50"></i>
+                            </div>
+                        </div>
+
+                        <button id="btnNext" onclick="navigateEntry(1)" class="inline-flex items-center justify-center rounded-md border border-input bg-background h-10 w-10 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" disabled>
+                            <i data-lucide="chevron-right" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                    <div id="statsContainer" class="flex gap-2 text-sm items-center text-muted-foreground hidden whitespace-nowrap">
+                        <span class="flex items-center gap-1"><i data-lucide="file-edit" class="h-3 w-3 text-blue-600"></i> <span id="statsUpdates">0</span> reviews</span>
+                        <span class="separator text-border opacity-50">|</span>
+                        <span class="flex items-center gap-1"><i data-lucide="alert-triangle" class="h-3 w-3 text-orange-600"></i> <span id="statsConflicts">0</span> conflicts</span>
+                        <span class="separator text-border opacity-50">|</span>
+                        <span class="flex items-center gap-1"><i data-lucide="git-compare" class="h-3 w-3 text-yellow-600"></i> <span id="statsDifferences">0</span> differences</span>
+                        <span class="separator text-border opacity-50">|</span>
+                        <span class="flex items-center gap-1"><i data-lucide="check-circle" class="h-3 w-3 text-green-600"></i> <span id="statsIdentical">0</span> identical</span>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0">
+                     <button onclick="acceptAllGlobal()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-4 py-2">
+                        <i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept Changes
+                    </button>
+                </div>
             </div>
 
             <!-- Comparison Table -->
@@ -2398,6 +2401,15 @@ def create_gui_app(
                          renderComparison(currentData);
                     }, 2000);
                     await loadEntry(currentData.entry_key);
+
+                    // Update global stats
+                    const entryInGlobal = allEntries.find(e => e.key === currentData.entry_key);
+                    if (entryInGlobal) {
+                        entryInGlobal.fields_updated = entryInGlobal.fields_updated.filter(f => !fieldsToAccept.includes(f));
+                        entryInGlobal.fields_conflict = entryInGlobal.fields_conflict.filter(f => !fieldsToAccept.includes(f));
+                        entryInGlobal.fields_different = entryInGlobal.fields_different.filter(f => !fieldsToAccept.includes(f));
+                        updateGlobalSummary();
+                    }
                 }
 
             } catch (e) {
@@ -2456,6 +2468,15 @@ def create_gui_app(
                          renderComparison(currentData);
                     }, 2000);
                     await loadEntry(currentData.entry_key);
+                    
+                    // Update global stats
+                    const entryInGlobal = allEntries.find(e => e.key === currentData.entry_key);
+                    if (entryInGlobal) {
+                        entryInGlobal.fields_updated = entryInGlobal.fields_updated.filter(f => !fieldsToReject.includes(f));
+                        entryInGlobal.fields_conflict = entryInGlobal.fields_conflict.filter(f => !fieldsToReject.includes(f));
+                        entryInGlobal.fields_different = entryInGlobal.fields_different.filter(f => !fieldsToReject.includes(f));
+                        updateGlobalSummary();
+                    }
                 }
 
             } catch (e) {
