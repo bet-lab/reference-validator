@@ -1,0 +1,13 @@
+[project]
+name = "bibtex-validator"
+version = "1.0.0"
+description = "BibTeX validator and enricher using Crossref, arXiv, and Google Scholar APIs"
+requires-python = ">=3.8"
+dependencies = [
+    "bibtexparser>=1.4.0",
+    "requests>=2.31.0",
+    "scholarly>=1.7.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+]
+
