@@ -126,9 +126,25 @@ uv run bibtex-validator references.bib --gui
 
 Once running, the web interface will automatically launch in your default browser on your local machine.
 
-- **Green Badges**: Validated data from APIs.
-- **Red/Yellow Highlights**: Conflicts or missing data.
-- **Actions**: Accept or reject changes per field or per entry.
+The interface is designed for efficiency and clarity:
+
+#### 1. Dashboard Overview
+
+- **Validation Summary**: A top-level summary card displaying stats for **Reviews** (Blue), **Conflicts** (Orange), and **Differences** (Yellow).
+- **Navigation Toolbar**: Allows jumping between entries. The dropdown highlights entries requiring attention (e.g., `paper2023 (+2 !1)` indicates 2 updates and 1 conflict).
+
+#### 2. Comparison Table
+
+Each entry is displayed in a detailed table comparing your local BibTeX against API data.
+
+- **Source Badges**: Color-coded badges indicate the data origin:
+  - **Crossref** (Blue), **arXiv** (Red), **Semantic Scholar** (Indigo), **DBLP** (Purple), **PubMed** (Sky).
+  - _Interactive_: Click badges with arrows to select data from alternate sources.
+- **Status Indicators**:
+  - **Risk Levels**: Clearly distinguishes between simple **Updates** (Blue), critical **Conflicts** (Orange), and minor **Differences** (Yellow).
+- **Actions**:
+  - **Accept / Reject**: Buttons in every row to selectively apply changes.
+  - **Bulk Actions**: "Accept All" or "Reject All" footer buttons to process an entire entry instantly.
 
 ### CLI Options
 
