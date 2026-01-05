@@ -2674,8 +2674,6 @@ def create_gui_app(
                 const result = await response.json();
                 
                 if (result.success) {
-                    alert(`Successfully processed global updates.\nModified ${result.modified_count} entries.`);
-                    
                     // Update entries list if provided
                     if (result.entries) {
                         loadEntries();
@@ -2683,13 +2681,29 @@ def create_gui_app(
                     
                     // Reload current entry
                     if (currentData) loadEntry(currentData.entry_key);
+
+                    // Show "All Accepted" state
+                    btn.innerHTML = '<i data-lucide="check-check" class="mr-2 h-4 w-4"></i> All Accepted';
+                    btn.classList.remove('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
+                    btn.classList.remove('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
+                    btn.classList.add('bg-green-600', 'text-white', 'hover:bg-green-700');
+                    lucide.createIcons({ root: btn });
+
+                    // Revert after 3 seconds
+                    setTimeout(() => {
+                        btn.innerHTML = '<i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries';
+                        btn.classList.remove('bg-green-600', 'text-white', 'hover:bg-green-700');
+                        btn.classList.add('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
+                        lucide.createIcons({ root: btn });
+                        btn.disabled = false;
+                    }, 3000);
+                    
                 } else {
                     alert("Failed: " + result.detail);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries';
+                    lucide.createIcons({ root: btn });
                 }
-                
-                 btn.disabled = false;
-                 btn.innerHTML = originalText;
-                 lucide.createIcons({ root: btn });
                  
             } catch (e) {
                 console.error(e);
