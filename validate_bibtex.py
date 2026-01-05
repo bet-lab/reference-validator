@@ -490,6 +490,91 @@ class BibTeXValidator:
 
         return None
 
+    def fetch_zenodo_data(self, doi: str) -> Optional[Dict]:
+        """
+        Fetch metadata from Zenodo API
+
+        Args:
+            doi: DOI string
+
+        Returns:
+            Dictionary with metadata or None if not found
+        """
+        doi = self.normalize_doi(doi)
+        if "zenodo" not in doi.lower():
+            return None
+
+        # Extract record ID from Zenodo DOI (e.g., 10.5281/zenodo.1234567 -> 1234567)
+        match = re.search(r"zenodo\.(\d+)", doi)
+        if not match:
+            return None
+
+        record_id = match.group(1)
+        url = f"https://zenodo.org/api/records/{record_id}"
+
+        try:
+            time.sleep(self.delay)
+            response = requests.get(url, timeout=10)
+
+            if response.status_code == 200:
+                data = response.json()
+                metadata = data.get("metadata", {})
+                if not metadata:
+                    return None
+
+                result = {}
+
+                # Title
+                if "title" in metadata:
+                    result["title"] = metadata["title"]
+
+                # Authors
+                creators = metadata.get("creators", [])
+                authors = []
+                for creator in creators:
+                    name = creator.get("name")
+                    if name:
+                        authors.append(name)
+                if authors:
+                    result["authors"] = authors
+
+                # Year
+                if "publication_date" in metadata:
+                    # Format: YYYY-MM-DD
+                    result["year"] = metadata["publication_date"].split("-")[0]
+
+                # Publisher
+                result["publisher"] = "Zenodo"
+                result["journal"] = "Zenodo"  # Common practice for miscellaneous
+
+                # DOI
+                if "doi" in metadata:
+                    result["doi"] = metadata["doi"]
+
+                # URL (GitHub or other related identifiers)
+                # Check related_identifiers for supplements (GitHub repos usually)
+                github_url = None
+                for rel in metadata.get(
+                    "related_identifiers", []
+                ):  # Use snake_case for Zenodo API key
+                    if rel.get(
+                        "relation"
+                    ) == "isSupplementTo" and "github.com" in rel.get("identifier", ""):
+                        github_url = rel.get("identifier")
+                        break
+
+                if github_url:
+                    result["url"] = github_url
+                elif "doi" in metadata:
+                    # Default to Zenodo record URL if no GitHub link
+                    result["url"] = f"https://doi.org/{metadata['doi']}"
+
+                return result
+        except requests.RequestException:
+            pass
+
+        return None
+
     def fetch_datacite_data(self, doi: str) -> Optional[Dict]:
         """
         Fetch metadata from DataCite API
@@ -550,6 +635,10 @@ class BibTeXValidator:
                 types = attributes.get("types", {})
                 if "resourceTypeGeneral" in types:
                     metadata["type"] = types["resourceTypeGeneral"]
+
+                # URL (DataCite often has a URL field or related identifiers)
+                if "url" in attributes:
+                    metadata["url"] = attributes["url"]
 
                 return metadata if metadata else None
         except requests.RequestException:
@@ -1149,18 +1238,38 @@ class BibTeXValidator:
 
             # Try DataCite if Crossref failed or if we want to check it anyway
             # DataCite is often used for Zenodo, Figshare, etc.
-            if "crossref" not in fetched_data:
-                logs.append("  Fetching DataCite...")
-                data = self.fetch_datacite_data(doi)
-                if data:
-                    result.doi_valid = True
-                    fetched_data["datacite"] = data
-                    logs.append("  ✓ Found data from DataCite")
-                else:
-                    result.warnings.append(f"DOI {doi} not found in DataCite")
+            if (
+                "crossref" not in fetched_data
+                or "zenodo" in doi.lower()
+                or "figshare" in doi.lower()
+            ):
+                # Try Zenodo specifically first for better metadata
+                if "zenodo" in doi.lower():
+                    logs.append("  Fetching Zenodo...")
+                    zenodo_data = self.fetch_zenodo_data(doi)
+                    if zenodo_data:
+                        result.doi_valid = True
+                        fetched_data["zenodo"] = zenodo_data
+                        logs.append("  ✓ Found data from Zenodo")
+
+                # Also try DataCite
+                if "zenodo" not in fetched_data:
+                    logs.append("  Fetching DataCite...")
+                    data = self.fetch_datacite_data(doi)
+                    if data:
+                        result.doi_valid = True
+                        fetched_data["datacite"] = data
+                        logs.append("  ✓ Found data from DataCite")
+                    else:
+                        if "zenodo" not in fetched_data:
+                            result.warnings.append(f"DOI {doi} not found in DataCite")
 
             # Try OpenAlex (High priority, extensive coverage)
-            if "crossref" not in fetched_data and "datacite" not in fetched_data:
+            if (
+                "crossref" not in fetched_data
+                and "datacite" not in fetched_data
+                and "zenodo" not in fetched_data
+            ):
                 # Note: OpenAlex usually has Crossref data, but can be a good fallback or alternative
                 pass
 
@@ -1230,6 +1339,7 @@ class BibTeXValidator:
         # Priority order for DEFAULT values
         priority_order = [
             "crossref",
+            "zenodo",
             "arxiv",
             "dblp",
             "datacite",
@@ -1696,6 +1806,13 @@ def create_gui_app(
                         </div>
                         <span class="text-border opacity-50 text-2xl font-light">|</span>
 
+                        <!-- Global Action -->
+                         <button onclick="acceptAllGlobal()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">
+                             <i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries
+                        </button>
+
+                        <span class="text-border opacity-50 text-2xl font-light">|</span>
+
                         <!-- Reviews -->
                         <div class="flex items-center gap-2">
                              <div class="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
@@ -1778,11 +1895,8 @@ def create_gui_app(
                     </div>
                 </div>
 
-                <div class="flex-shrink-0">
-                     <button onclick="acceptAllGlobal()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-4 py-2">
-                        <i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept Changes
-                    </button>
-                </div>
+                
+                <div class="flex-shrink-0 hidden"></div>
             </div>
 
             <!-- Comparison Table -->
@@ -2535,7 +2649,7 @@ def create_gui_app(
                 if (acceptAllGlobalTimeout) clearTimeout(acceptAllGlobalTimeout);
                 acceptAllGlobalTimeout = setTimeout(() => {
                     acceptAllGlobalConfirm = false;
-                    btn.innerHTML = '<i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept Changes';
+                    btn.innerHTML = '<i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries';
                     btn.classList.remove('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
                     btn.classList.add('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
                     lucide.createIcons({ root: btn });
