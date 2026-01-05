@@ -147,6 +147,25 @@ class BibTeXValidator:
         self.update_bib = update_bib
         self.delay = delay
         self.results: List[ValidationResult] = []
+        self.PREFERRED_FIELD_ORDER = [
+            "entrytype",
+            "title",
+            "author",
+            "year",
+            "journal",
+            "booktitle",
+            "volume",
+            "number",
+            "pages",
+            "publisher",
+            "doi",
+            "issn",
+            "url",
+            "eprint",
+            "eprinttype",
+            "abstract",
+        ]
+
         self.print_lock = threading.Lock()
 
         # Load BibTeX file
@@ -817,7 +836,7 @@ class BibTeXValidator:
             return ""
 
         # Special handling for ENTRYTYPE
-        if field_name == "ENTRYTYPE":
+        if field_name == "entrytype" or field_name == "ENTRYTYPE":
             return s.lower().strip()
 
         # Handle list format (should be extracted before this, but safety check)
@@ -910,7 +929,7 @@ class BibTeXValidator:
                     "ISSN",
                     lambda x: self.extract_string_from_api_value(x) if x else None,
                 ),
-                "ENTRYTYPE": (
+                "entrytype": (
                     "type",
                     lambda x: self.map_api_type_to_bibtex(x, "crossref"),
                 ),
@@ -986,12 +1005,12 @@ class BibTeXValidator:
             # Check ENTRYTYPE (usually article)
             bib_type = bib_entry.get("ENTRYTYPE", "misc").strip()
             api_type = "article"  # Default for arXiv
-            sources["ENTRYTYPE"] = source
+            sources["entrytype"] = source
 
-            if self.normalize_string_for_comparison(bib_type, "ENTRYTYPE") != api_type:
-                updates["ENTRYTYPE"] = api_type
+            if self.normalize_string_for_comparison(bib_type, "entrytype") != api_type:
+                updates["entrytype"] = api_type
             else:
-                identical["ENTRYTYPE"] = bib_type
+                identical["entrytype"] = bib_type
 
             if "title" in api_data:
                 bib_value = bib_entry.get("title", "").strip()
@@ -1083,7 +1102,7 @@ class BibTeXValidator:
                 "volume": ("volume", lambda x: str(x).strip() if x else None),
                 "number": ("number", lambda x: str(x).strip() if x else None),
                 "pages": ("pages", lambda x: str(x).strip() if x else None),
-                "ENTRYTYPE": (
+                "entrytype": (
                     "type",
                     lambda x: self.map_api_type_to_bibtex(x, source)
                     if source in ["dblp", "openalex"]
@@ -1271,7 +1290,7 @@ class BibTeXValidator:
                 result.original_values[field_name] = str(value)
         # Explicitly add ENTRYTYPE if not in items (some parsers might keep it separate)
         if "ENTRYTYPE" in entry:
-            result.original_values["ENTRYTYPE"] = entry["ENTRYTYPE"]
+            result.original_values["entrytype"] = entry["ENTRYTYPE"]
 
         if total > 0:
             logs.append(
@@ -1550,11 +1569,19 @@ class BibTeXValidator:
             # - Update fields_updated/conflict ONLY if not already set by higher priority source
 
             # Helper to collect all involved fields
-            involved_fields = set()
-            involved_fields.update(comparison["updated"].keys())
-            involved_fields.update(comparison["conflicts"].keys())
-            involved_fields.update(comparison.get("identical", {}).keys())
-            involved_fields.update(comparison.get("different", {}).keys())
+            involved_fields_set = set()
+            involved_fields_set.update(comparison["updated"].keys())
+            involved_fields_set.update(comparison["conflicts"].keys())
+            involved_fields_set.update(comparison.get("identical", {}).keys())
+            involved_fields_set.update(comparison.get("different", {}).keys())
+
+            # Sort fields by preferred order
+            involved_fields = sorted(
+                list(involved_fields_set),
+                key=lambda x: self.PREFERRED_FIELD_ORDER.index(x)
+                if x in self.PREFERRED_FIELD_ORDER
+                else 999,
+            )
 
             for field_name in involved_fields:
                 # Get the value provided by this source for this field
@@ -1652,6 +1679,12 @@ class BibTeXValidator:
         print(
             f"Validating {total_entries} entries from {self.bib_file} with {max_workers} threads"
         )
+
+        # Pre-sort fields if updating file is enabled (or generally good practice)
+        if self.update_bib:
+            print("Pre-sorting fields according to preferred order...")
+            self.reorder_fields()
+            self.save_updated_bib(force=True)
         print("=" * 60)
 
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -1812,12 +1845,44 @@ class BibTeXValidator:
 
         return report_text
 
+    def reorder_fields(self):
+        """Sort fields in all entries according to PREFERRED_FIELD_ORDER"""
+        for i, entry in enumerate(self.db.entries):
+            # Separate system keys from content keys
+            system_keys = ["ID", "ENTRYTYPE"]
+            content_keys = [k for k in entry.keys() if k not in system_keys]
+
+            # Sort content keys
+            sorted_content_keys = sorted(
+                content_keys,
+                key=lambda x: self.PREFERRED_FIELD_ORDER.index(x)
+                if x in self.PREFERRED_FIELD_ORDER
+                else 999,
+            )
+
+            # Create new ordered dict (Python 3.7+ preserves insertion order)
+            new_entry = {}
+            # Ensure system keys are first for safety (though bibtexparser handles them)
+            for k in system_keys:
+                if k in entry:
+                    new_entry[k] = entry[k]
+
+            for k in sorted_content_keys:
+                new_entry[k] = entry[k]
+
+            # Replace entry in db
+            self.db.entries[i] = new_entry
+            self.db.entries_dict[entry["ID"]] = new_entry
+
     def save_updated_bib(self, force=False):
         """Save updated BibTeX file"""
         if self.update_bib or force:
             writer = BibTexWriter()
             writer.indent = "\t"
             writer.comma_first = False
+
+            # Ensure fields are sorted before saving
+            self.reorder_fields()
 
             with open(self.output_file, "w", encoding="utf-8") as f:
                 bibtexparser.dump(self.db, f, writer=writer)
@@ -3085,7 +3150,10 @@ def create_gui_app(
                 if entry_key in validator.db.entries_dict:
                     entry = validator.db.entries_dict[entry_key]
                     for k, v in changes_to_apply.items():
-                        entry[k] = v
+                        if k == "entrytype":
+                            entry["ENTRYTYPE"] = v
+                        else:
+                            entry[k] = v
                         # Add to identical fields for stats update
                         result.fields_identical[k] = v
                     modified_count += 1
@@ -3389,32 +3457,54 @@ def create_gui_app(
                     entry, source_data, source=selected_source
                 )
                 # Get the value from comparison results
+                # Get the value from comparison results
                 if f_name in comparison["updated"]:
-                    entry[f_name] = comparison["updated"][f_name]
+                    if f_name == "entrytype":
+                        entry["ENTRYTYPE"] = comparison["updated"][f_name]
+                    else:
+                        entry[f_name] = comparison["updated"][f_name]
                     applied_count += 1
                 elif f_name in comparison["conflicts"]:
-                    entry[f_name] = comparison["conflicts"][f_name][1]  # API value
+                    if f_name == "entrytype":
+                        entry["ENTRYTYPE"] = comparison["conflicts"][f_name][1]
+                    else:
+                        entry[f_name] = comparison["conflicts"][f_name][1]  # API value
                     applied_count += 1
                 elif f_name in comparison.get("different", {}):
-                    entry[f_name] = comparison["different"][f_name][1]  # API value
+                    if f_name == "entrytype":
+                        entry["ENTRYTYPE"] = comparison["different"][f_name][1]
+                    else:
+                        entry[f_name] = comparison["different"][f_name][1]  # API value
                     applied_count += 1
                 elif f_name in comparison.get("identical", {}):
-                    entry[f_name] = comparison["identical"][f_name]
+                    if f_name == "entrytype":
+                        entry["ENTRYTYPE"] = comparison["identical"][f_name]
+                    else:
+                        entry[f_name] = comparison["identical"][f_name]
                     applied_count += 1
             elif f_name in result.fields_updated:
-                entry[f_name] = result.fields_updated[f_name]
+                if f_name == "entrytype":
+                    entry["ENTRYTYPE"] = result.fields_updated[f_name]
+                else:
+                    entry[f_name] = result.fields_updated[f_name]
                 applied_count += 1
             elif (
                 f_name in result.fields_conflict
                 and len(result.fields_conflict[f_name]) >= 2
             ):
-                entry[f_name] = result.fields_conflict[f_name][1]  # API value
+                if f_name == "entrytype":
+                    entry["ENTRYTYPE"] = result.fields_conflict[f_name][1]
+                else:
+                    entry[f_name] = result.fields_conflict[f_name][1]  # API value
                 applied_count += 1
             elif (
                 f_name in result.fields_different
                 and len(result.fields_different[f_name]) >= 2
             ):
-                entry[f_name] = result.fields_different[f_name][1]  # API value
+                if f_name == "entrytype":
+                    entry["ENTRYTYPE"] = result.fields_different[f_name][1]
+                else:
+                    entry[f_name] = result.fields_different[f_name][1]  # API value
                 applied_count += 1
 
             # Remove from pending changes in result object so it's not suggested again
