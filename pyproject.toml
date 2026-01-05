@@ -21,3 +21,10 @@ bibtex-validator = "validate_bibtex:main"
 [tool.setuptools]
 py-modules = ["validate_bibtex"]
 
+[dependency-groups]
+dev = [
+    "myst-parser>=3.0.1",
+    "shibuya>=2025.5.30",
+    "sphinx>=7.1.2",
+]
+
