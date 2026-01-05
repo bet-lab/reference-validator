@@ -20,6 +20,8 @@ from typing import Dict, List, Optional, Tuple, TYPE_CHECKING
 from dataclasses import dataclass, field
 from datetime import datetime
 import threading
+import pickle
+import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 try:
@@ -1722,11 +1724,11 @@ def create_gui_app(
                         <!-- Entries Attention -->
                         <div class="flex items-center gap-2">
                              <div class="relative h-10 w-10">
-                                <div id="attentionPieChart" class="h-full w-full rounded-full" style="background: conic-gradient(var(--primary) 0%, var(--primary) 0%, var(--muted) 0% 100%);"></div>
+                                <div id="attentionPieChart" class="h-full w-full rounded-full" style="background: conic-gradient(#f87171 0%, #f87171 0%, var(--muted) 0% 100%);"></div>
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Need Attention</span>
-                                <span class="text-xl font-bold leading-none" id="summaryAttention">0/0 (0%)</span>
+                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryAttention">0/0 (0%)</span>
                             </div>
                         </div>
                         <span class="text-border opacity-50 text-2xl font-light">|</span>
@@ -1738,7 +1740,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Reviews</span>
-                                <span class="text-xl font-bold leading-none" id="summaryReviews">0</span>
+                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryReviews">0</span>
                             </div>
                         </div>
 
@@ -1749,7 +1751,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Conflicts</span>
-                                <span class="text-xl font-bold leading-none" id="summaryConflicts">0</span>
+                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryConflicts">0</span>
                             </div>
                         </div>
 
@@ -1760,7 +1762,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Differences</span>
-                                <span class="text-xl font-bold leading-none" id="summaryDifferences">0</span>
+                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryDifferences">0</span>
                             </div>
                         </div>
 
@@ -1771,7 +1773,7 @@ def create_gui_app(
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-xs text-muted-foreground uppercase font-semibold">Identical</span>
-                                <span class="text-xl font-bold leading-none" id="summaryIdentical">0</span>
+                                <span class="text-base font-medium text-gray-900 dark:text-gray-100 leading-none" id="summaryIdentical">0</span>
                             </div>
                         </div>
                     </div>
@@ -2061,7 +2063,7 @@ def create_gui_app(
             
             const chart = document.getElementById('attentionPieChart');
             if (chart) {
-                chart.style.background = `conic-gradient(hsl(var(--primary)) ${percentage}%, hsl(var(--muted)) 0)`;
+                chart.style.background = `conic-gradient(#f87171 ${percentage}%, hsl(var(--muted)) 0)`;
             }
         }
 
@@ -3115,6 +3117,34 @@ def create_gui_app(
     return app
 
 
+def gui_app_factory():
+    """Factory function for uvicorn reload"""
+    state_file = os.environ.get("BIBTEX_VALIDATOR_GUI_STATE")
+    if not state_file or not os.path.exists(state_file):
+        # Fallback only (should not happen in normal flow unless run directly without state)
+        print("No state file found. GUI might fail to load data.", file=sys.stderr)
+        # return dummy app to avoid crash loop
+        return FastAPI()
+
+    try:
+        with open(state_file, "rb") as f:
+            state = pickle.load(f)
+
+        validator = BibTeXValidator(
+            bib_file=state["bib_file"],
+            output_file=state["output_file"],
+            update_bib=False,  # dummy
+            delay=1.0,
+        )
+        validator.db = state["db"]
+        results = state["results"]
+
+        return create_gui_app(validator, results)
+    except Exception as e:
+        print(f"Failed to load state: {e}", file=sys.stderr)
+        return FastAPI()
+
+
 def main():
     """Main function"""
     import argparse
@@ -3232,9 +3262,39 @@ Examples:
             print(f"Press Ctrl+C to stop the server")
             print(f"{'=' * 60}\n")
 
-            # Start server
+            # Save state for reload
+            with tempfile.NamedTemporaryFile(
+                mode="wb", delete=False, suffix=".pkl"
+            ) as f:
+                state = {
+                    "bib_file": str(validator.bib_file),
+                    "output_file": str(validator.output_file),
+                    "db": validator.db,
+                    "results": validator.results,
+                }
+                pickle.dump(state, f)
+                state_path = f.name
+
+            os.environ["BIBTEX_VALIDATOR_GUI_STATE"] = state_path
+
+            # Start server with reload
             try:
-                uvicorn.run(app, host="127.0.0.1", port=args.port, log_level="info")
+                # We use factory=True and reload=True
+                # The app string must be importable. Since we are running this script, it should be importable as validate_bibtex
+                # We need to make sure the directory is in python path
+                sys.path.insert(0, os.getcwd())
+
+                print(
+                    "\n[INFO] Live reload enabled. You can edit the script and browser will refresh."
+                )
+                uvicorn.run(
+                    "validate_bibtex:gui_app_factory",
+                    host="127.0.0.1",
+                    port=args.port,
+                    log_level="info",
+                    reload=True,
+                    factory=True,
+                )
             except OSError as e:
                 error_msg = str(e)
                 if (
@@ -3244,20 +3304,15 @@ Examples:
                     print(
                         f"\nError: Port {args.port} is already in use.", file=sys.stderr
                     )
-                    print(
-                        f"Try a different port with: --port <port_number>",
-                        file=sys.stderr,
-                    )
-                    print(
-                        f"Example: python validate_bibtex.py {args.bib_file} --gui --port {args.port + 1}",
-                        file=sys.stderr,
-                    )
                     return 1
                 else:
                     print(f"\nError starting server: {error_msg}", file=sys.stderr)
                     return 1
             except KeyboardInterrupt:
                 print("\n\nServer stopped.")
+                # Cleanup
+                if os.path.exists(state_path):
+                    os.unlink(state_path)
                 return 0
             except Exception:
                 print(
@@ -3267,7 +3322,15 @@ Examples:
                 import traceback
 
                 traceback.print_exc()
+                if os.path.exists(state_path):
+                    os.unlink(state_path)
                 return 1
+            finally:
+                if os.path.exists(state_path):
+                    try:
+                        os.unlink(state_path)
+                    except:
+                        pass
 
         # CLI mode (existing behavior)
         # Generate report
