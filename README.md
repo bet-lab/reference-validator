@@ -17,16 +17,49 @@ A powerful tool to validate and enrich BibTeX entries using metadata from **Cros
 - **Interactive GUI**: A web-based interface to review, accept, or reject changes visually.
 - **Report Generation**: Produces detailed validation reports.
 
-## Installation
+## Usage Scenarios
 
-This project is managed with [uv](https://github.com/astral-sh/uv).
+This project is managed with [uv](https://github.com/astral-sh/uv). Ensure you have **uv** installed on your system.
 
-### Prerequisites
+### Scenario 1: Integration into a LaTeX Writing Environment
 
-- [uv](https://github.com/astral-sh/uv) installed on your system.
-- Python 3.8 or higher.
+If you are writing a paper and simply want to use this tool to validate your `references.bib` file without modifying the tool's code:
 
-### Setup
+#### Option A: Install as a Standalone Tool (Recommended)
+
+This installs the tool in an isolated environment, making `bibtex-validator` available globally or for your specific project without polluting dependencies.
+
+```bash
+# Install directly from the repository
+uv tool install git+https://github.com/bet-lab/reference-validator.git
+```
+
+**Run validation:**
+
+```bash
+bibtex-validator references.bib --gui
+```
+
+#### Option B: Add to Your Project Dependencies
+
+If you are already managing your paper's environment (e.g., for processing scripts) using `uv` or a `pyproject.toml`:
+
+```bash
+# Add to your existing project
+uv add git+https://github.com/bet-lab/reference-validator.git
+```
+
+**Run validation:**
+
+```bash
+uv run bibtex-validator references.bib
+```
+
+---
+
+### Scenario 2: Development & Contribution
+
+If you want to modify the source code, fix bugs, or add new features:
 
 1. **Clone the repository**:
 
@@ -36,14 +69,19 @@ This project is managed with [uv](https://github.com/astral-sh/uv).
    ```
 
 2. **Sync dependencies**:
-   Run `uv sync` to create a virtual environment and install all dependencies defined in `pyproject.toml`.
+   Run `uv sync` to create a virtual environment and install all dependencies (including dev dependencies).
+
    ```bash
    uv sync
    ```
 
-## Usage
+3. **Run from source**:
+   You can run the script using `uv run`.
+   ```bash
+   uv run bibtex-validator references_test.bib --gui
+   ```
 
-You can run the validator using `uv run`.
+## Detailed Usage
 
 ### Command Line Interface (CLI)
 
@@ -51,6 +89,10 @@ You can run the validator using `uv run`.
 Checks the file and prints a report without making changes.
 
 ```bash
+# If installed via Scenario 1 (Option A)
+bibtex-validator references.bib
+
+# If installed via Scenario 1 (Option B) or Scenario 2
 uv run bibtex-validator references.bib
 ```
 
@@ -88,7 +130,7 @@ Once running, the web interface will automatically launch in your default browse
 - **Red/Yellow Highlights**: Conflicts or missing data.
 - **Actions**: Accept or reject changes per field or per entry.
 
-### Options
+### CLI Options
 
 ```text
 usage: validate_bibtex.py [-h] [-o OUTPUT] [-r REPORT] [-u] [-d DELAY] [--no-progress] [--gui] [--workers WORKERS] [--port PORT] bib_file
