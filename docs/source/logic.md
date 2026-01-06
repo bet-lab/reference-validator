@@ -79,7 +79,7 @@ When multiple sources provide data for the same field, the validator applies a s
 
 Each field in an entry is assigned a validation status based on the comparison:
 
-- :gui-status-identical:`Identical`: Perfect match (after normalization).
-- :gui-status-different:`Different`: Content matches but format differs slightly (>70% similarity).
-- :gui-status-conflict:`Conflict`: Significant content mismatch (e.g., completely different year).
-- :gui-status-review:`Review`: Using data from API to fill a missing local field.
+- <span class="badge badge-status-identical">Identical</span>: Perfect match (after normalization).
+- <span class="badge badge-status-different">Different</span>: Content matches but format differs slightly (>70% similarity).
+- <span class="badge badge-status-conflict">Conflict</span>: Significant content mismatch (e.g., completely different year).
+- <span class="badge badge-status-review">Review</span>: Using data from API to fill a missing local field.
