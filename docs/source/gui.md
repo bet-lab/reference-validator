@@ -52,38 +52,61 @@ A circular progress indicator (pie chart) shows the percentage of entries requir
 The chart is accompanied by a counter displaying: `{entries_with_issues}/{total_entries} ({percentage}%)`
 
 **Visual Representation:**
+
+```{card} Attention Pie Chart Example
+:class: sd-shadow-sm
+
+<div style="display: flex; align-items: center; gap: 1rem;">
+    <div class="pie-chart" style="--pie-percentage: 30%;"></div>
+    <div>
+        <strong>Need Attention</strong><br>
+        15/50 (30%)
+    </div>
+</div>
 ```
-    ┌─────────────────┐
-    │   [Pie Chart]   │  Need Attention
-    │   🔴 30%        │  15/50 (30%)
-    │   ⚪ 70%        │
-    └─────────────────┘
-```
+
+The pie chart uses CSS `conic-gradient` to visualize the percentage of entries requiring attention.
 
 ### Statistics Icons
 
 Four icon-based statistics provide quick insights:
 
 #### Reviews (Blue) - `edit-3` Icon
-- **Color**: Blue background (`bg-blue-100`, `text-blue-600`)
+```{bdg-primary}`Review
+:class: badge-status-review
+```
+
+- **Color**: Blue background with dark blue text
 - **Meaning**: Fields where the API found new data to update incomplete or missing fields
 - **Action Required**: Review and decide whether to accept the suggested values
 - **Example**: A missing `journal` field that can be filled from Crossref
 
 #### Conflicts (Orange) - `alert-triangle` Icon
-- **Color**: Orange background (`bg-orange-100`, `text-orange-600`)
+```{bdg-primary}`Conflict
+:class: badge-status-conflict
+```
+
+- **Color**: Orange background with dark orange text
 - **Meaning**: Critical mismatches between your local BibTeX data and API data
 - **Action Required**: Manual review required - these are significant differences (e.g., Year 2023 vs 2024, different author names)
 - **Example**: Your BibTeX has `year = {2023}` but Crossref reports `2024`
 
 #### Differences (Yellow) - `git-compare` Icon
-- **Color**: Yellow background (`bg-yellow-100`, `text-yellow-600`)
+```{bdg-primary}`Different
+:class: badge-status-different
+```
+
+- **Color**: Yellow background with dark yellow text
 - **Meaning**: Minor styling or formatting differences that don't affect content
 - **Action Required**: Optional review - usually safe to accept
 - **Example**: `"Journal Name"` vs `Journal Name` (quotes difference), or `Smith, John` vs `Smith, J.` (abbreviation)
 
 #### Identical (Green) - `check-circle` Icon
-- **Color**: Green background (`bg-green-100`, `text-green-600`)
+```{bdg-primary}`Identical
+:class: badge-status-identical
+```
+
+- **Color**: Green background with dark green text
 - **Meaning**: Fields that perfectly match the authoritative source
 - **Action Required**: None - these fields are already correct
 - **Example**: Title, author, and year all match exactly
@@ -104,11 +127,41 @@ A global action button that allows batch-approval of all non-conflicting changes
 3. After 3 seconds: Button reverts to normal state if not confirmed
 
 **Visual States:**
+
+```{grid} 1 2
+:gutter: 2
+
+```{card} Normal State
+:class: sd-shadow-sm
+
+```{bdg-primary}`Accept All Entries
+:class: badge-status-review
 ```
-Normal:    [✓ Accept All Entries] (Blue)
-Confirm:   [⚠ Click again to confirm] (Red)
-Processing: [⟳ Processing...] (Disabled)
-Success:   [✓✓ All Accepted] (Green, 3 seconds)
+```
+
+```{card} Confirm State
+:class: sd-shadow-sm
+
+```{bdg-primary}`Click again to confirm
+:class: badge-destructive
+```
+```
+
+```{card} Processing State
+:class: sd-shadow-sm
+
+```{bdg-primary}`Processing...
+:class: badge-muted
+```
+```
+
+```{card} Success State
+:class: sd-shadow-sm
+
+```{bdg-primary}`All Accepted
+:class: badge-status-accepted
+```
+```
 ```
 
 ## 2. Navigation Toolbar
@@ -127,13 +180,23 @@ A searchable dropdown menu listing all BibTeX entries by their citation keys.
 - **Keyboard Accessible**: Can be navigated with arrow keys
 
 **Example Display:**
-```
+
+```{dropdown} Entry Selector Example
 Select an entry...
-├─ smith2023 (+2, !1)
-├─ jones2024
-├─ brown2022 (+1)
-└─ ...
+
+smith2023 (+2, !1)
+:   Entry with 2 updates and 1 conflict
+
+jones2024
+:   Entry with no issues
+
+brown2022 (+1)
+:   Entry with 1 update
 ```
+
+The dropdown shows badge indicators next to entries that need attention:
+- `+N`: Number of fields with suggested updates
+- `!N`: Number of fields with conflicts
 
 ### Previous/Next Buttons
 
@@ -201,14 +264,20 @@ Source badges indicate which online database provided the metadata for each fiel
 ### Source Types and Colors
 
 #### Crossref (Blue)
-- **Color**: `bg-blue-100 text-blue-800 border-blue-200`
+```{bdg-primary}`CROSSREF
+:class: badge-source-crossref
+```
+
 - **Primary Use**: DOI metadata - the main authoritative source for published papers
 - **Coverage**: Journals, conferences, books with DOIs
 - **Priority**: Highest (1st in priority order)
 - **Reliability**: Very high - official DOI registry
 
 #### arXiv (Red)
-- **Color**: `bg-red-100 text-red-800 border-red-200`
+```{bdg-primary}`ARXIV
+:class: badge-source-arxiv
+```
+
 - **Primary Use**: Preprint papers and arXiv-hosted publications
 - **Coverage**: Preprints, e-prints, arXiv papers
 - **Priority**: High (3rd in priority order)
@@ -216,7 +285,10 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Special Features**: Automatically adds `eprint` and `eprinttype` fields
 
 #### Semantic Scholar (Indigo)
-- **Color**: `bg-indigo-100 text-indigo-800 border-indigo-200`
+```{bdg-primary}`SEMANTIC SCHOLAR
+:class: badge-source-semantic-scholar
+```
+
 - **Primary Use**: AI-powered academic search and metadata
 - **Coverage**: Broad academic literature
 - **Priority**: Lower (7th in priority order)
@@ -224,7 +296,10 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Best For**: Finding missing DOIs or metadata for obscure papers
 
 #### DBLP (Purple)
-- **Color**: `bg-purple-100 text-purple-800 border-purple-200`
+```{bdg-primary}`DBLP
+:class: badge-source-dblp
+```
+
 - **Primary Use**: Computer science bibliography
 - **Coverage**: CS conferences, journals, and proceedings
 - **Priority**: Medium (4th in priority order)
@@ -232,7 +307,10 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Best For**: Computer science papers, especially conference proceedings
 
 #### PubMed (Sky Blue)
-- **Color**: `bg-sky-100 text-sky-800 border-sky-200`
+```{bdg-primary}`PUBMED
+:class: badge-source-pubmed
+```
+
 - **Primary Use**: Biomedical and life sciences literature
 - **Coverage**: Medical journals, biomedical research
 - **Priority**: Medium (6th in priority order)
@@ -240,7 +318,10 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Best For**: Papers with PMID identifiers
 
 #### Zenodo (Gray)
-- **Color**: `bg-gray-100 text-gray-800 border-gray-200`
+```{bdg-primary}`ZENODO
+:class: badge-source-zenodo
+```
+
 - **Primary Use**: General repository for research outputs
 - **Coverage**: Datasets, software, reports, presentations
 - **Priority**: High (2nd in priority order, after Crossref)
@@ -248,7 +329,10 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Special Features**: Often includes GitHub repository links
 
 #### DataCite (Gray)
-- **Color**: `bg-gray-100 text-gray-800 border-gray-200`
+```{bdg-primary}`DATACITE
+:class: badge-source-datacite
+```
+
 - **Primary Use**: Data DOI registry
 - **Coverage**: Research datasets, data publications
 - **Priority**: Medium (5th in priority order)
@@ -256,7 +340,10 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Best For**: Datasets and data publications
 
 #### OpenAlex (Gray)
-- **Color**: `bg-gray-100 text-gray-800 border-gray-200`
+```{bdg-primary}`OPENALEX
+:class: badge-source-openalex
+```
+
 - **Primary Use**: Comprehensive academic metadata
 - **Coverage**: Very broad - aggregates multiple sources
 - **Priority**: Lowest (8th in priority order)
@@ -288,18 +375,37 @@ For fields with multiple available sources, a dropdown menu allows you to choose
 - **Auto-Update**: Changing the source immediately updates the displayed API value
 
 **Visual Example:**
+
+```{card} Source Selection Dropdown
+:class: sd-shadow-sm
+
+```{bdg-primary}`CROSSREF
+:class: badge-source-crossref
 ```
-┌─────────────────────┐
-│ CROSSREF        ▼   │  ← Click to expand
-└─────────────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ CROSSREF        ✓   │  ← Currently selected
-│ ARXIV               │
-│ SEMANTIC SCHOLAR    │
-│ DBLP                │
-└─────────────────────┘
+: Click to expand
+
+When expanded, shows available sources:
+
+```{grid} 1
+:gutter: 1
+
+```{bdg-primary}`CROSSREF ✓
+:class: badge-source-crossref
+```
+: Currently selected
+
+```{bdg-primary}`ARXIV
+:class: badge-source-arxiv
+```
+
+```{bdg-primary}`SEMANTIC SCHOLAR
+:class: badge-source-semantic-scholar
+```
+
+```{bdg-primary}`DBLP
+:class: badge-source-dblp
+```
+```
 ```
 
 **When Available:**
