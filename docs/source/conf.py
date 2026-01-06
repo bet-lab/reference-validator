@@ -4,8 +4,8 @@ from datetime import date
 
 # -- Project information -----------------------------------------------------
 project = "BibTeX Validator"
-copyright = f"{date.today().year}, Wonjun"
-author = "Wonjun"
+copyright = f"{date.today().year}, Wonjun Choi"
+author = "Wonjun Choi"
 release = "1.0.0"
 
 # -- General configuration ---------------------------------------------------
