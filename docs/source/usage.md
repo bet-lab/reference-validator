@@ -2,51 +2,98 @@
 
 The **BibTeX Validator** can be run in two modes: Command Line Interface (CLI) and Graphical User Interface (GUI).
 
-## Command Line Interface (CLI)
+## Quick Start
 
-Run the validator on a BibTeX file from the terminal.
+::::{grid} 1 1 2 2
+:gutter: 2
 
-```bash
-uv run bibtex-validator <bib_file> [options]
-```
-
-### Arguments
-
-- `bib_file`: Path to the input BibTeX file (Required).
-- `--output`, `-o`: Path to the output file (Optional). If not provided, it may overwrite the input based on configuration or default behavior.
-- `--gui`: Launch the web-based interactive GUI.
-- `--update`: Automatically update the BibTeX file with fetched data (CLI mode).
-- `--no-cache`: key to ignore cache if implemented.
-
-### Examples
-
-**Validate and print results:**
+:::{grid-item-card} :octicon:`terminal` CLI Mode
+Run in your terminal to validate a file.
 
 ```bash
 uv run bibtex-validator references.bib
 ```
 
-**Validate and update the file:**
+:::
 
-```bash
-uv run bibtex-validator references.bib --update
-```
-
-## Graphical User Interface (GUI)
-
-The GUI provides a powerful way to review changes and resolve conflicts manually.
+:::{grid-item-card} :octicon:`browser` GUI Mode
+Launch the visualization dashboard.
 
 ```bash
 uv run bibtex-validator references.bib --gui
 ```
 
-This will launch a local server and open your default web browser (usually at `http://127.0.0.1:8000`).
+:::
+::::
 
-### GUI Features
+## Detailed Usage
 
-- **Validation Table**: Shows all entries.
-  - **Green header**: Entry is valid.
-  - **Red header**: Entry has missing fields or invalid IDs.
-- **Diff View**: Compare the current BibTeX value with the value fetched from APIs.
-- **Source Selection**: Choose which source (Crossref, arXiv, Scholar, etc.) to use for each field.
-- **Bulk Actions**: Accept all changes or apply updates entry-by-entry.
+.. tab-set::
+
+    .. tab-item:: CLI
+        :sync: cli
+
+        Run the validator from the command line for automation or quick checks.
+
+        **Basic Syntax**
+
+        ```bash
+        uv run bibtex-validator <bib_file> [options]
+        ```
+
+        **Arguments**
+
+        - `bib_file`: Path to the input BibTeX file (Required).
+        - `--output`, `-o`: Path to the output file (Optional).
+        - `--update`: Automatically update the BibTeX file with fetched data.
+        - `--no-cache`: Force fresh data fetch (ignore cache).
+
+        **Examples**
+
+        Validate and print results:
+        ```bash
+        uv run bibtex-validator references.bib
+        ```
+
+        Validate and update the file in-place:
+        ```bash
+        uv run bibtex-validator references.bib --update
+        ```
+
+    .. tab-item:: GUI
+        :sync: gui
+
+        The **GUI** is the recommended way to interactively review changes and resolve conflicts.
+
+        **Launch Command**
+
+        ```bash
+        uv run bibtex-validator references.bib --gui
+        ```
+
+        **Key Features**
+
+        - **Validation Table**: Color-coded rows (Green = Valid, Red = Issues).
+        - **Diff View**: Side-by-side comparison of local vs. fetched data.
+        - **Interactive Badges**: Click badges to toggle sources for specific fields.
+        - **Bulk Actions**:
+            - :gui-btn-accept:`Accept All`: Apply all suggested changes.
+            - :gui-btn-reject:`Reject All`: Discard all changes.
+
+    .. tab-item:: Python
+        :sync: python
+
+        You can import the validator class into your own Python scripts.
+
+        ```python
+        from validate_bibtex import BibTeXValidator
+
+        # Initialize
+        validator = BibTeXValidator(
+            bib_file="references.bib",
+            output_file="references_updated.bib"
+        )
+
+        # Run validation
+        validator.validate_file()
+        ```

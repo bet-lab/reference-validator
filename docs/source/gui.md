@@ -21,15 +21,15 @@ flowchart TD
     A[GUI Interface] --> B[Validation Summary]
     A --> C[Navigation Toolbar]
     A --> D[Comparison Table]
-    
+
     B --> B1[Attention Pie Chart]
     B --> B2[Statistics Icons]
     B --> B3[Accept All Entries Button]
-    
+
     C --> C1[Previous/Next Buttons]
     C --> C2[Entry Selector Dropdown]
     C --> C3[Entry Stats Display]
-    
+
     D --> D1[Field Column]
     D --> D2[BibTeX Value Column]
     D --> D3[API Value Column]
@@ -46,6 +46,7 @@ The Validation Summary appears at the top of the dashboard and provides a global
 ### Attention Pie Chart
 
 A circular progress indicator (pie chart) shows the percentage of entries requiring attention. The chart uses a conic gradient where:
+
 - **Red portion**: Percentage of entries with issues (updates, conflicts, or differences)
 - **Gray portion**: Percentage of entries that are fully validated
 
@@ -54,7 +55,7 @@ The chart is accompanied by a counter displaying: `{entries_with_issues}/{total_
 **Visual Representation:**
 
 ```{card} Attention Pie Chart Example
-:class: sd-shadow-sm
+:class-card: sd-shadow-sm
 
 <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem;">
     <div class="pie-chart" style="--pie-percentage: 30%; flex-shrink: 0;"></div>
@@ -71,44 +72,36 @@ The pie chart uses CSS `conic-gradient` to visualize the percentage of entries r
 
 Four icon-based statistics provide quick insights:
 
-#### Reviews (Blue) - `edit-3` Icon
+#### Reviews (Blue) - <i data-lucide="edit-3" class="h-4 w-4 inline-block align-text-bottom"></i> Review Icon
 
-```{bdg-primary}`Review
-:class: badge-status-review
-```
+:gui-status-review:`Review`
 
 - **Color**: Blue background with dark blue text
 - **Meaning**: Fields where the API found new data to update incomplete or missing fields
 - **Action Required**: Review and decide whether to accept the suggested values
 - **Example**: A missing `journal` field that can be filled from Crossref
 
-#### Conflicts (Orange) - `alert-triangle` Icon
+#### Conflicts (Orange) - <i data-lucide="alert-triangle" class="h-4 w-4 inline-block align-text-bottom"></i> Conflict Icon
 
-```{bdg-primary}`Conflict
-:class: badge-status-conflict
-```
+:gui-status-conflict:`Conflict`
 
 - **Color**: Orange background with dark orange text
 - **Meaning**: Critical mismatches between your local BibTeX data and API data
 - **Action Required**: Manual review required - these are significant differences (e.g., Year 2023 vs 2024, different author names)
 - **Example**: Your BibTeX has `year = {2023}` but Crossref reports `2024`
 
-#### Differences (Yellow) - `git-compare` Icon
+#### Differences (Yellow) - <i data-lucide="git-compare" class="h-4 w-4 inline-block align-text-bottom"></i> Difference Icon
 
-```{bdg-primary}`Different
-:class: badge-status-different
-```
+:gui-status-different:`Different`
 
 - **Color**: Yellow background with dark yellow text
 - **Meaning**: Minor styling or formatting differences that don't affect content
 - **Action Required**: Optional review - usually safe to accept
 - **Example**: `"Journal Name"` vs `Journal Name` (quotes difference), or `Smith, John` vs `Smith, J.` (abbreviation)
 
-#### Identical (Green) - `check-circle` Icon
+#### Identical (Green) - <i data-lucide="check-circle" class="h-4 w-4 inline-block align-text-bottom"></i> Identical Icon
 
-```{bdg-primary}`Identical
-:class: badge-status-identical
-```
+:gui-status-identical:`Identical`
 
 - **Color**: Green background with dark green text
 - **Meaning**: Fields that perfectly match the authoritative source
@@ -120,45 +113,50 @@ Four icon-based statistics provide quick insights:
 A global action button that allows batch-approval of all non-conflicting changes across all entries.
 
 **Features:**
+
 - **Two-step confirmation**: Click once to activate confirmation mode, click again within 3 seconds to confirm
 - **Visual feedback**: Button changes to red/destructive style during confirmation
 - **Scope**: Accepts all `fields_updated` and `fields_different` for all entries
 - **Safety**: Conflicts are included in "Accept All" - use with caution
 
 **Workflow:**
+
 1. First click: Button text changes to "Click again to confirm" (red background)
 2. Second click (within 3 seconds): Processes all changes
 3. After 3 seconds: Button reverts to normal state if not confirmed
 
 **Visual States:**
 
-```{grid} 1 2
+````{grid} 1 1 2 2
 :gutter: 2
 
-```{card} Normal State
-:class: sd-shadow-sm
+```{grid-item-card} Normal State
+:class-card: sd-shadow-sm
 
-<span class="badge badge-status-review">Accept All Entries</span>
+<div class="badge badge-status-review inline-flex items-center gap-2">
+    <i data-lucide="check-circle-2" class="h-4 w-4"></i> Accept All Entries
+</div>
 ```
 
-```{card} Confirm State
-:class: sd-shadow-sm
+```{grid-item-card} Confirm State
+:class-card: sd-shadow-sm
 
 <span class="badge badge-destructive">Click again to confirm</span>
 ```
 
-```{card} Processing State
-:class: sd-shadow-sm
+```{grid-item-card} Processing State
+:class-card: sd-shadow-sm
 
 <span class="badge badge-muted">Processing...</span>
 ```
 
-```{card} Success State
-:class: sd-shadow-sm
+```{grid-item-card} Success State
+:class-card: sd-shadow-sm
 
 <span class="badge badge-status-accepted">All Accepted</span>
 ```
-```
+
+````
 
 ## 2. Navigation Toolbar
 
@@ -169,6 +167,7 @@ The navigation toolbar, located below the summary, provides controls for moving 
 A searchable dropdown menu listing all BibTeX entries by their citation keys.
 
 **Features:**
+
 - **Badge Indicators**: Entries with issues show badges next to their keys:
   - `+N`: Number of fields with suggested updates
   - `!N`: Number of fields with conflicts
@@ -191,6 +190,7 @@ brown2022 (+1)
 ```
 
 The dropdown shows badge indicators next to entries that need attention:
+
 - `+N`: Number of fields with suggested updates
 - `!N`: Number of fields with conflicts
 
@@ -208,10 +208,19 @@ Sequential navigation controls for moving through entries one at a time.
 An inline summary showing the current entry's validation status:
 
 ```
-📝 2 reviews | ⚠ 1 conflicts | 🔄 0 differences | ✓ 5 identical
+<div class="flex gap-2 text-sm items-center text-muted-foreground whitespace-nowrap">
+    <span class="flex items-center gap-1"><i data-lucide="file-edit" class="h-3 w-3 text-blue-600"></i> 2 reviews</span>
+    <span class="separator text-border opacity-50">|</span>
+    <span class="flex items-center gap-1"><i data-lucide="alert-triangle" class="h-3 w-3 text-orange-600"></i> 1 conflicts</span>
+    <span class="separator text-border opacity-50">|</span>
+    <span class="flex items-center gap-1"><i data-lucide="git-compare" class="h-3 w-3 text-yellow-600"></i> 0 differences</span>
+    <span class="separator text-border opacity-50">|</span>
+    <span class="flex items-center gap-1"><i data-lucide="check-circle" class="h-3 w-3 text-green-600"></i> 5 identical</span>
+</div>
 ```
 
 The stats update dynamically as you navigate between entries and reflect:
+
 - Number of fields in each category (updates, conflicts, differences, identical)
 - Color-coded icons matching the global summary
 
@@ -221,21 +230,22 @@ The GUI supports comprehensive keyboard navigation for efficient workflow. All s
 
 ### Navigation Shortcuts
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `←` (Left Arrow) | Previous Entry | Navigate to the previous entry in the list |
-| `↑` (Up Arrow) | Previous Entry | Same as Left Arrow - navigate backward |
-| `→` (Right Arrow) | Next Entry | Navigate to the next entry in the list |
-| `↓` (Down Arrow) | Next Entry | Same as Right Arrow - navigate forward |
-| `Home` | First Entry | Jump to the first entry in the bibliography |
-| `End` | Last Entry | Jump to the last entry in the bibliography |
-| `PageUp` | Jump Back 10 | Move backward by 10 entries (or to first if less than 10 remain) |
-| `PageDown` | Jump Forward 10 | Move forward by 10 entries (or to last if less than 10 remain) |
-| `Esc` | Clear Selection | Deselect current entry and show empty state |
+| Key               | Action          | Description                                                      |
+| ----------------- | --------------- | ---------------------------------------------------------------- |
+| `←` (Left Arrow)  | Previous Entry  | Navigate to the previous entry in the list                       |
+| `↑` (Up Arrow)    | Previous Entry  | Same as Left Arrow - navigate backward                           |
+| `→` (Right Arrow) | Next Entry      | Navigate to the next entry in the list                           |
+| `↓` (Down Arrow)  | Next Entry      | Same as Right Arrow - navigate forward                           |
+| `Home`            | First Entry     | Jump to the first entry in the bibliography                      |
+| `End`             | Last Entry      | Jump to the last entry in the bibliography                       |
+| `PageUp`          | Jump Back 10    | Move backward by 10 entries (or to first if less than 10 remain) |
+| `PageDown`        | Jump Forward 10 | Move forward by 10 entries (or to last if less than 10 remain)   |
+| `Esc`             | Clear Selection | Deselect current entry and show empty state                      |
 
 ### Keyboard Navigation Logic
 
 - **Input Field Detection**: Shortcuts are automatically disabled when:
+
   - An `<input>` field has focus
   - A `<textarea>` has focus
   - A `<select>` dropdown is open
@@ -261,9 +271,7 @@ Source badges indicate which online database provided the metadata for each fiel
 
 #### Crossref (Blue)
 
-```{bdg-primary}`CROSSREF
-:class: badge-source-crossref
-```
+:gui-badge-crossref:`CROSSREF`
 
 - **Primary Use**: DOI metadata - the main authoritative source for published papers
 - **Coverage**: Journals, conferences, books with DOIs
@@ -272,9 +280,7 @@ Source badges indicate which online database provided the metadata for each fiel
 
 #### arXiv (Red)
 
-```{bdg-primary}`ARXIV
-:class: badge-source-arxiv
-```
+:gui-badge-arxiv:`ARXIV`
 
 - **Primary Use**: Preprint papers and arXiv-hosted publications
 - **Coverage**: Preprints, e-prints, arXiv papers
@@ -284,9 +290,7 @@ Source badges indicate which online database provided the metadata for each fiel
 
 #### Semantic Scholar (Indigo)
 
-```{bdg-primary}`SEMANTIC SCHOLAR
-:class: badge-source-semantic-scholar
-```
+:gui-badge-scholar:`SEMANTIC SCHOLAR`
 
 - **Primary Use**: AI-powered academic search and metadata
 - **Coverage**: Broad academic literature
@@ -296,9 +300,7 @@ Source badges indicate which online database provided the metadata for each fiel
 
 #### DBLP (Purple)
 
-```{bdg-primary}`DBLP
-:class: badge-source-dblp
-```
+:gui-badge-dblp:`DBLP`
 
 - **Primary Use**: Computer science bibliography
 - **Coverage**: CS conferences, journals, and proceedings
@@ -308,9 +310,7 @@ Source badges indicate which online database provided the metadata for each fiel
 
 #### PubMed (Sky Blue)
 
-```{bdg-primary}`PUBMED
-:class: badge-source-pubmed
-```
+:gui-badge-pubmed:`PUBMED`
 
 - **Primary Use**: Biomedical and life sciences literature
 - **Coverage**: Medical journals, biomedical research
@@ -320,9 +320,7 @@ Source badges indicate which online database provided the metadata for each fiel
 
 #### Zenodo (Gray)
 
-```{bdg-primary}`ZENODO
-:class: badge-source-zenodo
-```
+:gui-badge-zenodo:`ZENODO`
 
 - **Primary Use**: General repository for research outputs
 - **Coverage**: Datasets, software, reports, presentations
@@ -332,9 +330,7 @@ Source badges indicate which online database provided the metadata for each fiel
 
 #### DataCite (Gray)
 
-```{bdg-primary}`DATACITE
-:class: badge-source-datacite
-```
+:gui-badge-datacite:`DATACITE`
 
 - **Primary Use**: Data DOI registry
 - **Coverage**: Research datasets, data publications
@@ -344,9 +340,7 @@ Source badges indicate which online database provided the metadata for each fiel
 
 #### OpenAlex (Gray)
 
-```{bdg-primary}`OPENALEX
-:class: badge-source-openalex
-```
+:gui-badge-openalex:`OPENALEX`
 
 - **Primary Use**: Comprehensive academic metadata
 - **Coverage**: Very broad - aggregates multiple sources
@@ -372,6 +366,7 @@ When multiple sources provide data for the same field, the validator uses this p
 For fields with multiple available sources, a dropdown menu allows you to choose which source's value to use.
 
 **Features:**
+
 - **Visual Indicator**: Badge shows a chevron-down icon when multiple sources are available
 - **Click to Expand**: Clicking the badge opens a dropdown menu
 - **Source List**: Shows all sources that have data for this field
@@ -380,29 +375,44 @@ For fields with multiple available sources, a dropdown menu allows you to choose
 
 **Visual Example:**
 
-```{card} Source Selection Dropdown
-:class: sd-shadow-sm
+`````{card} Source Selection Dropdown
+:class-card: sd-shadow-sm
 
-<span class="badge badge-source-crossref">CROSSREF</span>
+<div class="badge badge-source-crossref">
+    CROSSREF <i data-lucide="chevron-down" class="ml-1 h-3 w-3"></i>
+</div>
 : Click to expand
 
 When expanded, shows available sources:
 
-```{grid} 1
+````{grid} 1
 :gutter: 1
 
-<span class="badge badge-source-crossref">CROSSREF ✓</span>
-: Currently selected
+```{grid-item}
 
-<span class="badge badge-source-arxiv">ARXIV</span>
-
-<span class="badge badge-source-semantic-scholar">SEMANTIC SCHOLAR</span>
-
-<span class="badge badge-source-dblp">DBLP</span>
+:gui-badge-crossref:`CROSSREF ✓`
+Currently selected
 ```
+
+```{grid-item}
+
+:gui-badge-arxiv:`ARXIV`
 ```
+
+```{grid-item}
+
+:gui-badge-scholar:`SEMANTIC SCHOLAR`
+```
+
+```{grid-item}
+
+:gui-badge-dblp:`DBLP`
+```
+````
+`````
 
 **When Available:**
+
 - Multiple sources found data for the same field
 - Field is not in "identical" or "bibtex-only" status
 - At least 2 sources have different values
@@ -415,9 +425,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 #### Review (Blue)
 
-```{bdg-primary}`Review
-:class: badge-status-review
-```
+:gui-status-review:`Review`
 
 - **Label**: "Review"
 - **Meaning**: New data is available from the API for a field that is missing or empty in your BibTeX
@@ -427,9 +435,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 #### Conflict (Orange)
 
-```{bdg-primary}`Conflict
-:class: badge-status-conflict
-```
+:gui-status-conflict:`Conflict`
 
 - **Label**: "Conflict"
 - **Meaning**: Significant mismatch between your BibTeX value and API value
@@ -442,9 +448,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 #### Different (Yellow)
 
-```{bdg-primary}`Different
-:class: badge-status-different
-```
+:gui-status-different:`Different`
 
 - **Label**: "Different"
 - **Meaning**: Minor formatting or stylistic differences (similarity > 70%)
@@ -457,9 +461,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 #### Identical (Green)
 
-```{bdg-primary}`Identical
-:class: badge-status-identical
-```
+:gui-status-identical:`Identical`
 
 - **Label**: "Identical"
 - **Meaning**: Your BibTeX value perfectly matches the API value (after normalization)
@@ -469,9 +471,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 #### Accepted (Emerald)
 
-```{bdg-primary}`Accepted
-:class: badge-status-accepted
-```
+:gui-btn-accept:`Accepted`
 
 - **Label**: "Accepted"
 - **Meaning**: You have accepted the API value for this field
@@ -481,9 +481,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 #### Rejected (Red)
 
-```{bdg-primary}`Rejected
-:class: badge-status-rejected
-```
+:gui-btn-reject:`Rejected`
 
 - **Label**: "Rejected"
 - **Meaning**: You have explicitly rejected the API suggestion
@@ -493,9 +491,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 #### Local Only (Gray)
 
-```{bdg-primary}`Local Only
-:class: badge-status-local-only
-```
+<span class="badge badge-status-local-only">Local Only</span>
 
 - **Label**: "Local Only"
 - **Meaning**: Field exists in your BibTeX but no API source provides data for it
@@ -505,23 +501,51 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 ### Status Badge Visual Reference
 
-```{grid} 3
+````{grid} 3
 :gutter: 2
 
-<span class="badge badge-status-review">Review</span>
+```{grid-item}
 
-<span class="badge badge-status-conflict">Conflict</span>
+:gui-status-review:`Review`
 
-<span class="badge badge-status-different">Different</span>
+```
 
-<span class="badge badge-status-identical">Identical</span>
+```{grid-item}
 
-<span class="badge badge-status-accepted">Accepted</span>
+:gui-status-conflict:`Conflict`
 
-<span class="badge badge-status-rejected">Rejected</span>
+```
+
+```{grid-item}
+
+:gui-status-different:`Different`
+
+```
+
+```{grid-item}
+
+:gui-status-identical:`Identical`
+
+```
+
+```{grid-item}
+
+:gui-btn-accept:`Accepted`
+
+```
+
+```{grid-item}
+
+:gui-btn-reject:`Rejected`
+
+```
+
+```{grid-item}
 
 <span class="badge badge-status-local-only">Local Only</span>
+
 ```
+````
 
 ## 6. Comparison Table
 
@@ -541,6 +565,7 @@ The table has six columns:
 ### Row Display Logic
 
 Rows are displayed in priority order:
+
 1. **Updates** (Review status) - New data available
 2. **Conflicts** - Significant mismatches
 3. **Differences** - Minor differences
@@ -620,7 +645,6 @@ At the bottom of the table, bulk action buttons appear when there are actionable
 - **Reject All**: Discard all suggestions for the current entry
   - Restores all fields to their original BibTeX values
   - Removes fields that were added (if they were originally missing)
-  
 - **Accept All**: Apply all suggested changes for the current entry
   - Accepts all updates, conflicts, and differences
   - Uses the selected source for each field (or default priority if none selected)
@@ -629,12 +653,18 @@ At the bottom of the table, bulk action buttons appear when there are actionable
 **Visual Layout:**
 
 ```{card} Footer Actions
-:class: sd-shadow-sm
+:class-card: sd-shadow-sm
 
 Apply to all fields in this entry:
 
-<span class="badge badge-destructive">Reject All</span>
-<span class="badge badge-status-review">Accept All</span>
+<div class="flex items-center gap-2">
+    <button class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors border border-input shadow-sm hover:bg-destructive hover:text-destructive-foreground h-8 w-20 bg-background">
+        Reject All
+    </button>
+    <button class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-8 w-20">
+        Accept All
+    </button>
+</div>
 ```
 
 ## 7. Action Buttons
@@ -642,6 +672,7 @@ Apply to all fields in this entry:
 ### Field-Level Actions
 
 #### Accept Button
+
 - **Function**: Applies the API value to your BibTeX entry
 - **Process**:
   1. Sends request to backend with field name and selected source
@@ -656,6 +687,7 @@ Apply to all fields in this entry:
 - **Source Handling**: Uses the selected source (from dropdown) if available, otherwise uses default priority
 
 #### Reject Button
+
 - **Function**: Keeps your original BibTeX value, rejecting the API suggestion
 - **Process**:
   1. Sends request to backend with field name
@@ -672,6 +704,7 @@ Apply to all fields in this entry:
 ### Entry-Level Actions
 
 #### Accept All (Footer)
+
 - **Function**: Accepts all suggested changes for the current entry
 - **Scope**: All fields with status "Review", "Conflict", or "Different"
 - **Process**:
@@ -684,6 +717,7 @@ Apply to all fields in this entry:
 - **Safety**: Only processes fields that haven't been accepted/rejected yet
 
 #### Reject All (Footer)
+
 - **Function**: Rejects all suggestions for the current entry
 - **Scope**: All fields with status "Review", "Conflict", or "Different"
 - **Process**:
@@ -697,6 +731,7 @@ Apply to all fields in this entry:
 ### Global Actions
 
 #### Accept All Entries
+
 - **Function**: Batch-approves all non-conflicting changes across all entries
 - **Scope**: All entries in the bibliography
 - **Confirmation**: Two-step process (click twice within 3 seconds)
@@ -723,20 +758,20 @@ graph TD
     D -->|Yes| E[arXiv API]
     D -->|No| F{Has Title?}
     F -->|Yes| G[Search APIs]
-    
+
     C --> H{Zenodo DOI?}
     H -->|Yes| I[Zenodo API]
     H -->|No| J[DataCite API]
-    
+
     G --> K[DBLP Search]
     G --> L[Semantic Scholar]
     G --> M[OpenAlex Search]
-    
+
     D -->|Yes| N[Extract DOI from arXiv]
     N --> C
-    
+
     O[Has PMID?] --> P[PubMed API]
-    
+
     Q[Recursive Enrichment] --> R{Found New DOI?}
     R -->|Yes| C
     R -->|No| S{Found New arXiv ID?}
@@ -746,6 +781,7 @@ graph TD
 ### Source Details
 
 #### Crossref
+
 - **API Endpoint**: `https://api.crossref.org/works/{doi}`
 - **Primary Use**: DOI metadata for published papers
 - **Data Quality**: Very high - official DOI registry
@@ -755,6 +791,7 @@ graph TD
 - **Fields Provided**: title, author, journal, year, volume, pages, DOI, ISSN, entrytype
 
 #### arXiv
+
 - **API Endpoint**: `http://export.arxiv.org/api/query?id_list={arxiv_id}`
 - **Primary Use**: Preprint papers
 - **Data Quality**: High - official arXiv metadata
@@ -765,6 +802,7 @@ graph TD
 - **Special**: Automatically adds `eprint` and `eprinttype="arxiv"` fields
 
 #### Zenodo
+
 - **API Endpoint**: `https://zenodo.org/api/records/{record_id}`
 - **Primary Use**: General research repository
 - **Data Quality**: High - official repository
@@ -774,6 +812,7 @@ graph TD
 - **Special**: Extracts GitHub repository URLs from related identifiers
 
 #### DataCite
+
 - **API Endpoint**: `https://api.datacite.org/dois/{doi}`
 - **Primary Use**: Data DOI registry
 - **Data Quality**: High - official data DOI registry
@@ -782,6 +821,7 @@ graph TD
 - **Fields Provided**: title, creators, year, publisher, DOI, type, URL
 
 #### DBLP
+
 - **API Endpoint**: `https://dblp.org/search/publ/api`
 - **Primary Use**: Computer science bibliography
 - **Data Quality**: Very high for CS publications
@@ -791,6 +831,7 @@ graph TD
 - **Fields Provided**: title, authors, year, venue (journal/conference)
 
 #### Semantic Scholar
+
 - **API Endpoint**: `https://api.semanticscholar.org/graph/v1/paper/search`
 - **Primary Use**: AI-powered academic search
 - **Data Quality**: Good - AI-enhanced but may have errors
@@ -800,6 +841,7 @@ graph TD
 - **Fields Provided**: title, authors, year, venue, DOI, externalIds
 
 #### PubMed
+
 - **API Endpoint**: `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi`
 - **Primary Use**: Biomedical and life sciences literature
 - **Data Quality**: Very high for medical publications
@@ -809,6 +851,7 @@ graph TD
 - **Fields Provided**: title, authors, year, journal
 
 #### OpenAlex
+
 - **API Endpoint**: `https://api.openalex.org/works`
 - **Primary Use**: Comprehensive academic metadata
 - **Data Quality**: Good - comprehensive but may be less precise
@@ -838,12 +881,14 @@ When multiple sources provide data for the same field, the validator uses this p
 The validator implements a "recursive enrichment" feature that discovers missing identifiers:
 
 **Process:**
+
 1. If an entry has no DOI, search secondary sources (DBLP, Semantic Scholar, OpenAlex, PubMed)
 2. If a DOI is found in secondary sources, fetch from Crossref/Zenodo/DataCite
 3. If an entry has no arXiv ID, check if secondary sources mention one
 4. If an arXiv ID is found, fetch from arXiv API
 
 **Example Flow:**
+
 ```
 Entry (no DOI, has title)
   → Search DBLP → Found DOI: 10.1234/example
@@ -867,7 +912,7 @@ sequenceDiagram
     participant Backend
     participant APIs as External APIs
     participant File as BibTeX File
-    
+
     User->>GUI: Launch --gui
     GUI->>Backend: Load BibTeX file
     Backend->>Backend: Parse entries
@@ -877,12 +922,12 @@ sequenceDiagram
     Backend->>Backend: Generate ValidationResult
     Backend-->>GUI: Return results
     GUI->>GUI: Display summary & entries
-    
+
     User->>GUI: Select entry
     GUI->>Backend: GET /api/entry/{key}
     Backend-->>GUI: Return comparison data
     GUI->>GUI: Render comparison table
-    
+
     User->>GUI: Accept field
     GUI->>Backend: POST /api/save
     Backend->>Backend: Update entry
@@ -894,25 +939,30 @@ sequenceDiagram
 ### Typical Workflow
 
 1. **Launch and Validate**
+
    - Run `bibtex-validator references.bib --gui`
    - Validator fetches metadata from all available sources
    - Summary displays global statistics
 
 2. **Review Summary**
+
    - Check attention pie chart for overall status
    - Review statistics (reviews, conflicts, differences, identical)
    - Decide whether to use "Accept All Entries" or review individually
 
 3. **Navigate Entries**
+
    - Use dropdown, arrow keys, or Previous/Next buttons
    - Focus on entries with badges (`+N`, `!N`)
 
 4. **Review Comparison Table**
+
    - Check each field's status badge
    - Compare BibTeX vs API values
    - Select source if multiple available (dropdown)
 
 5. **Make Decisions**
+
    - **Accept**: Click Accept button for individual fields
    - **Reject**: Click Reject button to keep original
    - **Bulk Actions**: Use Accept All / Reject All for entry
@@ -958,3 +1008,7 @@ sequenceDiagram
 The BibTeX Validator GUI provides a powerful, intuitive interface for reviewing and enriching your bibliography. By understanding the badge systems, keyboard shortcuts, and data sources, you can efficiently validate large bibliographies while maintaining control over every change.
 
 For command-line usage, see the [Usage Guide](usage.md). For details on the validation logic, see the [Internal Logic](logic.md) documentation.
+
+```
+
+```
