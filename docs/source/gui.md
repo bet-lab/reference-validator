@@ -72,6 +72,7 @@ The pie chart uses CSS `conic-gradient` to visualize the percentage of entries r
 Four icon-based statistics provide quick insights:
 
 #### Reviews (Blue) - `edit-3` Icon
+
 ```{bdg-primary}`Review
 :class: badge-status-review
 ```
@@ -82,6 +83,7 @@ Four icon-based statistics provide quick insights:
 - **Example**: A missing `journal` field that can be filled from Crossref
 
 #### Conflicts (Orange) - `alert-triangle` Icon
+
 ```{bdg-primary}`Conflict
 :class: badge-status-conflict
 ```
@@ -92,6 +94,7 @@ Four icon-based statistics provide quick insights:
 - **Example**: Your BibTeX has `year = {2023}` but Crossref reports `2024`
 
 #### Differences (Yellow) - `git-compare` Icon
+
 ```{bdg-primary}`Different
 :class: badge-status-different
 ```
@@ -102,6 +105,7 @@ Four icon-based statistics provide quick insights:
 - **Example**: `"Journal Name"` vs `Journal Name` (quotes difference), or `Smith, John` vs `Smith, J.` (abbreviation)
 
 #### Identical (Green) - `check-circle` Icon
+
 ```{bdg-primary}`Identical
 :class: badge-status-identical
 ```
@@ -134,33 +138,25 @@ A global action button that allows batch-approval of all non-conflicting changes
 ```{card} Normal State
 :class: sd-shadow-sm
 
-```{bdg-primary}`Accept All Entries
-:class: badge-status-review
-```
+<span class="badge badge-status-review">Accept All Entries</span>
 ```
 
 ```{card} Confirm State
 :class: sd-shadow-sm
 
-```{bdg-primary}`Click again to confirm
-:class: badge-destructive
-```
+<span class="badge badge-destructive">Click again to confirm</span>
 ```
 
 ```{card} Processing State
 :class: sd-shadow-sm
 
-```{bdg-primary}`Processing...
-:class: badge-muted
-```
+<span class="badge badge-muted">Processing...</span>
 ```
 
 ```{card} Success State
 :class: sd-shadow-sm
 
-```{bdg-primary}`All Accepted
-:class: badge-status-accepted
-```
+<span class="badge badge-status-accepted">All Accepted</span>
 ```
 ```
 
@@ -264,6 +260,7 @@ Source badges indicate which online database provided the metadata for each fiel
 ### Source Types and Colors
 
 #### Crossref (Blue)
+
 ```{bdg-primary}`CROSSREF
 :class: badge-source-crossref
 ```
@@ -274,6 +271,7 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Reliability**: Very high - official DOI registry
 
 #### arXiv (Red)
+
 ```{bdg-primary}`ARXIV
 :class: badge-source-arxiv
 ```
@@ -285,6 +283,7 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Special Features**: Automatically adds `eprint` and `eprinttype` fields
 
 #### Semantic Scholar (Indigo)
+
 ```{bdg-primary}`SEMANTIC SCHOLAR
 :class: badge-source-semantic-scholar
 ```
@@ -296,6 +295,7 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Best For**: Finding missing DOIs or metadata for obscure papers
 
 #### DBLP (Purple)
+
 ```{bdg-primary}`DBLP
 :class: badge-source-dblp
 ```
@@ -307,6 +307,7 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Best For**: Computer science papers, especially conference proceedings
 
 #### PubMed (Sky Blue)
+
 ```{bdg-primary}`PUBMED
 :class: badge-source-pubmed
 ```
@@ -318,6 +319,7 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Best For**: Papers with PMID identifiers
 
 #### Zenodo (Gray)
+
 ```{bdg-primary}`ZENODO
 :class: badge-source-zenodo
 ```
@@ -329,6 +331,7 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Special Features**: Often includes GitHub repository links
 
 #### DataCite (Gray)
+
 ```{bdg-primary}`DATACITE
 :class: badge-source-datacite
 ```
@@ -340,6 +343,7 @@ Source badges indicate which online database provided the metadata for each fiel
 - **Best For**: Datasets and data publications
 
 #### OpenAlex (Gray)
+
 ```{bdg-primary}`OPENALEX
 :class: badge-source-openalex
 ```
@@ -379,9 +383,7 @@ For fields with multiple available sources, a dropdown menu allows you to choose
 ```{card} Source Selection Dropdown
 :class: sd-shadow-sm
 
-```{bdg-primary}`CROSSREF
-:class: badge-source-crossref
-```
+<span class="badge badge-source-crossref">CROSSREF</span>
 : Click to expand
 
 When expanded, shows available sources:
@@ -389,22 +391,14 @@ When expanded, shows available sources:
 ```{grid} 1
 :gutter: 1
 
-```{bdg-primary}`CROSSREF ✓
-:class: badge-source-crossref
-```
+<span class="badge badge-source-crossref">CROSSREF ✓</span>
 : Currently selected
 
-```{bdg-primary}`ARXIV
-:class: badge-source-arxiv
-```
+<span class="badge badge-source-arxiv">ARXIV</span>
 
-```{bdg-primary}`SEMANTIC SCHOLAR
-:class: badge-source-semantic-scholar
-```
+<span class="badge badge-source-semantic-scholar">SEMANTIC SCHOLAR</span>
 
-```{bdg-primary}`DBLP
-:class: badge-source-dblp
-```
+<span class="badge badge-source-dblp">DBLP</span>
 ```
 ```
 
@@ -420,6 +414,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 ### Status Types
 
 #### Review (Blue)
+
 ```{bdg-primary}`Review
 :class: badge-status-review
 ```
@@ -431,6 +426,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 - **Example**: Your entry has no `journal` field, but Crossref provides it
 
 #### Conflict (Orange)
+
 ```{bdg-primary}`Conflict
 :class: badge-status-conflict
 ```
@@ -445,6 +441,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
   - Journal name differences: `J. ACM` vs `Journal of the ACM`
 
 #### Different (Yellow)
+
 ```{bdg-primary}`Different
 :class: badge-status-different
 ```
@@ -459,6 +456,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
   - Case differences: `Journal Name` vs `journal name`
 
 #### Identical (Green)
+
 ```{bdg-primary}`Identical
 :class: badge-status-identical
 ```
@@ -470,6 +468,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 - **Note**: These fields are verified and correct
 
 #### Accepted (Emerald)
+
 ```{bdg-primary}`Accepted
 :class: badge-status-accepted
 ```
@@ -481,6 +480,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 - **Transient**: Status appears for ~2 seconds after acceptance
 
 #### Rejected (Red)
+
 ```{bdg-primary}`Rejected
 :class: badge-status-rejected
 ```
@@ -492,6 +492,7 @@ Status badges indicate the relationship between your BibTeX value and the API va
 - **Transient**: Status appears for ~2 seconds after rejection
 
 #### Local Only (Gray)
+
 ```{bdg-primary}`Local Only
 :class: badge-status-local-only
 ```
@@ -507,33 +508,19 @@ Status badges indicate the relationship between your BibTeX value and the API va
 ```{grid} 3
 :gutter: 2
 
-```{bdg-primary}`Review
-:class: badge-status-review
-```
+<span class="badge badge-status-review">Review</span>
 
-```{bdg-primary}`Conflict
-:class: badge-status-conflict
-```
+<span class="badge badge-status-conflict">Conflict</span>
 
-```{bdg-primary}`Different
-:class: badge-status-different
-```
+<span class="badge badge-status-different">Different</span>
 
-```{bdg-primary}`Identical
-:class: badge-status-identical
-```
+<span class="badge badge-status-identical">Identical</span>
 
-```{bdg-primary}`Accepted
-:class: badge-status-accepted
-```
+<span class="badge badge-status-accepted">Accepted</span>
 
-```{bdg-primary}`Rejected
-:class: badge-status-rejected
-```
+<span class="badge badge-status-rejected">Rejected</span>
 
-```{bdg-primary}`Local Only
-:class: badge-status-local-only
-```
+<span class="badge badge-status-local-only">Local Only</span>
 ```
 
 ## 6. Comparison Table
@@ -575,9 +562,7 @@ Rows are displayed in priority order:
 * - title
   - ~~(empty)~~
   - **New Title from API**
-  - ```{bdg-primary}`Review
-:class: badge-status-review
-```
+  - <span class="badge badge-status-review">Review</span>
 ```
 
 #### Conflict/Different Rows
@@ -593,9 +578,7 @@ Rows are displayed in priority order:
 * - year
   - 2023
   - 2024
-  - ```{bdg-primary}`Conflict
-:class: badge-status-conflict
-```
+  - <span class="badge badge-status-conflict">Conflict</span>
 ```
 
 #### Identical Rows
@@ -611,9 +594,7 @@ Rows are displayed in priority order:
 * - title
   - Matching Title
   - Matching Title
-  - ```{bdg-primary}`Identical
-:class: badge-status-identical
-```
+  - <span class="badge badge-status-identical">Identical</span>
 ```
 
 #### Local Only Rows
@@ -629,9 +610,7 @@ Rows are displayed in priority order:
 * - note
   - Custom note text
   - *-*
-  - ```{bdg-primary}`Local Only
-:class: badge-status-local-only
-```
+  - <span class="badge badge-status-local-only">Local Only</span>
 ```
 
 ### Footer Actions
@@ -654,12 +633,8 @@ At the bottom of the table, bulk action buttons appear when there are actionable
 
 Apply to all fields in this entry:
 
-```{bdg-primary}`Reject All
-:class: badge-destructive
-```
-```{bdg-primary}`Accept All
-:class: badge-status-review
-```
+<span class="badge badge-destructive">Reject All</span>
+<span class="badge badge-status-review">Accept All</span>
 ```
 
 ## 7. Action Buttons
