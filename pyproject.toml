@@ -26,5 +26,10 @@ dev = [
     "myst-parser>=3.0.1",
     "shibuya>=2025.5.30",
     "sphinx>=7.1.2",
+    "sphinx-copybutton>=0.5.0",
+    "sphinx-design>=0.5.0",
+    "sphinx-tabs>=3.4.0",
+    "sphinxext-opengraph>=0.8.0",
+    "sphinx-sitemap>=2.6.0",
 ]
 
