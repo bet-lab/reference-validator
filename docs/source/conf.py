@@ -46,9 +46,7 @@ html_css_files = [
 ]
 
 html_js_files = [
-    # Lucide Icons library
-    "https://unpkg.com/lucide@latest",
-    # Custom JavaScript for icons initialization and interactive features
+    # Custom JavaScript for interactive features
     "custom.js",
 ]
 

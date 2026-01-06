@@ -5,37 +5,7 @@
 (function() {
     'use strict';
 
-    // Initialize Lucide Icons when DOM is ready
-    function initLucideIcons() {
-        if (typeof lucide !== 'undefined') {
-            // Initialize all icons in the document
-            lucide.createIcons();
-            
-            // Re-initialize icons after dynamic content loads
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.addedNodes.length) {
-                        // Check if any added nodes contain icon elements
-                        mutation.addedNodes.forEach(function(node) {
-                            if (node.nodeType === 1) { // Element node
-                                if (node.querySelector && node.querySelector('[data-lucide]')) {
-                                    lucide.createIcons({ root: node });
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-
-            // Observe the document body for changes
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        } else {
-            console.warn('Lucide Icons library not loaded. Icons may not display correctly.');
-        }
-    }
+    // Lucide Icons initialization removed - using Sphinx Design Octicons instead
 
     // Dark mode toggle integration with Shibuya theme
     function initDarkModeToggle() {
@@ -120,7 +90,7 @@
     function init() {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
-                initLucideIcons();
+                // initLucideIcons(); // Removed
                 initDarkModeToggle();
                 enhanceCodeBlocks();
                 initSmoothScroll();
@@ -129,7 +99,7 @@
             });
         } else {
             // DOM already loaded
-            initLucideIcons();
+            // initLucideIcons(); // Removed
             initDarkModeToggle();
             enhanceCodeBlocks();
             initSmoothScroll();
@@ -143,7 +113,7 @@
 
     // Export functions for potential external use
     window.bibtexValidatorDocs = {
-        initLucideIcons: initLucideIcons,
+        // initLucideIcons: initLucideIcons, // Removed
         updateThemeVariables: updateThemeVariables
     };
 })();

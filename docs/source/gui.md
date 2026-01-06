@@ -72,7 +72,7 @@ The pie chart uses CSS `conic-gradient` to visualize the percentage of entries r
 
 Four icon-based statistics provide quick insights:
 
-#### Reviews (Blue) - <i data-lucide="edit-3" class="h-4 w-4 inline-block align-text-bottom"></i> Review Icon
+#### Reviews (Blue) - :octicon:`pencil` Review Icon
 
 :gui-status-review:`Review`
 
@@ -81,7 +81,7 @@ Four icon-based statistics provide quick insights:
 - **Action Required**: Review and decide whether to accept the suggested values
 - **Example**: A missing `journal` field that can be filled from Crossref
 
-#### Conflicts (Orange) - <i data-lucide="alert-triangle" class="h-4 w-4 inline-block align-text-bottom"></i> Conflict Icon
+#### Conflicts (Orange) - :octicon:`alert` Conflict Icon
 
 :gui-status-conflict:`Conflict`
 
@@ -90,7 +90,7 @@ Four icon-based statistics provide quick insights:
 - **Action Required**: Manual review required - these are significant differences (e.g., Year 2023 vs 2024, different author names)
 - **Example**: Your BibTeX has `year = {2023}` but Crossref reports `2024`
 
-#### Differences (Yellow) - <i data-lucide="git-compare" class="h-4 w-4 inline-block align-text-bottom"></i> Difference Icon
+#### Differences (Yellow) - :octicon:`diff` Difference Icon
 
 :gui-status-different:`Different`
 
@@ -99,7 +99,7 @@ Four icon-based statistics provide quick insights:
 - **Action Required**: Optional review - usually safe to accept
 - **Example**: `"Journal Name"` vs `Journal Name` (quotes difference), or `Smith, John` vs `Smith, J.` (abbreviation)
 
-#### Identical (Green) - <i data-lucide="check-circle" class="h-4 w-4 inline-block align-text-bottom"></i> Identical Icon
+#### Identical (Green) - :octicon:`check-circle` Identical Icon
 
 :gui-status-identical:`Identical`
 
@@ -134,7 +134,7 @@ A global action button that allows batch-approval of all non-conflicting changes
 :class-card: sd-shadow-sm
 
 <div class="badge badge-status-review inline-flex items-center gap-2">
-    <i data-lucide="check-circle-2" class="h-4 w-4"></i> Accept All Entries
+    :octicon:`check-circle` Accept All Entries
 </div>
 ```
 
@@ -208,15 +208,19 @@ Sequential navigation controls for moving through entries one at a time.
 An inline summary showing the current entry's validation status:
 
 ```
+
+```
+
 <div class="flex gap-2 text-sm items-center text-muted-foreground whitespace-nowrap">
-    <span class="flex items-center gap-1"><i data-lucide="file-edit" class="h-3 w-3 text-blue-600"></i> 2 reviews</span>
+    <span class="flex items-center gap-1"> :octicon:`pencil` 2 reviews</span>
     <span class="separator text-border opacity-50">|</span>
-    <span class="flex items-center gap-1"><i data-lucide="alert-triangle" class="h-3 w-3 text-orange-600"></i> 1 conflicts</span>
+    <span class="flex items-center gap-1"> :octicon:`alert` 1 conflicts</span>
     <span class="separator text-border opacity-50">|</span>
-    <span class="flex items-center gap-1"><i data-lucide="git-compare" class="h-3 w-3 text-yellow-600"></i> 0 differences</span>
+    <span class="flex items-center gap-1"> :octicon:`diff` 0 differences</span>
     <span class="separator text-border opacity-50">|</span>
-    <span class="flex items-center gap-1"><i data-lucide="check-circle" class="h-3 w-3 text-green-600"></i> 5 identical</span>
+    <span class="flex items-center gap-1"> :octicon:`check-circle` 5 identical</span>
 </div>
+```
 ```
 
 The stats update dynamically as you navigate between entries and reflect:
@@ -379,7 +383,7 @@ For fields with multiple available sources, a dropdown menu allows you to choose
 :class-card: sd-shadow-sm
 
 <div class="badge badge-source-crossref">
-    CROSSREF <i data-lucide="chevron-down" class="ml-1 h-3 w-3"></i>
+    CROSSREF :octicon:`chevron-down`
 </div>
 : Click to expand
 
