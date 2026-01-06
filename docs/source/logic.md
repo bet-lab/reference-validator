@@ -1,50 +1,85 @@
 # Internal Logic
 
-Understanding how **BibTeX Validator** processes your entries.
+Detailed explanation of how **BibTeX Validator** processes, validates, and enriches your bibliography.
 
-## Validation Process
+## Validation Pipeline
 
-The validation pipeline follows a parallel execution model to ensure speed and efficiency.
+The core validation logic follows a multi-stage pipeline designed for accuracy and performance.
+
+### Process Flow
 
 ```{mermaid}
-graph TD
-    A[Start: Input BibTeX] --> B{Parse Entries}
-    B --> C[Validate Entry]
+flowchart LR
+    Start([Input BibTeX]) --> Parser{Parse}
+    Parser --> |Entries| Validator[Validation Engine]
 
-    subgraph Parallel Execution
-        C --> D{Check Identifiers}
-        D -->|Has DOI| E[Fetch Crossref]
-        D -->|Has arXiv ID| F[Fetch arXiv]
-        D -->|Missing IDs| G[Search Google Scholar / DBLP]
+    subgraph Parallel[Parallel Processing]
+        direction TB
+        Validator --> Check{Check IDs}
+        Check --> |Has DOI| Crossref[Fetch Crossref]
+        Check --> |Has arXiv| Arxiv[Fetch arXiv]
+        Check --> |Missing| Scholar[Search Backup\nScholar/DBLP]
 
-        E --> H[Normalize Data]
-        F --> H
-        G --> H
+        Crossref --> Normalize[Normalize Data]
+        Arxiv --> Normalize
+        Scholar --> Normalize
     end
 
-    H --> I{Compare with Local}
-    I -->|Match| J[Status: Identical]
-    I -->|Mismatch| K[Status: Conflict/Different]
-    I -->|New Data| L[Status: Review (Update)]
+    Normalize --> Compare{Comparison}
+    Compare --> |Match| StatusOk[Identical]
+    Compare --> |Mismatch| StatusDiff[Conflict]
+    Compare --> |New Data| StatusNew[Review]
 
-    J --> M[End: Result]
-    K --> M
-    L --> M
+    StatusOk --> Result([Final Result])
+    StatusDiff --> Result
+    StatusNew --> Result
+
+    classDef distinct fill:#f9f,stroke:#333,stroke-width:2px;
+    class Start,Result distinct;
 ```
 
-### Steps Explained
+### 1. Parsing & Identification
 
-1.  **Parsing**: The input BibTeX file is parsed using `bibtexparser`.
-2.  **DOI Normalization**: DOIs are stripped of prefixes (e.g., `doi:`) to ensure consistent querying.
-3.  **API Querying**:
-    - **Crossref**: Primary source for DOI-based metadata.
-    - **arXiv**: Used if an arXiv ID is found or inferred.
-    - **Backup Searches**: OpenAlex, DBLP, and Semantic Scholar are queried for additional coverage or if primary IDs are missing.
-4.  **Comparison**: The script compares the fetched metadata with your local entry to determine the status (Identical, Conflict, etc.).
+The validator first parses the `.bib` file using `bibtexparser`. It then identifies the best strategy for each entry:
 
-## Speed Optimization
+- **DOI-based**: Preferred method. Queries Crossref directly.
+- **arXiv-based**: Used for preprints. Queries arXiv API.
+- **Search-based**: Fallback. Uses Title/Author to search Google Scholar or DBLP.
 
-To speed up processing, especially for large files, the validator uses `concurrent.futures`.
+### 2. Parallel Execution
 
-- **ThreadPoolExecutor**: Utilized to fetch data for multiple entries concurrently.
-- **Rate Limiting**: A `delay` parameter ensures we don't hit API rate limits (default: 1.0s between requests for the same provider).
+To ensure high performance even with large bibliographies, the validator processes entries in parallel.
+
+- **Concurrency**: Uses `ThreadPoolExecutor` to handle multiple network requests simultaneously.
+- **Rate Limiting**: Implements smart delays to respect API rate limits (e.g., Crossref, arXiv).
+
+### 3. Smart Comparison
+
+The system doesn't just check for equality; it understands bibliographic data:
+
+- **Normalization**: Standardizes author names, page numbers, and dates before comparing.
+- **Fuzzy Matching**: Detects minor stylistic differences (like "Journal of..." vs "J. of...") to avoid false alarms.
+
+## Data Source Priority
+
+When multiple sources provide data for the same field, the validator applies a strict priority system to ensure the highest quality metadata.
+
+| Priority | Source               | Best For                          |
+| :------- | :------------------- | :-------------------------------- |
+| **1**    | **Crossref**         | Official DOIs, Publisher Metadata |
+| **2**    | **Zenodo**           | Datasets, Software, GitHub Links  |
+| **3**    | **arXiv**            | Preprints, Latest Revisions       |
+| **4**    | **DBLP**             | Computer Science Conferences      |
+| **5**    | **DataCite**         | General Datasets                  |
+| **6**    | **PubMed**           | Biomedical Literature             |
+| **7**    | **Semantic Scholar** | AI-driven discovery, Missing DOIs |
+| **8**    | **OpenAlex**         | General Backup                    |
+
+## Scoring & Status Logic
+
+Each field in an entry is assigned a validation status based on the comparison:
+
+- :gui-status-identical:`Identical`: Perfect match (after normalization).
+- :gui-status-different:`Different`: Content matches but format differs slightly (>70% similarity).
+- :gui-status-conflict:`Conflict`: Significant content mismatch (e.g., completely different year).
+- :gui-status-review:`Review`: Using data from API to fill a missing local field.
