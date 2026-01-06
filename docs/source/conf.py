@@ -15,6 +15,11 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
+    "sphinx_copybutton",
+    "sphinx_design",
+    "sphinx_tabs.tabs",
+    "sphinxext.opengraph",
+    "sphinx_sitemap",
 ]
 
 templates_path = ["_templates"]
@@ -36,3 +41,13 @@ myst_heading_anchors = 3
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here.
 sys.path.insert(0, os.path.abspath("../.."))
+
+# -- Options for sphinx-sitemap ----------------------------------------------
+# GitHub Pages URL 설정 (실제 배포 URL로 변경 필요)
+html_baseurl = "https://wonjun.github.io/reference-validator/"
+
+# -- Options for sphinxext-opengraph -----------------------------------------
+# Open Graph 메타 태그 설정
+ogp_site_url = html_baseurl
+ogp_description = "BibTeX validator and enricher using Crossref, arXiv, and Google Scholar APIs"
+ogp_image = f"{html_baseurl}_static/og-image.png"  # 선택사항: 이미지가 있는 경우
