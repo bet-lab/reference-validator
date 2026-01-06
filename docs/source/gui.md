@@ -56,16 +56,16 @@ The chart is accompanied by a counter displaying: `{entries_with_issues}/{total_
 ```{card} Attention Pie Chart Example
 :class: sd-shadow-sm
 
-<div style="display: flex; align-items: center; gap: 1rem;">
-    <div class="pie-chart" style="--pie-percentage: 30%;"></div>
+<div style="display: flex; align-items: center; gap: 1rem; padding: 1rem;">
+    <div class="pie-chart" style="--pie-percentage: 30%; flex-shrink: 0;"></div>
     <div>
         <strong>Need Attention</strong><br>
-        15/50 (30%)
+        <span style="font-size: 1.25rem; font-weight: 600;">15/50 (30%)</span>
     </div>
 </div>
 ```
 
-The pie chart uses CSS `conic-gradient` to visualize the percentage of entries requiring attention.
+The pie chart uses CSS `conic-gradient` to visualize the percentage of entries requiring attention. The red portion represents entries with issues, while the gray portion represents fully validated entries.
 
 ### Statistics Icons
 
@@ -420,7 +420,10 @@ Status badges indicate the relationship between your BibTeX value and the API va
 ### Status Types
 
 #### Review (Blue)
-- **Color**: `bg-blue-100 text-blue-800 border-blue-200`
+```{bdg-primary}`Review
+:class: badge-status-review
+```
+
 - **Label**: "Review"
 - **Meaning**: New data is available from the API for a field that is missing or empty in your BibTeX
 - **Action**: Review the suggested value and accept if appropriate
@@ -428,7 +431,10 @@ Status badges indicate the relationship between your BibTeX value and the API va
 - **Example**: Your entry has no `journal` field, but Crossref provides it
 
 #### Conflict (Orange)
-- **Color**: `bg-orange-100 text-orange-800 border-orange-200`
+```{bdg-primary}`Conflict
+:class: badge-status-conflict
+```
+
 - **Label**: "Conflict"
 - **Meaning**: Significant mismatch between your BibTeX value and API value
 - **Action**: **Manual review required** - these are important differences
@@ -439,7 +445,10 @@ Status badges indicate the relationship between your BibTeX value and the API va
   - Journal name differences: `J. ACM` vs `Journal of the ACM`
 
 #### Different (Yellow)
-- **Color**: `bg-yellow-100 text-yellow-800 border-yellow-200`
+```{bdg-primary}`Different
+:class: badge-status-different
+```
+
 - **Label**: "Different"
 - **Meaning**: Minor formatting or stylistic differences (similarity > 70%)
 - **Action**: Usually safe to accept - these are cosmetic differences
@@ -450,7 +459,10 @@ Status badges indicate the relationship between your BibTeX value and the API va
   - Case differences: `Journal Name` vs `journal name`
 
 #### Identical (Green)
-- **Color**: `bg-green-100 text-green-800 border-green-200`
+```{bdg-primary}`Identical
+:class: badge-status-identical
+```
+
 - **Label**: "Identical"
 - **Meaning**: Your BibTeX value perfectly matches the API value (after normalization)
 - **Action**: **No action needed** - field is already correct
@@ -458,7 +470,10 @@ Status badges indicate the relationship between your BibTeX value and the API va
 - **Note**: These fields are verified and correct
 
 #### Accepted (Emerald)
-- **Color**: `bg-emerald-100 text-emerald-800 border-emerald-200`
+```{bdg-primary}`Accepted
+:class: badge-status-accepted
+```
+
 - **Label**: "Accepted"
 - **Meaning**: You have accepted the API value for this field
 - **Action**: None - change has been applied
@@ -466,7 +481,10 @@ Status badges indicate the relationship between your BibTeX value and the API va
 - **Transient**: Status appears for ~2 seconds after acceptance
 
 #### Rejected (Red)
-- **Color**: `bg-red-100 text-red-800 border-red-200`
+```{bdg-primary}`Rejected
+:class: badge-status-rejected
+```
+
 - **Label**: "Rejected"
 - **Meaning**: You have explicitly rejected the API suggestion
 - **Action**: None - your original value is preserved
@@ -474,7 +492,10 @@ Status badges indicate the relationship between your BibTeX value and the API va
 - **Transient**: Status appears for ~2 seconds after rejection
 
 #### Local Only (Gray)
-- **Color**: `bg-gray-100 text-gray-800 border-gray-200`
+```{bdg-primary}`Local Only
+:class: badge-status-local-only
+```
+
 - **Label**: "Local Only"
 - **Meaning**: Field exists in your BibTeX but no API source provides data for it
 - **Action**: None - keep your local value
@@ -483,21 +504,36 @@ Status badges indicate the relationship between your BibTeX value and the API va
 
 ### Status Badge Visual Reference
 
+```{grid} 3
+:gutter: 2
+
+```{bdg-primary}`Review
+:class: badge-status-review
 ```
-┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│   Review    │  │  Conflict   │  │  Different  │
-│   (Blue)    │  │  (Orange)   │  │  (Yellow)   │
-└─────────────┘  └─────────────┘  └─────────────┘
 
-┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│  Identical  │  │  Accepted   │  │  Rejected   │
-│   (Green)   │  │ (Emerald)   │  │   (Red)     │
-└─────────────┘  └─────────────┘  └─────────────┘
+```{bdg-primary}`Conflict
+:class: badge-status-conflict
+```
 
-┌─────────────┐
-│ Local Only  │
-│   (Gray)    │
-└─────────────┘
+```{bdg-primary}`Different
+:class: badge-status-different
+```
+
+```{bdg-primary}`Identical
+:class: badge-status-identical
+```
+
+```{bdg-primary}`Accepted
+:class: badge-status-accepted
+```
+
+```{bdg-primary}`Rejected
+:class: badge-status-rejected
+```
+
+```{bdg-primary}`Local Only
+:class: badge-status-local-only
+```
 ```
 
 ## 6. Comparison Table
@@ -527,35 +563,75 @@ Rows are displayed in priority order:
 ### Visual Formatting by Status
 
 #### Update Rows
+
+```{list-table} Update Row Example
+:header-rows: 1
+:class: longtable
+
+* - Field
+  - BibTeX Value
+  - API Value
+  - Status
+* - title
+  - ~~(empty)~~
+  - **New Title from API**
+  - ```{bdg-primary}`Review
+:class: badge-status-review
 ```
-Field    | BibTeX Value              | API Value
----------|---------------------------|--------------------------
-title    | (empty)                   | New Title from API
-         | (red, strikethrough)      | (green, bold)
 ```
 
 #### Conflict/Different Rows
+
+```{list-table} Conflict Row Example
+:header-rows: 1
+:class: longtable
+
+* - Field
+  - BibTeX Value
+  - API Value
+  - Status
+* - year
+  - 2023
+  - 2024
+  - ```{bdg-primary}`Conflict
+:class: badge-status-conflict
 ```
-Field    | BibTeX Value              | API Value
----------|---------------------------|--------------------------
-year     | 2023                      | 2024
-         | (normal text)             | (normal text)
 ```
 
 #### Identical Rows
+
+```{list-table} Identical Row Example
+:header-rows: 1
+:class: longtable
+
+* - Field
+  - BibTeX Value
+  - API Value
+  - Status
+* - title
+  - Matching Title
+  - Matching Title
+  - ```{bdg-primary}`Identical
+:class: badge-status-identical
 ```
-Field    | BibTeX Value              | API Value
----------|---------------------------|--------------------------
-title    | Matching Title            | Matching Title
-         | (muted gray)              | (muted gray)
 ```
 
 #### Local Only Rows
+
+```{list-table} Local Only Row Example
+:header-rows: 1
+:class: longtable
+
+* - Field
+  - BibTeX Value
+  - API Value
+  - Status
+* - note
+  - Custom note text
+  - *-*
+  - ```{bdg-primary}`Local Only
+:class: badge-status-local-only
 ```
-Field    | BibTeX Value              | API Value
----------|---------------------------|--------------------------
-note     | Custom note text          | -
-         | (muted gray)              | (italic dash)
 ```
 
 ### Footer Actions
@@ -572,11 +648,18 @@ At the bottom of the table, bulk action buttons appear when there are actionable
   - Immediately saves to the BibTeX file
 
 **Visual Layout:**
+
+```{card} Footer Actions
+:class: sd-shadow-sm
+
+Apply to all fields in this entry:
+
+```{bdg-primary}`Reject All
+:class: badge-destructive
 ```
-┌─────────────────────────────────────────────────────────┐
-│ Apply to all fields in this entry:                      │
-│                    [Reject All]  [Accept All]          │
-└─────────────────────────────────────────────────────────┘
+```{bdg-primary}`Accept All
+:class: badge-status-review
+```
 ```
 
 ## 7. Action Buttons
