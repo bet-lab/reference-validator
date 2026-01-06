@@ -55,7 +55,7 @@ html_js_files = [
 # Shibuya theme options
 html_theme_options = {
     "light_logo": "_static/logo-light.svg",  # Optional: add logo if available
-    "dark_logo": "_static/logo-dark.svg",    # Optional: add logo if available
+    "dark_logo": "_static/logo-dark.svg",  # Optional: add logo if available
     "github_url": "https://github.com/bet-lab/reference-validator",
     "nav_links": [
         {
@@ -84,16 +84,18 @@ html_baseurl = "https://wonjun.github.io/reference-validator/"
 # -- Options for sphinxext-opengraph -----------------------------------------
 # Open Graph 메타 태그 설정
 ogp_site_url = html_baseurl
-ogp_description = "BibTeX validator and enricher using Crossref, arXiv, and Google Scholar APIs"
+ogp_description = (
+    "BibTeX validator and enricher using Crossref, arXiv, and Google Scholar APIs"
+)
 ogp_image = f"{html_baseurl}_static/og-image.png"  # 선택사항: 이미지가 있는 경우
 
 # -- Options for sphinx.ext.intersphinx -------------------------------------
 # 외부 프로젝트 문서와의 상호 참조 설정
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'bibtexparser': ('https://bibtexparser.readthedocs.io/en/stable/', None),
-    'requests': ('https://requests.readthedocs.io/en/stable/', None),
-    'fastapi': ('https://fastapi.tiangolo.com/', None),
+    "python": ("https://docs.python.org/3", None),
+    "bibtexparser": ("https://bibtexparser.readthedocs.io/en/stable/", None),
+    "requests": ("https://requests.readthedocs.io/en/stable/", None),
+    "fastapi": ("https://fastapi.tiangolo.com/", None),
 }
 
 # -- Options for sphinx.ext.todo ---------------------------------------------
@@ -103,10 +105,56 @@ todo_link_only = False
 
 # -- Options for sphinx-last-updated-by-git ----------------------------------
 # Git 기반 마지막 업데이트 시간 표시
-git_last_updated_timezone = 'Asia/Seoul'
+git_last_updated_timezone = "Asia/Seoul"
 
 # -- Options for sphinxcontrib.mermaid ---------------------------------------
 # Mermaid 다이어그램 설정 (MyST와 함께 사용 시)
 # MyST Parser가 Mermaid를 직접 지원하므로 sphinxcontrib-mermaid는 선택사항
 # mermaid_output_format = 'png'  # 또는 'svg'
 # mermaid_cmd = 'mmdc'  # mermaid-cli가 설치된 경우에만 사용
+
+
+# -- Custom Roles Setup (GUI Visuals) ---------------------------------------
+rst_prolog = """
+.. role:: gui-badge-crossref
+   :class: badge badge-source-crossref
+
+.. role:: gui-badge-arxiv
+   :class: badge badge-source-arxiv
+
+.. role:: gui-badge-scholar
+   :class: badge badge-source-semantic-scholar
+
+.. role:: gui-badge-dblp
+   :class: badge badge-source-dblp
+
+.. role:: gui-badge-pubmed
+   :class: badge badge-source-pubmed
+
+.. role:: gui-badge-zenodo
+   :class: badge badge-source-zenodo
+
+.. role:: gui-badge-datacite
+   :class: badge badge-source-datacite
+
+.. role:: gui-badge-openalex
+   :class: badge badge-source-openalex
+
+.. role:: gui-status-review
+   :class: badge badge-status-review
+
+.. role:: gui-status-conflict
+   :class: badge badge-status-conflict
+
+.. role:: gui-status-different
+   :class: badge badge-status-different
+
+.. role:: gui-status-identical
+   :class: badge badge-status-identical
+
+.. role:: gui-btn-accept
+   :class: badge badge-status-accepted
+
+.. role:: gui-btn-reject
+   :class: badge badge-status-rejected
+"""

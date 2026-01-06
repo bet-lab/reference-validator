@@ -134,15 +134,17 @@ Once running, the web interface will automatically launch in your default browse
 <div style="background-color: #f8f9fa; border-left: 4px solid #3b82f6; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
 
 **📊 Validation Summary Dashboard**
+
 - Attention pie chart showing percentage of entries needing review
 - Real-time statistics: <span style="display: inline-block; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; border-radius: 12px; padding: 2px 8px; font-size: 0.85em; font-weight: 600; margin: 2px;">Reviews</span> <span style="display: inline-block; background-color: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; border-radius: 12px; padding: 2px 8px; font-size: 0.85em; font-weight: 600; margin: 2px;">Conflicts</span> <span style="display: inline-block; background-color: #fef9c3; color: #854d0e; border: 1px solid #fde047; border-radius: 12px; padding: 2px 8px; font-size: 0.85em; font-weight: 600; margin: 2px;">Differences</span> <span style="display: inline-block; background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; border-radius: 12px; padding: 2px 8px; font-size: 0.85em; font-weight: 600; margin: 2px;">Identical</span>
-- Global "Accept All Entries" button with two-step confirmation
+- Global Action: <span style="display: inline-block; background-color: #0f172a; color: #f8fafc; border: 1px solid #0f172a; border-radius: 6px; padding: 4px 12px; font-size: 0.85em; font-weight: 500; margin: 2px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">✅ Accept All Entries</span>
 
 </div>
 
 <div style="background-color: #f8f9fa; border-left: 4px solid #10b981; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
 
 **🔍 Field-by-Field Comparison**
+
 - Side-by-side comparison of BibTeX vs API values
 - Color-coded status badges for each field:
   - <span style="display: inline-block; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; border-radius: 12px; padding: 2px 8px; font-size: 0.85em; font-weight: 600; margin: 2px;">Review</span> - New data available
@@ -156,6 +158,7 @@ Once running, the web interface will automatically launch in your default browse
 <div style="background-color: #f8f9fa; border-left: 4px solid #f59e0b; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
 
 **⌨️ Keyboard Navigation**
+
 - Arrow keys (`←` `→`) to navigate between entries
 - `Home`/`End` to jump to first/last entry
 - `PageUp`/`PageDown` to jump by 10 entries
@@ -166,8 +169,9 @@ Once running, the web interface will automatically launch in your default browse
 <div style="background-color: #f8f9fa; border-left: 4px solid #8b5cf6; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
 
 **🎯 Flexible Actions**
+
 - Accept/Reject individual fields
-- Bulk actions: Accept All / Reject All per entry
+- Bulk actions: <span style="display: inline-block; background-color: #ffffff; color: #7f1d1d; border: 1px solid #ef4444; border-radius: 6px; padding: 2px 8px; font-size: 0.8em; font-weight: 500;">Reject All</span> / <span style="display: inline-block; background-color: #0f172a; color: #f8fafc; border: 1px solid #0f172a; border-radius: 6px; padding: 2px 8px; font-size: 0.8em; font-weight: 500;">Accept All</span> per entry
 - Global batch approval for all entries
 - Real-time save with visual feedback
 
@@ -200,23 +204,25 @@ optional arguments:
 
 #### Keyboard Shortcuts (GUI Mode)
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `←` `↑` | Previous Entry | Navigate to previous entry |
-| `→` `↓` | Next Entry | Navigate to next entry |
-| `Home` | First Entry | Jump to first entry |
-| `End` | Last Entry | Jump to last entry |
-| `PageUp` | Jump Back 10 | Move backward by 10 entries |
-| `PageDown` | Jump Forward 10 | Move forward by 10 entries |
-| `Esc` | Clear Selection | Deselect current entry |
+| Key        | Action          | Description                 |
+| ---------- | --------------- | --------------------------- |
+| `←` `↑`    | Previous Entry  | Navigate to previous entry  |
+| `→` `↓`    | Next Entry      | Navigate to next entry      |
+| `Home`     | First Entry     | Jump to first entry         |
+| `End`      | Last Entry      | Jump to last entry          |
+| `PageUp`   | Jump Back 10    | Move backward by 10 entries |
+| `PageDown` | Jump Forward 10 | Move forward by 10 entries  |
+| `Esc`      | Clear Selection | Deselect current entry      |
 
 ## Dependencies
 
 - **📚 Core Libraries**
+
   - `bibtexparser` (>=1.4.0): For reading and writing BibTeX files.
   - `requests` (>=2.31.0): For making API calls to academic databases.
 
 - **🔍 Data Sources**
+
   - `scholarly` (>=1.7.0): For accessing Google Scholar data (optional).
 
 - **🖥️ GUI Components**

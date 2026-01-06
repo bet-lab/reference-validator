@@ -18,6 +18,15 @@ Features
 --------
 
 - **Validation**: Checks if DOIs and arXiv IDs are valid.
-- **Enrichment**: Fetches metadata from Crossref, arXiv, Google Scholar, DBLP, Semantic Scholar, Pubmed, Zenodo, and DataCite.
+- **Enrichment**: Fetches metadata from multiple sources:
+  
+  :gui-badge-crossref:`Crossref` :gui-badge-arxiv:`arXiv` :gui-badge-scholar:`Google Scholar` :gui-badge-dblp:`DBLP` :gui-badge-pubmed:`PubMed` :gui-badge-zenodo:`Zenodo` :gui-badge-datacite:`DataCite` :gui-badge-openalex:`OpenAlex`
+
 - **Correction**: Automatically suggests updates for missing or incorrect fields.
-- **GUI**: Interactive web interface for easy review and selective updates.
+- **Visual Feedback**:
+  
+  :gui-status-review:`Review` :gui-status-conflict:`Conflict` :gui-status-different:`Different` :gui-status-identical:`Identical`
+
+- **Interactive GUI**: A modern web-based interface.
+
+  :gui-btn-accept:`Accept All` :gui-btn-reject:`Reject All`
