@@ -1542,8 +1542,8 @@ class BibTeXValidator:
         # Priority order for DEFAULT values
         priority_order = [
             "crossref",
-            "zenodo",
             "arxiv",
+            "zenodo",
             "dblp",
             "datacite",
             "pubmed",
