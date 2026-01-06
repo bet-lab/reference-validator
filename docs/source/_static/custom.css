@@ -318,7 +318,7 @@ html.dark .badge-status-local-only {
   height: 80px;
   border-radius: 50%;
   display: inline-block;
-  margin: 0.5rem;
+  /* margin: 0.5rem; Removed for better flex alignment */
   position: relative;
 }
 

@@ -54,17 +54,13 @@ The chart is accompanied by a counter displaying: `{entries_with_issues}/{total_
 
 **Visual Representation:**
 
-```{card} Attention Pie Chart Example
-:class-card: sd-shadow-sm
-
-<div style="display: flex; align-items: center; gap: 1rem; padding: 1rem;">
+<div style="display: flex; align-items: center; gap: 1.5rem;">
     <div class="pie-chart" style="--pie-percentage: 30%; flex-shrink: 0;"></div>
-    <div>
-        <strong>Need Attention</strong><br>
-        <span style="font-size: 1.25rem; font-weight: 600;">15/50 (30%)</span>
+    <div style="display: flex; flex-direction: column;">
+        <span style="font-size: 0.875rem; color: var(--muted-foreground); font-weight: 500;">Need Attention</span>
+        <span style="font-size: 1.5rem; font-weight: 700; line-height: 1.2;">15/50 <span style="font-size: 1rem; color: var(--muted-foreground); font-weight: 500;">(30%)</span></span>
     </div>
 </div>
-```
 
 The pie chart uses CSS `conic-gradient` to visualize the percentage of entries requiring attention. The red portion represents entries with issues, while the gray portion represents fully validated entries.
 
@@ -125,37 +121,37 @@ A global action button that allows batch-approval of all non-conflicting changes
 2. Second click (within 3 seconds): Processes all changes
 3. After 3 seconds: Button reverts to normal state if not confirmed
 
-**Visual States:**
+**Interaction Flow:**
 
-````{grid} 1 1 2 2
+````{grid} 1 1 4 4
 :gutter: 2
+:class-container: items-center text-center
 
-```{grid-item-card} Normal State
-:class-card: sd-shadow-sm
+```{grid-item}
+**1. Initial**
 
 <div class="badge badge-status-review inline-flex items-center gap-2">
     :octicon:`check-circle` Accept All Entries
 </div>
 ```
 
-```{grid-item-card} Confirm State
-:class-card: sd-shadow-sm
+```{grid-item}
+**2. Confirm** (Click 1)
 
 <span class="badge badge-destructive">Click again to confirm</span>
 ```
 
-```{grid-item-card} Processing State
-:class-card: sd-shadow-sm
+```{grid-item}
+**3. Processing** (Click 2)
 
 <span class="badge badge-muted">Processing...</span>
 ```
 
-```{grid-item-card} Success State
-:class-card: sd-shadow-sm
+```{grid-item}
+**4. Done**
 
 <span class="badge badge-status-accepted">All Accepted</span>
 ```
-
 ````
 
 ## 2. Navigation Toolbar
