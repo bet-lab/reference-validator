@@ -67,8 +67,8 @@ When multiple sources provide data for the same field, the validator applies a s
 | Priority | Source               | Best For                          |
 | :------- | :------------------- | :-------------------------------- |
 | **1**    | **Crossref**         | Official DOIs, Publisher Metadata |
-| **2**    | **Zenodo**           | Datasets, Software, GitHub Links  |
-| **3**    | **arXiv**            | Preprints, Latest Revisions       |
+| **2**    | **arXiv**            | Preprints, Latest Revisions       |
+| **3**    | **Zenodo**           | Datasets, Software, GitHub Links  |
 | **4**    | **DBLP**             | Computer Science Conferences      |
 | **5**    | **DataCite**         | General Datasets                  |
 | **6**    | **PubMed**           | Biomedical Literature             |
