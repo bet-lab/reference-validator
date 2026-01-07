@@ -112,6 +112,242 @@ class BibTeXValidator:
         "misc": ["title"],
     }
 
+    # Common fields allowed in any entry type
+    COMMON_FIELDS = {
+        "url",
+        "doi",
+        "note",
+        "abstract",
+        "eprint",
+        "eprinttype",
+        "archiveprefix",
+        "primaryclass",
+        "file",
+        "keywords",
+    }
+
+    # Allowed fields per entry type (plus common fields)
+    ALLOWED_FIELDS = {
+        "article": {
+            "title",
+            "author",
+            "journal",
+            "year",
+            "volume",
+            "number",
+            "pages",
+            "month",
+            "issn",
+        },
+        "inproceedings": {
+            "title",
+            "author",
+            "booktitle",
+            "year",
+            "editor",
+            "volume",
+            "number",
+            "series",
+            "pages",
+            "address",
+            "month",
+            "organization",
+            "publisher",
+        },
+        "book": {
+            "title",
+            "author",
+            "editor",
+            "publisher",
+            "year",
+            "volume",
+            "number",
+            "series",
+            "address",
+            "edition",
+            "month",
+            "isbn",
+        },
+        "incollection": {
+            "title",
+            "author",
+            "booktitle",
+            "publisher",
+            "year",
+            "editor",
+            "volume",
+            "number",
+            "series",
+            "type",
+            "chapter",
+            "pages",
+            "address",
+            "edition",
+            "month",
+            "isbn",
+        },
+        "phdthesis": {
+            "title",
+            "author",
+            "school",
+            "year",
+            "type",
+            "address",
+            "month",
+        },
+        "mastersthesis": {
+            "title",
+            "author",
+            "school",
+            "year",
+            "type",
+            "address",
+            "month",
+        },
+        "techreport": {
+            "title",
+            "author",
+            "institution",
+            "year",
+            "type",
+            "number",
+            "address",
+            "month",
+        },
+        "misc": {"title", "author", "howpublished", "month", "year"},
+        "proceedings": {
+            "title",
+            "editor",
+            "volume",
+            "number",
+            "series",
+            "address",
+            "organization",
+            "publisher",
+            "year",
+            "month",
+            "isbn",
+        },
+    }
+
+    # Common fields allowed in any entry type
+    COMMON_FIELDS = {
+        "url",
+        "doi",
+        "note",
+        "abstract",
+        "eprint",
+        "eprinttype",
+        "archiveprefix",
+        "primaryclass",
+        "file",
+        "keywords",
+    }
+
+    # Allowed fields per entry type (plus common fields)
+    ALLOWED_FIELDS = {
+        "article": {
+            "title",
+            "author",
+            "journal",
+            "year",
+            "volume",
+            "number",
+            "pages",
+            "month",
+            "issn",
+        },
+        "inproceedings": {
+            "title",
+            "author",
+            "booktitle",
+            "year",
+            "editor",
+            "volume",
+            "number",
+            "series",
+            "pages",
+            "address",
+            "month",
+            "organization",
+            "publisher",
+        },
+        "book": {
+            "title",
+            "author",
+            "editor",
+            "publisher",
+            "year",
+            "volume",
+            "number",
+            "series",
+            "address",
+            "edition",
+            "month",
+            "isbn",
+        },
+        "incollection": {
+            "title",
+            "author",
+            "booktitle",
+            "publisher",
+            "year",
+            "editor",
+            "volume",
+            "number",
+            "series",
+            "type",
+            "chapter",
+            "pages",
+            "address",
+            "edition",
+            "month",
+            "isbn",
+        },
+        "phdthesis": {
+            "title",
+            "author",
+            "school",
+            "year",
+            "type",
+            "address",
+            "month",
+        },
+        "mastersthesis": {
+            "title",
+            "author",
+            "school",
+            "year",
+            "type",
+            "address",
+            "month",
+        },
+        "techreport": {
+            "title",
+            "author",
+            "institution",
+            "year",
+            "type",
+            "number",
+            "address",
+            "month",
+        },
+        "misc": {"title", "author", "howpublished", "month", "year"},
+        "proceedings": {
+            "title",
+            "editor",
+            "volume",
+            "number",
+            "series",
+            "address",
+            "organization",
+            "publisher",
+            "year",
+            "month",
+            "isbn",
+        },
+    }
+
     # arXiv ID patterns
     ARXIV_NOTE_PATTERN = re.compile(r"(?i)arxiv:\s*(\d{4}\.\d{4,5}(?:v\d+)?)")
     ARXIV_DOI_PATTERN = re.compile(r"10\.48550/ARXIV\.(\d{4}\.\d{4,5})", re.IGNORECASE)
@@ -325,6 +561,18 @@ class BibTeXValidator:
                         categories.append(term)
                 if categories:
                     metadata["categories"] = categories
+
+                # arXiv specific metadata (journal ref, doi)
+                # Namespace: http://arxiv.org/schemas/atom
+                arxiv_ns = "{http://arxiv.org/schemas/atom}"
+
+                journal_ref_elem = entry.find(f"{arxiv_ns}journal_ref")
+                if journal_ref_elem is not None and journal_ref_elem.text:
+                    metadata["journal"] = journal_ref_elem.text
+
+                doi_elem = entry.find(f"{arxiv_ns}doi")
+                if doi_elem is not None and doi_elem.text:
+                    metadata["doi"] = doi_elem.text
 
                 return metadata if metadata else None
             else:
@@ -1002,9 +1250,18 @@ class BibTeXValidator:
 
         elif source == "arxiv":
             # Map arXiv data to BibTeX fields
-            # Check ENTRYTYPE (usually article)
+            # Check ENTRYTYPE
+            # If we have journal ref (journal) or DOI (doi) from arXiv, it's likely published
+            # User request: published -> inproceedings, preprint -> misc
+
             bib_type = bib_entry.get("ENTRYTYPE", "misc").strip()
-            api_type = "article"  # Default for arXiv
+
+            # Determine API type based on metadata
+            is_published = False
+            if api_data.get("journal") or api_data.get("doi"):
+                is_published = True
+
+            api_type = "inproceedings" if is_published else "misc"
             sources["entrytype"] = source
 
             if self.normalize_string_for_comparison(bib_type, "entrytype") != api_type:
@@ -1033,6 +1290,7 @@ class BibTeXValidator:
             if "authors" in api_data:
                 bib_value = bib_entry.get("author", "").strip()
                 api_value = self.format_author_list(api_data["authors"])
+                api_value_str = api_value  # helper
                 bib_normalized = self.normalize_string_for_comparison(
                     bib_value, "author"
                 )
@@ -1059,6 +1317,30 @@ class BibTeXValidator:
                 elif bib_value != api_value:
                     # Year differences are usually conflicts
                     conflicts["year"] = (bib_value, api_value)
+
+            # Journal/Booktitle for published papers
+            if "journal" in api_data and is_published:
+                # If mapped to inproceedings, we usually want booktitle
+                target_field = "booktitle" if api_type == "inproceedings" else "journal"
+
+                bib_value = bib_entry.get(target_field, "").strip()
+                api_value = api_data["journal"]
+                sources[target_field] = source
+
+                if not bib_value:
+                    updates[target_field] = api_value
+                elif bib_value != api_value:
+                    conflicts[target_field] = (bib_value, api_value)
+
+            # DOI
+            if "doi" in api_data:
+                bib_value = bib_entry.get("doi", "").strip()
+                api_value = self.normalize_doi(api_data["doi"])
+                sources["doi"] = source
+                if not bib_value:
+                    updates["doi"] = api_value
+                elif bib_value.lower() != api_value.lower():
+                    updates["doi"] = api_value
 
             # Add eprint and eprinttype if not present
             if "arxiv_id" in api_data:
@@ -1874,9 +2156,38 @@ class BibTeXValidator:
             self.db.entries[i] = new_entry
             self.db.entries_dict[entry["ID"]] = new_entry
 
+    def filter_entry_fields(self, entry: Dict) -> Dict:
+        """
+        Filter entry fields to keep only allowed fields for the entry type
+        """
+        if not entry:
+            return entry
+
+        entry_type = entry.get("ENTRYTYPE", "misc").lower()
+        allowed = self.ALLOWED_FIELDS.get(
+            entry_type, self.ALLOWED_FIELDS["misc"]
+        ).union(self.COMMON_FIELDS)
+
+        # Always keep ID and ENTRYTYPE
+        allowed.add("ID")
+        allowed.add("ENTRYTYPE")
+        # Allowed add lower case
+        allowed = {k.lower() for k in allowed}
+
+        filtered_entry = {}
+        for k, v in entry.items():
+            if k.lower() in allowed:
+                filtered_entry[k] = v
+
+        return filtered_entry
+
     def save_updated_bib(self, force=False):
         """Save updated BibTeX file"""
         if self.update_bib or force:
+            # Filter fields first
+            for i, entry in enumerate(self.db.entries):
+                self.db.entries[i] = self.filter_entry_fields(entry)
+
             writer = BibTexWriter()
             writer.indent = "\t"
             writer.comma_first = False
