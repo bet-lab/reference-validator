@@ -1793,6 +1793,88 @@ class BibTeXValidator:
 
         return None
 
+    def _fetch_concurrently(
+        self, doi: str, arxiv_id: str, title: str, author: str
+    ) -> Dict[str, Dict]:
+        """
+        Fetch data from all keys sources concurrently.
+
+        Args:
+            doi: DOI string or empty
+            arxiv_id: ArXiv ID or empty
+            title: Title string
+            author: Author string
+
+        Returns:
+            Dictionary mapping source name to fetched data
+        """
+        results = {}
+        futures = {}
+
+        # We use a purely internal executor for these quick I/O tasks
+        # separate from the main validation executor to avoid potential deadlocks
+        # though with max_workers=30 on main, we should be fine.
+        # Ideally, use a context manager for clean shutdown.
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            # 1. DOI-based sources
+            if doi and not self.ARXIV_DOI_PATTERN.search(doi):
+                # Crossref
+                futures[executor.submit(self.fetch_crossref_data, doi)] = "crossref"
+
+                # Zenodo checks
+                if "zenodo" in doi.lower():
+                    futures[executor.submit(self.fetch_zenodo_data, doi)] = "zenodo"
+
+                # DataCite checks
+                # (Note: Logic in original was conditional: if crossref fails or zenodo/figshare in doi)
+                # Here we launch aggressively to save time, unless rate limiting is a concern.
+                # DataCite is generally robust.
+                if "zenodo" not in doi.lower():  # If zenodo, we already checking zenodo
+                    futures[executor.submit(self.fetch_datacite_data, doi)] = "datacite"
+                else:
+                    # For zenodo DOIs, datacite is also valid fallback
+                    futures[executor.submit(self.fetch_datacite_data, doi)] = "datacite"
+
+            # 2. arXiv
+            if arxiv_id:
+                futures[executor.submit(self.fetch_arxiv_data, arxiv_id)] = "arxiv"
+
+            # 3. Title/Author based sources (Search)
+            if title and len(title) > 10:
+                # DBLP
+                futures[executor.submit(self.fetch_dblp_data, title, author)] = "dblp"
+
+                # Semantic Scholar (Search)
+                # Note: Semantic Scholar is heavy on rate limits.
+                futures[
+                    executor.submit(self.fetch_semantic_scholar_data, title, doi)
+                ] = "semantic_scholar"
+
+            # 4. OpenAlex (Dual Strategy)
+            # If DOI exists, prioritize DOI fetch. Else title search.
+            # We can launch both or pick one. Priority logic suggests DOI first.
+            if doi:
+                futures[executor.submit(self.fetch_openalex_data, None, doi)] = (
+                    "openalex"
+                )
+            elif title and len(title) > 10:
+                futures[executor.submit(self.fetch_openalex_data, title, None)] = (
+                    "openalex"
+                )
+
+            # Wait for all
+            for future in as_completed(futures):
+                source = futures[future]
+                try:
+                    data = future.result()
+                    if data:
+                        results[source] = data
+                except Exception:
+                    # Ignore individual source failures
+                    pass
+
+        return results
+
     def validate_entry(
         self, entry: Dict, index: int = 0, total: int = 0
     ) -> ValidationResult:
@@ -1869,119 +1951,103 @@ class BibTeXValidator:
         title = val_fields.get("title", "")
         author = val_fields.get("author", "")
 
-        # 2. Fetch Data (from ALL applicable sources)
+        # 2. Fetch Data (from ALL applicable sources concurrently)
         fetched_data = {}  # source_name -> data_dict
 
-        # (A) Crossref
-        if doi and not self.ARXIV_DOI_PATTERN.search(doi):
-            logs.append("  Fetching Crossref...")
-            data = self.fetch_crossref_data(doi)
-            if data:
+        # Collect params for concurrent fetch
+        c_doi = doi if doi and not self.ARXIV_DOI_PATTERN.search(doi) else ""
+        c_arxiv_id = arxiv_id
+        c_title = val_fields.get("title", "")
+        c_author = val_fields.get("author", "")
+
+        logs.append(
+            f"  Fetching data concurrently (DOI={bool(c_doi)}, ArXiv={bool(c_arxiv_id)}, Title={bool(c_title)})..."
+        )
+
+        # Execute concurrent fetch
+        concurrent_results = self._fetch_concurrently(
+            c_doi, c_arxiv_id, c_title, c_author
+        )
+        fetched_data.update(concurrent_results)
+
+        # Process Results & Logging
+
+        # (A) Crossref / Zenodo / DataCite (DOI)
+        if c_doi:
+            found_doi_source = False
+            if "crossref" in fetched_data:
                 result.doi_valid = True
-                fetched_data["crossref"] = data
+                found_doi_source = True
                 logs.append("  ✓ Found data from Crossref")
-            else:
-                result.warnings.append(f"DOI {doi} not found in Crossref")
-                logs.append("  ✗ DOI not found in Crossref")
 
-            # Try DataCite if Crossref failed or if we want to check it anyway
-            # DataCite is often used for Zenodo, Figshare, etc.
+            if "zenodo" in fetched_data:
+                result.doi_valid = True
+                found_doi_source = True
+                logs.append("  ✓ Found data from Zenodo")
+
+            if "datacite" in fetched_data:
+                result.doi_valid = True
+                found_doi_source = True
+                logs.append("  ✓ Found data from DataCite")
+
             if (
-                "crossref" not in fetched_data
-                or "zenodo" in doi.lower()
-                or "figshare" in doi.lower()
+                "openalex" in fetched_data
+                and fetched_data["openalex"].get("doi", "").lower() == c_doi.lower()
             ):
-                # Try Zenodo specifically first for better metadata
-                if "zenodo" in doi.lower():
-                    logs.append("  Fetching Zenodo...")
-                    zenodo_data = self.fetch_zenodo_data(doi)
-                    if zenodo_data:
-                        result.doi_valid = True
-                        fetched_data["zenodo"] = zenodo_data
-                        logs.append("  ✓ Found data from Zenodo")
+                # OpenAlex found via DOI
+                result.doi_valid = True  # Validated via OpenAlex
+                found_doi_source = True
 
-                # Also try DataCite
-                if "zenodo" not in fetched_data:
-                    logs.append("  Fetching DataCite...")
-                    data = self.fetch_datacite_data(doi)
-                    if data:
-                        result.doi_valid = True
-                        fetched_data["datacite"] = data
-                        logs.append("  ✓ Found data from DataCite")
-                    else:
-                        if "zenodo" not in fetched_data:
-                            result.warnings.append(f"DOI {doi} not found in DataCite")
+            # Negative Logging for DOI
+            if not found_doi_source:
+                # If we expected Crossref but didn't get it (and didn't get others)
+                logs.append("  ✗ DOI not found in primary sources")
+                # We don't strictly warn here if we found it in *some* source, but original code warned per source.
+                # Let's keep it simple: if not found in ANY primary DOI registry, warn.
+                if "crossref" not in fetched_data:
+                    result.warnings.append(f"DOI {c_doi} not found in Crossref")
 
-            # Try OpenAlex (High priority, extensive coverage)
-            if (
-                "crossref" not in fetched_data
-                and "datacite" not in fetched_data
-                and "zenodo" not in fetched_data
-            ):
-                # Note: OpenAlex usually has Crossref data, but can be a good fallback or alternative
-                pass
-
-        # OpenAlex Lookup (Try if DOI exists, regardless of Crossref success?
-        # Actually OpenAlex is very good, maybe we check it anyway for extra metadata like accurate venue names)
-        if doi:
-            logs.append("  Fetching OpenAlex...")
-            data = self.fetch_openalex_data(doi=doi)
-            if data:
-                if "crossref" not in fetched_data and "datacite" not in fetched_data:
-                    # Only mark valid if not already validated (though if it found it, it is valid)
-                    result.doi_valid = True
-                fetched_data["openalex"] = data
-                logs.append("  ✓ Found data from OpenAlex")
-
-        # (B) arXiv
-        if arxiv_id:
-            logs.append(f"  Fetching arXiv: {arxiv_id}")
-            data = self.fetch_arxiv_data(arxiv_id)
-            if data:
+        # (B) ArXiv
+        if c_arxiv_id:
+            if "arxiv" in fetched_data:
                 result.arxiv_valid = True
-                fetched_data["arxiv"] = data
+                logs.append("  ✓ Found data from arXiv")
                 # If we have a DOI that was actually an arXiv DOI, mark it valid
                 if result.has_doi and self.ARXIV_DOI_PATTERN.search(doi):
                     result.doi_valid = True
-                logs.append("  ✓ Found data from arXiv")
             else:
-                result.warnings.append(f"arXiv ID {arxiv_id} not found")
+                result.warnings.append(f"arXiv ID {c_arxiv_id} not found")
                 logs.append("  ✗ arXiv ID not found")
-        elif result.has_arxiv:
-            result.warnings.append("No arXiv ID found")
+        elif result.has_arxiv and not c_arxiv_id:
+            # Case where has_arxiv is true (from normalize) but extraction failed?
+            # logic above: arxiv_id = self.extract_arxiv_id(val_fields). if arxiv_id: result.has_arxiv=True.
+            # So c_arxiv_id is same as arxiv_id.
+            pass
 
-        # (C) PubMed
+        # (C) OpenAlex
+        if "openalex" in fetched_data:
+            logs.append("  ✓ Found data from OpenAlex")
+
+        # (D) DBLP
+        if "dblp" in fetched_data:
+            logs.append("  ✓ Found data from DBLP")
+
+        # (E) Semantic Scholar
+        if "semantic_scholar" in fetched_data:
+            logs.append("  ✓ Found data from Semantic Scholar")
+
+        # (F) PubMed (Not in concurrent fetch yet, keep legacy or add? Original code had it.)
+        # Original code had pmid check. Let's keep pmid check sequential or add to concurrent.
+        # Adding to concurrent would require changing signature. Let's keep it here for now as it's rare.
         if pmid:
             logs.append(f"  Fetching PubMed: {pmid}")
+            # ... existing pmid logic would need self.fetch_pubmed_data check ...
+            # We removed the block, so we need to restore it or add to concurrent.
+            # Let's do a quick sequential fetch for PubMed if needed, it's fast/rare.
             data = self.fetch_pubmed_data(pmid)
             if data:
                 fetched_data["pubmed"] = data
                 logs.append("  ✓ Found data from PubMed")
-
-        # (D) DBLP (Always try if title exists)
-        if title:
-            logs.append("  Searching DBLP...")
-            data = self.fetch_dblp_data(title, author)
-            if data:
-                fetched_data["dblp"] = data
-                logs.append("  ✓ Found data from DBLP")
-
-        # (E) Semantic Scholar (Always try if title exists)
-        if title:
-            logs.append("  Searching Semantic Scholar...")
-            data = self.fetch_semantic_scholar_data(title, author)
-            if data:
-                fetched_data["semantic_scholar"] = data
-                logs.append("  ✓ Found data from Semantic Scholar")
-
-        # (F) OpenAlex (Search by title if DOI didn't work or wasn't present)
-        if title and "openalex" not in fetched_data:
-            # Only search if we haven't already fetched it via DOI
-            logs.append("  Searching OpenAlex by title...")
-            data = self.fetch_openalex_data(title=title)
-            if data:
-                fetched_data["openalex"] = data
-                logs.append("  ✓ Found data from OpenAlex")
 
         # 2.5 Recursive Enrichment (Discover missing identifiers)
         # If we didn't have a DOI but found one in secondary sources, fetch Crossref/Zenodo/OpenAlex
@@ -2228,7 +2294,7 @@ class BibTeXValidator:
         return result
 
     def validate_all(
-        self, show_progress: bool = True, max_workers: int = 10
+        self, show_progress: bool = True, max_workers: int = 30
     ) -> List[ValidationResult]:
         """
         Validate all entries in the BibTeX database
@@ -4259,8 +4325,8 @@ Examples:
     parser.add_argument(
         "--workers",
         type=int,
-        default=10,
-        help="Number of threads for parallel validation (default: 10)",
+        default=30,
+        help="Number of threads for parallel validation (default: 30)",
     )
     parser.add_argument(
         "--port", type=int, default=8010, help="Port for GUI web server (default: 8010)"
