@@ -63,15 +63,36 @@ except ImportError:
 
 
 @dataclass
+class BibEntry:
+    entry_type: str
+    citekey: str
+    fields: Dict[str, str]
+
+
+@dataclass
+class LintMessage:
+    level: str  # "error", "warning", "info"
+    code: str
+    message: str
+    field: Optional[str] = None
+
+
+@dataclass
 class ValidationResult:
     """Stores validation results for a single entry"""
 
     entry_key: str
+    entry_type: str = "misc"
     has_doi: bool = False
     doi_valid: bool = False
     has_arxiv: bool = False
     arxiv_valid: bool = False
     arxiv_id: Optional[str] = None
+
+    # Core Logic Results
+    normalized_entry: Optional[BibEntry] = None
+    lint_messages: List[LintMessage] = field(default_factory=list)
+
     fields_missing: List[str] = field(default_factory=list)
     fields_updated: Dict[str, Tuple[str, str]] = field(
         default_factory=dict
@@ -287,6 +308,13 @@ class BibTeXValidator:
                 ],
             },
         },
+        "strongly_recommended": {
+            "inproceedings": ["pages"],
+            "incollection": ["pages", "chapter"],
+            "inbook": ["chapter", "pages"],
+            "article": ["volume", "pages"],
+            "techreport": ["number"],
+        },
     }
 
     # arXiv ID patterns
@@ -344,20 +372,35 @@ class BibTeXValidator:
         ]
 
         self.print_lock = threading.Lock()
+        self.arxiv_lock = threading.Lock()  # Rate limiting lock for ArXiv
 
         # Compile schema
         self._compile_schemas()
+
+        # Load BibTeX file
+        if not self.bib_file.exists():
+            raise FileNotFoundError(f"BibTeX file not found: {self.bib_file}")
+
+        with open(self.bib_file, "r", encoding="utf-8") as f:
+            parser = BibTexParser(common_strings=True)
+            self.db = bibtexparser.load(f, parser=parser)
 
     def _compile_schemas(self):
         """Compile JSON schema into usable sets and lists"""
         self.ALLOWED_FIELDS = {}
         self.REQUIRED_FIELDS = {}
         self.REQUIRED_ANY_FIELDS = {}  # list of lists of fields (one from each list must exist)
+        self.STRONGLY_RECOMMENDED_FIELDS = {}
 
         common_core = set(self.FIELD_SCHEMA["common"]["core"])
         common_extended = set(self.FIELD_SCHEMA["common"]["extended"])
         common_all = common_core.union(common_extended).union({"ID", "ENTRYTYPE"})
         self.COMMON_FIELDS = common_all  # Expose common fields
+
+        # Compile Strongly Recommended
+        self.STRONGLY_RECOMMENDED_FIELDS = self.FIELD_SCHEMA.get(
+            "strongly_recommended", {}
+        )
 
         for type_name, schema in self.FIELD_SCHEMA["types"].items():
             # REQUIRED
@@ -389,20 +432,242 @@ class BibTeXValidator:
 
             self.ALLOWED_FIELDS[type_name] = allowed
 
-        # Load BibTeX file
-        if not self.bib_file.exists():
-            raise FileNotFoundError(f"BibTeX file not found: {self.bib_file}")
+    def normalize_entry(self, entry: BibEntry) -> BibEntry:
+        """
+        Normalize entry based on BibTeX mode policies.
+        - Map BibLaTeX fields to BibTeX
+        - Normalize aliases (conference -> inproceedings)
+        - Normalize DOI and URL
+        - Apply Type Promotion Rules (ArXiv -> Inproceedings/Article)
+        """
+        # 1. Field Mapping & Cleanup
+        mappings = {
+            "journaltitle": "journal",
+            "date": "year",  # handled specially below
+            "location": "address",
+        }
 
-        with open(self.bib_file, "r", encoding="utf-8") as f:
-            parser = BibTexParser(common_strings=True)
-            self.db = bibtexparser.load(f, parser=parser)
+        # Create a copy of fields to avoid mutating original during iteration
+        new_fields = entry.fields.copy()
+
+        # Apply mappings
+        for biblatex, bibtex in mappings.items():
+            if biblatex in new_fields:
+                if bibtex not in new_fields:  # Only map if target doesn't exist
+                    val = new_fields.pop(biblatex)
+                    if biblatex == "date" and val:
+                        # Extract YYYY
+                        match = re.search(r"\d{4}", val)
+                        if match:
+                            new_fields[bibtex] = match.group(0)
+                    else:
+                        new_fields[bibtex] = val
+                else:
+                    # If target exists, just remove BibLaTeX native field
+                    new_fields.pop(biblatex)
+
+        # 2. Type Aliases
+        type_aliases = {
+            "conference": "inproceedings",
+            "online": "misc",
+            "report": "techreport",
+        }
+        entry_type = type_aliases.get(
+            entry.entry_type.lower(), entry.entry_type.lower()
+        )
+
+        # 3. DOI & URL Normalization
+        doi = new_fields.get("doi", "").strip()
+        url = new_fields.get("url", "").strip()
+
+        # Navbar pattern for DOI in URL
+        doi_url_pattern = re.compile(
+            r"https?://(?:dx\.)?doi\.org/(10\..+)", re.IGNORECASE
+        )
+
+        # If no DOI but URL is a DOI link, extract specific DOI
+        if not doi and url:
+            match = doi_url_pattern.search(url)
+            if match:
+                doi = match.group(1)
+                new_fields["doi"] = doi
+                # Option: drop_pure_doi_url (assuming True as per spec guidelines "doi.org URL is doi replaced -> url remove")
+                new_fields.pop("url")
+                url = ""  # Cleared
+
+        # Normalize DOI string (remove prefix, trailing punctuation)
+        if doi:
+            # Remove https://doi.org/ or doi: prefixes if present in the field value itself
+            clean_doi = doi
+            if clean_doi.lower().startswith("https://doi.org/"):
+                clean_doi = clean_doi[16:]
+            elif clean_doi.lower().startswith("http://doi.org/"):
+                clean_doi = clean_doi[15:]
+            elif clean_doi.lower().startswith("doi:"):
+                clean_doi = clean_doi[4:]
+
+            clean_doi = clean_doi.strip().rstrip(".,")
+            new_fields["doi"] = clean_doi
+            doi = clean_doi
+
+        # Remove URL if it is just a link to the DOI (redundant)
+        if doi and url:
+            match = doi_url_pattern.search(url)
+            if match and match.group(1) == doi:
+                new_fields.pop("url")
+
+        # 4. Type Promotion (ArXiv)
+        # Default assumption: checking if it's an arXiv entry (usually misc)
+        # But rules apply generally if conditions match
+
+        # "Proceedings" classification
+        # Condition: title has "Proceedings of", editor exists, author missing
+        title = new_fields.get("title", "")
+        has_editor = "editor" in new_fields
+        has_author = "author" in new_fields
+        if "proceedings" in title.lower() and has_editor and not has_author:
+            entry_type = "proceedings"
+
+        # ArXiv promotion
+        elif entry_type == "misc":
+            # Check if it has arXiv indicators? Or just apply logic generally for 'misc'
+            # Spec says: "arXiv preprint default @misc"
+
+            # booktitle exists -> inproceedings
+            if "booktitle" in new_fields:
+                entry_type = "inproceedings"
+
+            # DOI exists and NOT arXiv DOI -> Published
+            elif doi and not self.ARXIV_DOI_PATTERN.search(doi):
+                # Zenodo DOIs (10.5281) usually imply dataset/software (@misc)
+                # Don't promote to inproceedings blindly
+                is_zenodo = "10.5281/" in doi
+
+                if "journal" in new_fields:
+                    entry_type = "article"
+                elif not is_zenodo:
+                    entry_type = "inproceedings"
+
+        return BibEntry(entry_type=entry_type, citekey=entry.citekey, fields=new_fields)
 
     def normalize_doi(self, doi: str) -> str:
         """Normalize DOI format"""
+        if not doi:
+            return ""
         doi = doi.strip()
         # Remove 'doi:' prefix if present
         doi = re.sub(r"^doi:\s*", "", doi, flags=re.IGNORECASE)
         return doi
+
+    def validate_entry_schema(self, entry: BibEntry) -> List[LintMessage]:
+        """
+        Validate entry against schema rules.
+        """
+        messages = []
+        fields = entry.fields
+        entry_type = entry.entry_type
+
+        # 1. Required Fields
+        required = self.REQUIRED_FIELDS.get(entry_type, [])
+        for req_field in required:
+            if not fields.get(req_field, "").strip():
+                messages.append(
+                    LintMessage(
+                        level="error",
+                        code="missing_required",
+                        message=f"Missing required field: {req_field}",
+                        field=req_field,
+                    )
+                )
+
+        # 2. Required Any Fields
+        req_any = self.REQUIRED_ANY_FIELDS.get(entry_type, [])
+        for group in req_any:
+            # Check if at least one field in the group exists
+            if not any(fields.get(f, "").strip() for f in group):
+                messages.append(
+                    LintMessage(
+                        level="error",
+                        code="missing_required_any",
+                        message=f"Missing one of required fields: {', '.join(group)}",
+                    )
+                )
+
+        # 3. Strongly Recommended Fields
+        recommended = self.STRONGLY_RECOMMENDED_FIELDS.get(entry_type, [])
+        for rec_field in recommended:
+            if not fields.get(rec_field, "").strip():
+                messages.append(
+                    LintMessage(
+                        level="warning",
+                        code="missing_recommended",
+                        message=f"Missing recommended field: {rec_field}",
+                        field=rec_field,
+                    )
+                )
+
+        # 4. Conditional Warnings
+
+        # InContext (inbook/incollection) validation
+        if entry_type in ["inbook", "incollection"]:
+            has_pages = bool(fields.get("pages", "").strip())
+            has_chapter = bool(fields.get("chapter", "").strip())
+            if not has_pages and not has_chapter:
+                messages.append(
+                    LintMessage(
+                        level="warning",
+                        code="missing_context",
+                        message="Missing both 'pages' and 'chapter'",
+                    )
+                )
+
+        # Article validation
+        if entry_type == "article":
+            has_vol = bool(fields.get("volume", "").strip())
+            has_pages = bool(fields.get("pages", "").strip())
+            if not has_vol and not has_pages:
+                messages.append(
+                    LintMessage(
+                        level="warning",
+                        code="missing_vol_pages_strong",
+                        message="Missing both 'volume' and 'pages'",
+                    )
+                )
+            elif not has_vol or not has_pages:
+                missing = "volume" if not has_vol else "pages"
+                messages.append(
+                    LintMessage(
+                        level="warning",
+                        code="missing_vol_pages_weak",
+                        message=f"Missing '{missing}'",
+                    )
+                )
+
+        # Venue Unstructured Warning
+        # If booktitle is missing, but venue info seems present in note/howpublished
+        if "booktitle" not in fields and entry_type in ["inproceedings", "proceedings"]:
+            # Check note or howpublished for venue keywords
+            venue_indicators = [
+                "submitted to",
+                "presented at",
+                "conference",
+                "workshop",
+                "symposium",
+                "proceedings",
+            ]
+            potential_venue = (
+                fields.get("note", "") + " " + fields.get("howpublished", "")
+            )
+            if any(ind in potential_venue.lower() for ind in venue_indicators):
+                messages.append(
+                    LintMessage(
+                        level="warning",
+                        code="venue_unstructured",
+                        message="Venue information found in note/howpublished but 'booktitle' is missing",
+                    )
+                )
+
+        return messages
 
     def extract_arxiv_id(self, entry: Dict) -> Optional[str]:
         """
@@ -478,18 +743,14 @@ class BibTeXValidator:
     def fetch_arxiv_data(self, arxiv_id: str) -> Optional[Dict]:
         """
         Fetch metadata from arXiv API
-
-        Args:
-            arxiv_id: arXiv ID in format YYYY.NNNNN
-
-        Returns:
-            Dictionary with metadata or None if not found
+        Respects strict rate limiting: 1 req / 3s
         """
         url = f"http://export.arxiv.org/api/query?id_list={arxiv_id}"
 
         try:
-            time.sleep(self.delay)  # Rate limiting
-            response = requests.get(url, timeout=10)
+            with self.arxiv_lock:
+                time.sleep(3.0)  # ArXiv requires 3s interval
+                response = requests.get(url, timeout=10)
 
             if response.status_code == 200:
                 # Parse XML response
@@ -1537,18 +1798,35 @@ class BibTeXValidator:
     ) -> ValidationResult:
         """
         Validate a single BibTeX entry
-
-        Args:
-            entry: BibTeX entry dictionary
-            index: Current entry index (0-based)
-            total: Total number of entries
-
-        Returns:
-            ValidationResult object
         """
-        entry_key = entry["ID"]
-        entry_type = entry.get("ENTRYTYPE", "misc")
-        result = ValidationResult(entry_key=entry_key)
+        # Create BibEntry from input dict (safely)
+        raw_bib_entry = BibEntry(
+            entry_type=entry.get("ENTRYTYPE", "misc"),
+            citekey=entry.get("ID", ""),
+            fields={k: v for k, v in entry.items() if k not in ["ID", "ENTRYTYPE"]},
+        )
+
+        # 1. Normalize (Core Logic)
+        normalized_entry = self.normalize_entry(raw_bib_entry)
+
+        result = ValidationResult(
+            entry_key=normalized_entry.citekey, entry_type=normalized_entry.entry_type
+        )
+        result.normalized_entry = normalized_entry
+
+        # Use normalized fields for validation logic
+        # We assume 'entry' in usage below refers to the data we are validating.
+        # However, to preserve 'original_values' for undo, we should assume the input 'entry' is the source of truth for originals.
+        # But for 'bib_value' in comparisons, we use normalized fields.
+
+        # Validatable fields map (includes ID and ENTRYTYPE for compatibility with existing code lookups if any)
+        val_fields = normalized_entry.fields.copy()
+        val_fields["ID"] = normalized_entry.citekey
+        val_fields["ENTRYTYPE"] = normalized_entry.entry_type
+
+        entry_key = normalized_entry.citekey
+        entry_type = normalized_entry.entry_type
+
         logs = []
 
         # Store original values for undo functionality
@@ -1567,10 +1845,10 @@ class BibTeXValidator:
             logs.append(f"\nValidating: {entry_key} ({entry_type})")
 
         # 1. Identification & Normalization
-        doi = entry.get("doi", "")
+        doi = val_fields.get("doi", "")
         if doi:
             result.has_doi = True
-            doi = self.normalize_doi(doi)
+            # DOI is already normalized by normalize_entry
 
             # Check if it's an arXiv DOI
             arxiv_doi_match = self.ARXIV_DOI_PATTERN.search(doi)
@@ -1580,16 +1858,16 @@ class BibTeXValidator:
             else:
                 logs.append(f"  DOI present: {doi}")
 
-        arxiv_id = self.extract_arxiv_id(entry)
+        arxiv_id = self.extract_arxiv_id(val_fields)
         if arxiv_id:
             result.has_arxiv = True
             result.arxiv_id = arxiv_id
             logs.append(f"  arXiv ID: {arxiv_id}")
 
-        pmid = entry.get("pmid", "") or entry.get("pubmed", "")
+        pmid = val_fields.get("pmid", "") or val_fields.get("pubmed", "")
 
-        title = entry.get("title", "")
-        author = entry.get("author", "")
+        title = val_fields.get("title", "")
+        author = val_fields.get("author", "")
 
         # 2. Fetch Data (from ALL applicable sources)
         fetched_data = {}  # source_name -> data_dict
@@ -1919,20 +2197,30 @@ class BibTeXValidator:
         if result.fields_updated:
             logs.append(f"  + Found {len(result.fields_updated)} fields to update")
 
-        # Check required fields
-        required = self.REQUIRED_FIELDS.get(entry_type, [])
-        for field_name in required:
-            if not entry.get(field_name, "").strip():
-                result.fields_missing.append(field_name)
+        # 3. Schema Validation (Core Logic)
+        lint_results = self.validate_entry_schema(normalized_entry)
+        result.lint_messages = lint_results
 
-        # Check required_any fields (at least one from each group must exist)
-        req_any_groups = self.REQUIRED_ANY_FIELDS.get(entry_type, [])
-        for group in req_any_groups:
-            # Check if at least one field in the group exists and is not empty
-            if not any(entry.get(f, "").strip() for f in group):
-                result.fields_missing.append(f"one of {group}")
+        # Map LintMessages to legacy result fields for compatibility
+        for msg in lint_results:
+            if msg.level == "error":
+                if msg.code.startswith("missing_"):
+                    if msg.field:
+                        result.fields_missing.append(msg.field)
+                    else:
+                        # For grouped required checks, adding the message description
+                        # or skipping strict field append if it doesn't match legacy expectation
+                        pass
+                result.errors.append(f"[{msg.code}] {msg.message}")
+            elif msg.level == "warning":
+                result.warnings.append(f"[{msg.code}] {msg.message}")
+
+        # Legacy compat: ValidationResult expects errors/warnings strings
         if result.fields_missing:
             logs.append(f"  Missing fields: {', '.join(result.fields_missing)}")
+        for msg in lint_results:
+            if msg.level == "warning":
+                logs.append(f"  Warning: {msg.message}")
 
         with self.print_lock:
             print("\n".join(logs))
