@@ -160,7 +160,7 @@ class BibTeXValidator:
                 "extended": ["doi", "url", "urldate", "issn"],
             },
             "book": {
-                "required_any": [["author"], ["editor"]],
+                "required_any": ["author", "editor"],
                 "required": ["title", "publisher", "year"],
                 "optional": [
                     "volume",
@@ -222,8 +222,8 @@ class BibTeXValidator:
                 "extended": ["doi", "url", "urldate", "isbn"],
             },
             "inbook": {
-                "required_any": [["author"], ["editor"]],
-                "required_any_2": [["chapter"], ["pages"]],
+                "required_any": ["author", "editor"],
+                "required_any_2": ["chapter", "pages"],
                 "required": ["title", "publisher", "year"],
                 "optional": [
                     "volume",
@@ -749,7 +749,7 @@ class BibTeXValidator:
 
         try:
             with self.arxiv_lock:
-                time.sleep(3.0)  # ArXiv requires 3s interval
+                time.sleep(5.0)  # ArXiv strict rate limiting
                 response = requests.get(url, timeout=10)
 
             if response.status_code == 200:
