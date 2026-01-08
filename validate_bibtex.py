@@ -2706,7 +2706,7 @@ def create_gui_app(
             <!-- Summary Section -->
             <div class="rounded-lg border bg-card text-card-foreground shadow-sm mb-6">
                 <div class="px-6 py-4 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold leading-none tracking-tight">Validation Summary</h3>
+                    <h3 class="text-lg font-semibold leading-none tracking-tight">Validation<br>Summary</h3>
                     
                     <div class="flex items-center gap-8">
                         <!-- Entries Attention -->
@@ -2722,10 +2722,11 @@ def create_gui_app(
                         <span class="text-border opacity-50 text-2xl font-light">|</span>
 
                         <!-- Global Action -->
-                         <!-- Global Action -->
-                         <button id="btnAcceptAllGlobal" onclick="acceptAllGlobal()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">
-                             <i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries
-                        </button>
+                         <div class="flex items-center gap-2">
+                            <button id="btnAcceptAllGlobal" onclick="acceptAllGlobal()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 w-48 transition-all duration-200">
+                                 <i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries
+                            </button>
+                         </div>
 
                         <span class="text-border opacity-50 text-2xl font-light">|</span>
 
@@ -2881,8 +2882,13 @@ def create_gui_app(
         let savedFields = new Set();
         let selectedSources = {};
         
+        // Undo support
+        let undoneFields = new Set();
+        
         let acceptAllGlobalConfirm = false;
         let acceptAllGlobalTimeout = null;
+        let rejectAllGlobalConfirm = false;
+        let rejectAllGlobalTimeout = null;
 
         function escapeHtml(text) {
             if (text === null || text === undefined) return '';
@@ -2946,11 +2952,8 @@ def create_gui_app(
             }
         }
 
-        function updateEntrySelect(entries) {
-            // This function is now integrated into loadEntries and is no longer needed as a separate function.
-            // Keeping it here as a placeholder comment for clarity, but it will be removed if not called elsewhere.
-            // The instruction effectively replaced the original loadEntries and removed the call to updateEntrySelect.
-        }
+        // --- Navigation ---
+        // (Previously updatedEntrySelect placeholder removed as it was unused)
 
         async function loadEntry(entryKey) {
             if (!entryKey) {
@@ -2969,11 +2972,16 @@ def create_gui_app(
                 if (!response.ok) throw new Error('Failed to load entry');
                 const data = await response.json();
                 
+                // Only clear state if we are switching to a NEW entry
+                if (!currentData || currentData.entry_key !== data.entry_key) {
+                    acceptedFields.clear();
+                    rejectedFields.clear();
+                    savingFields.clear();
+                    savedFields.clear();
+                    undoneFields.clear();
+                }
+                
                 currentData = data;
-                acceptedFields.clear();
-                rejectedFields.clear();
-                savingFields.clear();
-                savedFields.clear();
                 
                 renderComparison(data);
                 updateNavigationState();
@@ -3007,8 +3015,11 @@ def create_gui_app(
             const currentIndex = select.selectedIndex;
             const maxIndex = select.options.length - 1;
             
-            document.getElementById('btnPrev').disabled = currentIndex <= 1; // 0 is placeholder, 1 is first item
-            document.getElementById('btnNext').disabled = currentIndex >= maxIndex || currentIndex <= 0;
+            const prevBtn = document.getElementById('btnPrev');
+            const nextBtn = document.getElementById('btnNext');
+            
+            if (prevBtn) prevBtn.disabled = currentIndex <= 1; // 0 is placeholder, 1 is first item
+            if (nextBtn) nextBtn.disabled = currentIndex >= maxIndex || currentIndex <= 0;
         }
 
         function getSourceBadge(source) {
@@ -3200,17 +3211,24 @@ def create_gui_app(
 
                 // Actions
                 let actions = '';
-                if (type === 'identical' || type === 'bibtex-only') {
-                    actions = `<span class="text-muted-foreground text-xs">No action needed</span>`;
+                // Check if it WAS updated/rejected recently (in this session)?
+                if (acceptedFields.has(f_name) || rejectedFields.has(f_name)) {
+                     actions = `
+                        <button onclick="restoreField('${escapeHtml(f_name)}')" class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-7 px-3 py-1">
+                            <i data-lucide="rotate-ccw" class="mr-1 h-3 w-3"></i> Undo
+                        </button>
+                     `;
+                } else if (type === 'identical' || type === 'bibtex-only') {
+                     actions = `<span class="text-muted-foreground text-xs">No action needed</span>`;
                 } else {
                     if (isSaving) {
                         actions = `<span class="flex items-center text-xs text-muted-foreground"><i data-lucide="loader-2" class="h-3 w-3 animate-spin mr-1"></i> Saving...</span>`;
-                    } else if (isSaved) {
+                    } else if (isSaved && !acceptedFields.has(f_name) && !rejectedFields.has(f_name)) {
                         actions = `<span class="flex items-center text-xs text-emerald-600"><i data-lucide="check" class="h-3 w-3 mr-1"></i> Saved</span>`;
                     } else {
                         actions = `
                             <div class="flex items-center justify-center gap-2">
-                                <button onclick="rejectField('${escapeHtml(f_name)}')" class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input shadow-sm hover:bg-destructive hover:text-destructive-foreground h-7 px-2 py-1 ${isRejected ? 'opacity-50' : ''}" ${isAccepted ? 'disabled' : ''}>
+                                <button onclick="rejectField('${escapeHtml(f_name)}')" class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input shadow-sm hover:bg-destructive hover:text-destructive-foreground h-7 px-2 py-1 ${isRejected ? 'opacity-50' : ''}" ${isRejected ? 'disabled' : ''}>
                                     Reject
                                 </button>
                                 <button onclick="acceptField('${escapeHtml(f_name)}')" class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-7 px-2 py-1 ${isAccepted ? 'opacity-50' : ''}" ${isRejected ? 'disabled' : ''}>
@@ -3233,12 +3251,45 @@ def create_gui_app(
                 `;
             }
 
-            // Order: Updates -> Conflicts -> Different -> Identical -> Others
-            updates.forEach(f_name => html += createRow(f_name, 'update', data.fields_updated[f_name], fieldSources[f_name]));
-            conflicts.forEach(f_name => html += createRow(f_name, 'conflict', data.fields_conflict[f_name], fieldSources[f_name]));
-            different.forEach(f_name => html += createRow(f_name, 'different', data.fields_different[f_name], fieldSources[f_name]));
-            identical.forEach(f_name => html += createRow(f_name, 'identical', data.fields_identical[f_name], fieldSources[f_name]));
-            notInApi.forEach(f_name => html += createRow(f_name, 'bibtex-only', data.fields_not_in_api[f_name], null));
+            // Fixed Field Ordering
+            const priorityOrder = [
+                'title', 'author', 'journal', 'booktitle', 'year', 'volume', 'number', 'pages', 
+                'publisher', 'doi', 'url', 'eprint', 'eprinttype', 'abstract', 'entrytype'
+            ];
+            
+            // Collect all unique fields
+            const allFields = new Set([
+                ...updates, ...conflicts, ...different, ...identical, ...notInApi
+            ]);
+
+            // Determine type and data for each field dynamically
+            const getFieldInfo = (f) => {
+                if (updates.includes(f)) return { type: 'update', data: data.fields_updated[f] };
+                if (conflicts.includes(f)) return { type: 'conflict', data: data.fields_conflict[f] };
+                if (different.includes(f)) return { type: 'different', data: data.fields_different[f] };
+                if (identical.includes(f)) return { type: 'identical', data: data.fields_identical[f] };
+                if (notInApi.includes(f)) return { type: 'bibtex-only', data: data.fields_not_in_api[f] };
+                return { type: 'unknown', data: null };
+            };
+
+            const sortedFields = Array.from(allFields).sort((a, b) => {
+                const idxA = priorityOrder.indexOf(a.toLowerCase());
+                const idxB = priorityOrder.indexOf(b.toLowerCase());
+                
+                // If both in priority list, sort by index
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                // If only A in list, A comes first
+                if (idxA !== -1) return -1;
+                // If only B in list, B comes first
+                if (idxB !== -1) return 1;
+                // If neither, sort alphabetically
+                return a.localeCompare(b);
+            });
+
+            sortedFields.forEach(f_name => {
+                const info = getFieldInfo(f_name);
+                html += createRow(f_name, info.type, info.data, fieldSources[f_name]);
+            });
 
             tbody.innerHTML = html;
             
@@ -3266,6 +3317,117 @@ def create_gui_app(
             }
         }
         
+        async function restoreField(f_name) {
+             savingFields.add(f_name);
+             renderComparison(currentData); // specific update preferred ideally
+             
+             try {
+                 const response = await fetch('/api/restore', {
+                     method: 'POST',
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify({
+                         entry_key: currentData.entry_key,
+                         field: f_name
+                     })
+                 });
+                 
+                 const result = await response.json();
+                 if (!response.ok) throw new Error(result.detail || 'Failed to restore');
+                 
+                 if (result.success) {
+                     // Clear from accepted/rejected sets so it returns to action state
+                     acceptedFields.delete(f_name);
+                     rejectedFields.delete(f_name);
+                     savingFields.delete(f_name);
+                     
+                     // Reload entry to reflect restored state (it might go back to "Update" or "Conflict")
+                     await loadEntry(currentData.entry_key);
+                 }
+             } catch (e) {
+                 console.error(e);
+                 alert('Restore failed: ' + e.message);
+                 savingFields.delete(f_name);
+                 renderComparison(currentData);
+             }
+        }
+
+        async function acceptAllGlobal() {
+            const btn = document.getElementById('btnAcceptAllGlobal');
+            
+            if (!acceptAllGlobalConfirm) {
+                acceptAllGlobalConfirm = true;
+                const originalContent = btn.innerHTML;
+                
+                btn.innerHTML = '<i data-lucide="alert-triangle" class="mr-2 h-4 w-4"></i> Confirm Again'; 
+                btn.classList.add('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
+                btn.classList.remove('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
+                
+                lucide.createIcons({ root: btn });
+
+                if (acceptAllGlobalTimeout) clearTimeout(acceptAllGlobalTimeout);
+                acceptAllGlobalTimeout = setTimeout(() => {
+                    acceptAllGlobalConfirm = false;
+                    btn.innerHTML = '<i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries';
+                    btn.classList.remove('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
+                    btn.classList.add('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
+                    lucide.createIcons({ root: btn });
+                }, 3000);
+                return;
+            }
+            
+            // Confirmed
+            if (acceptAllGlobalTimeout) clearTimeout(acceptAllGlobalTimeout);
+            acceptAllGlobalConfirm = false;
+            
+            try {
+                // Show global loading indicator if possible, or just alert
+                const btn = document.getElementById('btnAcceptAllGlobal');
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i data-lucide="loader-2" class="mr-2 h-4 w-4 animate-spin"></i> Processing...';
+                
+                const response = await fetch('/api/accept_all_global', { method: 'POST' });
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update entries list if provided
+                    if (result.entries) {
+                        loadEntries();
+                    }
+                    
+                    // Reload current entry
+                    if (currentData) loadEntry(currentData.entry_key);
+
+                    // Show "All Accepted" state
+                    btn.innerHTML = '<i data-lucide="check-check" class="mr-2 h-4 w-4"></i> All Accepted';
+                    btn.classList.remove('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
+                    btn.classList.remove('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
+                    btn.classList.add('bg-green-600', 'text-white', 'hover:bg-green-700');
+                    lucide.createIcons({ root: btn });
+
+                    // Revert after 3 seconds
+                    setTimeout(() => {
+                        btn.innerHTML = '<i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries';
+                        btn.classList.remove('bg-green-600', 'text-white', 'hover:bg-green-700');
+                        btn.classList.add('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
+                        lucide.createIcons({ root: btn });
+                        btn.disabled = false;
+                    }, 3000);
+                    
+                } else {
+                    alert("Failed: " + result.detail);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i data-lucide="check-circle-2" class="mr-2 h-4 w-4"></i> Accept All Entries';
+                    lucide.createIcons({ root: btn });
+                }
+                 
+            } catch (e) {
+                console.error(e);
+                alert("Error: " + e.message);
+                location.reload(); 
+            }
+        }
+
         // --- Interactivity ---
         
         function toggleDropdown(id, forceState) {
@@ -3557,7 +3719,7 @@ def create_gui_app(
                 acceptAllGlobalConfirm = true;
                 const originalContent = btn.innerHTML;
                 
-                btn.innerHTML = '<i data-lucide="alert-triangle" class="mr-2 h-4 w-4"></i> Click again to confirm';
+                btn.innerHTML = '<i data-lucide="alert-triangle" class="mr-2 h-4 w-4"></i> Confirm Again';
                 btn.classList.add('bg-destructive', 'hover:bg-destructive/90', 'text-destructive-foreground');
                 btn.classList.remove('bg-primary', 'text-primary-foreground', 'hover:bg-primary/90');
                 
@@ -3958,6 +4120,118 @@ def create_gui_app(
         }
 
         return JSONResponse(comparison)
+
+    # API: Restore field
+    @app.post("/api/restore")
+    async def restore_field(request: Request):
+        """Restore field to its original value"""
+        try:
+            data = await request.json()
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=f"Invalid JSON: {str(e)}")
+
+        entry_key = data.get("entry_key")
+        field_to_restore = data.get("field")
+
+        if not entry_key or not field_to_restore:
+            raise HTTPException(
+                status_code=400, detail="entry_key and field are required"
+            )
+
+        validator = app.state.validator
+        results = app.state.results
+
+        entry = next((e for e in validator.db.entries if e["ID"] == entry_key), None)
+        if not entry:
+            raise HTTPException(status_code=404, detail="Entry not found")
+
+        result = next((r for r in results if r.entry_key == entry_key), None)
+        if not result:
+            raise HTTPException(status_code=404, detail="Result not found")
+
+        # Restore logic:
+        # Check if we have original value stored
+        if field_to_restore in result.original_values:
+            original_val = result.original_values[field_to_restore]
+            entry[field_to_restore] = original_val
+        elif field_to_restore == "entrytype" and "entrytype" in result.original_values:
+            entry["ENTRYTYPE"] = result.original_values["entrytype"]
+        else:
+            # If no original value, maybe it was a new field?
+            # If it was a new field added by API, restoring means deleting it (if it didn't exist before)
+            # But how do we know if it existed?
+            # If it's not in original_values, it probably didn't exist or wasn't tracked.
+            # Safe default: if not in original_values, do nothing or delete?
+            # Let's assume restore means reverting to state in original_values.
+            if field_to_restore in entry:
+                del entry[field_to_restore]
+
+        # Update stats (remove from identical, add back to updated/conflict/diff?)
+        # This is complex because we need to know what the API value was to re-categorize it.
+        # Ideally we just undo the 'identical' mark.
+        if field_to_restore in result.fields_identical:
+            del result.fields_identical[field_to_restore]
+
+        # Manually re-trigger comparison logic?
+        # Or just client side re-render will fetch comparison again?
+        # The comparison logic is in Python. We need to re-run compare_fields or rely on stored diffs.
+        # Stored diffs (fields_updated etc) were CLEARED upon accept.
+        # So we MUST recover them.
+        # BUT we don't store "cleared" diffs.
+        # Only option: Re-run validation for this entry?
+        # Yes, re-validating is safest.
+
+        # Re-validate this single entry
+        # We need the original entry dict?
+        # Actually validator.validate_entry expects a dict.
+        # If we restored the entry to original state in DB, we can just run validate_entry on it.
+
+        # 1. Restore DB entry in memory (done above)
+        # 2. Re-run validation
+        # We need to find the raw entry. validator.db.entries is list of dicts.
+        # We already modified 'entry' in place.
+        # So just calling validate_entry(entry) should work, assuming it fetches from APIs again or uses cache.
+        # Validator has no cache for API calls except internal LRU or if we passed it.
+        # Wait, fetch_* methods are cached? Standard requests dont cache.
+        # But we don't want to re-fetch if possible.
+        # The results object has 'all_sources_data'. We can reuse it?
+        # validate_entry fetches fresh data.
+        # To optimize, we could check if we have data.
+        # Actually, for "undo", we mainly want the UI to go back.
+        # If we re-validate, we get fresh 'fields_updated' etc.
+
+        new_res = validator.validate_entry(entry)
+
+        # We need to PRESERVE the original_values from the old result because new validation might overwrite them
+        # with current (already modified) values if we aren't careful?
+        # validate_entry populates original_values from the passed 'entry'.
+        # 'entry' is now restored to original state (mostly).
+        # So safe.
+
+        # Replace result in list
+        index = results.index(result)
+        results[index] = new_res
+
+        validator.save_updated_bib(force=True)
+
+        return JSONResponse({"success": True})
+
+    @app.post("/api/reject_all_global")
+    async def reject_all_global():
+        """Reject all updates (clears suggestions)"""
+        # "Reject All" means we discard the suggestions and keep local values.
+        # Effectively, we just clear the 'fields_updated', 'conflict', 'different' lists in the results.
+        # We DO NOT modify the DB (since local values are already there).
+        # We DO NOT save to file (nothing changed).
+
+        results = app.state.results
+        for result in results:
+            result.fields_updated = {}
+            result.fields_conflict = {}
+            result.fields_different = {}
+            # identical remains identical
+
+        return {"success": True, "count": len(results)}
 
     # API: Accept changes
     @app.post("/api/accept")
