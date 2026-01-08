@@ -161,7 +161,7 @@ class BibTeXValidator:
             },
             "book": {
                 "required_any": ["author", "editor"],
-                "required": ["title", "publisher", "year"],
+                "required": ["title", "year"],
                 "optional": [
                     "volume",
                     "number",
@@ -170,17 +170,17 @@ class BibTeXValidator:
                     "edition",
                     "month",
                     "note",
+                    "publisher",
                 ],
                 "extended": ["doi", "url", "urldate", "isbn"],
             },
             "inproceedings": {
-                "required": ["author", "title", "booktitle", "year"],
+                "required": ["author", "title", "booktitle", "year", "pages"],
                 "optional": [
                     "editor",
                     "volume",
                     "number",
                     "series",
-                    "pages",
                     "publisher",
                     "organization",
                     "address",
@@ -205,15 +205,15 @@ class BibTeXValidator:
                 "extended": ["doi", "url", "urldate", "isbn"],
             },
             "incollection": {
-                "required": ["author", "title", "booktitle", "publisher", "year"],
+                "required": ["author", "title", "booktitle", "year", "pages"],
                 "optional": [
+                    "publisher",
                     "editor",
                     "volume",
                     "number",
                     "series",
                     "type",
                     "chapter",
-                    "pages",
                     "address",
                     "edition",
                     "month",
@@ -223,8 +223,7 @@ class BibTeXValidator:
             },
             "inbook": {
                 "required_any": ["author", "editor"],
-                "required_any_2": ["chapter", "pages"],
-                "required": ["title", "publisher", "year"],
+                "required": ["title", "year", "chapter", "pages"],
                 "optional": [
                     "volume",
                     "number",
@@ -233,6 +232,7 @@ class BibTeXValidator:
                     "edition",
                     "month",
                     "note",
+                    "publisher",
                 ],
                 "extended": ["doi", "url", "urldate", "isbn"],
             },
@@ -242,14 +242,13 @@ class BibTeXValidator:
                 "extended": ["doi", "url", "urldate"],
             },
             "manual": {
-                "required": ["title"],
+                "required": ["title", "year"],
                 "optional": [
                     "author",
                     "organization",
                     "address",
                     "edition",
                     "month",
-                    "year",
                     "note",
                 ],
                 "extended": ["doi", "url", "urldate"],
@@ -265,20 +264,19 @@ class BibTeXValidator:
                 "extended": ["doi", "url", "urldate"],
             },
             "booklet": {
-                "required": ["title"],
+                "required": ["title", "year"],
                 "optional": [
                     "author",
                     "howpublished",
                     "address",
                     "month",
-                    "year",
                     "note",
                 ],
                 "extended": ["doi", "url", "urldate"],
             },
             "unpublished": {
-                "required": ["author", "title", "note"],
-                "optional": ["month", "year"],
+                "required": ["author", "title", "note", "year"],
+                "optional": ["month"],
                 "extended": [
                     "doi",
                     "url",
@@ -289,13 +287,12 @@ class BibTeXValidator:
                 ],
             },
             "misc": {
-                "required": [],
+                "required": ["year"],
                 "optional": [
                     "author",
                     "title",
                     "howpublished",
                     "month",
-                    "year",
                     "note",
                 ],
                 "extended": [
