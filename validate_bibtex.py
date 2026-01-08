@@ -105,246 +105,187 @@ class BibTeXValidator:
     """Validates and enriches BibTeX entries"""
 
     # Standard fields for different entry types
-    REQUIRED_FIELDS = {
-        "article": ["title", "author", "journal", "year"],
-        "inproceedings": ["title", "author", "booktitle", "year"],
-        "book": ["title", "author", "publisher", "year"],
-        "misc": ["title"],
-    }
-
-    # Common fields allowed in any entry type
-    COMMON_FIELDS = {
-        "url",
-        "doi",
-        "note",
-        "abstract",
-        "eprint",
-        "eprinttype",
-        "archiveprefix",
-        "primaryclass",
-        "file",
-        "keywords",
-    }
-
-    # Allowed fields per entry type (plus common fields)
-    ALLOWED_FIELDS = {
-        "article": {
-            "title",
-            "author",
-            "journal",
-            "year",
-            "volume",
-            "number",
-            "pages",
-            "month",
-            "issn",
+    # Valid entry types schema
+    FIELD_SCHEMA = {
+        "common": {
+            "core": [
+                "author",
+                "editor",
+                "title",
+                "year",
+                "month",
+                "note",
+                "key",
+                "crossref",
+            ],
+            "extended": [
+                "doi",
+                "url",
+                "urldate",
+                "eprint",
+                "archiveprefix",
+                "primaryclass",
+                "isbn",
+                "issn",
+                "language",
+                "keywords",
+                "file",  # Kept from previous common fields as it's useful
+            ],
         },
-        "inproceedings": {
-            "title",
-            "author",
-            "booktitle",
-            "year",
-            "editor",
-            "volume",
-            "number",
-            "series",
-            "pages",
-            "address",
-            "month",
-            "organization",
-            "publisher",
-        },
-        "book": {
-            "title",
-            "author",
-            "editor",
-            "publisher",
-            "year",
-            "volume",
-            "number",
-            "series",
-            "address",
-            "edition",
-            "month",
-            "isbn",
-        },
-        "incollection": {
-            "title",
-            "author",
-            "booktitle",
-            "publisher",
-            "year",
-            "editor",
-            "volume",
-            "number",
-            "series",
-            "type",
-            "chapter",
-            "pages",
-            "address",
-            "edition",
-            "month",
-            "isbn",
-        },
-        "phdthesis": {
-            "title",
-            "author",
-            "school",
-            "year",
-            "type",
-            "address",
-            "month",
-        },
-        "mastersthesis": {
-            "title",
-            "author",
-            "school",
-            "year",
-            "type",
-            "address",
-            "month",
-        },
-        "techreport": {
-            "title",
-            "author",
-            "institution",
-            "year",
-            "type",
-            "number",
-            "address",
-            "month",
-        },
-        "misc": {"title", "author", "howpublished", "month", "year"},
-        "proceedings": {
-            "title",
-            "editor",
-            "volume",
-            "number",
-            "series",
-            "address",
-            "organization",
-            "publisher",
-            "year",
-            "month",
-            "isbn",
-        },
-    }
-
-    # Common fields allowed in any entry type
-    COMMON_FIELDS = {
-        "url",
-        "doi",
-        "note",
-        "abstract",
-        "eprint",
-        "eprinttype",
-        "archiveprefix",
-        "primaryclass",
-        "file",
-        "keywords",
-    }
-
-    # Allowed fields per entry type (plus common fields)
-    ALLOWED_FIELDS = {
-        "article": {
-            "title",
-            "author",
-            "journal",
-            "year",
-            "volume",
-            "number",
-            "pages",
-            "month",
-            "issn",
-        },
-        "inproceedings": {
-            "title",
-            "author",
-            "booktitle",
-            "year",
-            "editor",
-            "volume",
-            "number",
-            "series",
-            "pages",
-            "address",
-            "month",
-            "organization",
-            "publisher",
-        },
-        "book": {
-            "title",
-            "author",
-            "editor",
-            "publisher",
-            "year",
-            "volume",
-            "number",
-            "series",
-            "address",
-            "edition",
-            "month",
-            "isbn",
-        },
-        "incollection": {
-            "title",
-            "author",
-            "booktitle",
-            "publisher",
-            "year",
-            "editor",
-            "volume",
-            "number",
-            "series",
-            "type",
-            "chapter",
-            "pages",
-            "address",
-            "edition",
-            "month",
-            "isbn",
-        },
-        "phdthesis": {
-            "title",
-            "author",
-            "school",
-            "year",
-            "type",
-            "address",
-            "month",
-        },
-        "mastersthesis": {
-            "title",
-            "author",
-            "school",
-            "year",
-            "type",
-            "address",
-            "month",
-        },
-        "techreport": {
-            "title",
-            "author",
-            "institution",
-            "year",
-            "type",
-            "number",
-            "address",
-            "month",
-        },
-        "misc": {"title", "author", "howpublished", "month", "year"},
-        "proceedings": {
-            "title",
-            "editor",
-            "volume",
-            "number",
-            "series",
-            "address",
-            "organization",
-            "publisher",
-            "year",
-            "month",
-            "isbn",
+        "types": {
+            "article": {
+                "required": ["author", "title", "journal", "year"],
+                "optional": ["volume", "number", "pages", "month", "note"],
+                "extended": ["doi", "url", "urldate", "issn"],
+            },
+            "book": {
+                "required_any": [["author"], ["editor"]],
+                "required": ["title", "publisher", "year"],
+                "optional": [
+                    "volume",
+                    "number",
+                    "series",
+                    "address",
+                    "edition",
+                    "month",
+                    "note",
+                ],
+                "extended": ["doi", "url", "urldate", "isbn"],
+            },
+            "inproceedings": {
+                "required": ["author", "title", "booktitle", "year"],
+                "optional": [
+                    "editor",
+                    "volume",
+                    "number",
+                    "series",
+                    "pages",
+                    "publisher",
+                    "organization",
+                    "address",
+                    "month",
+                    "note",
+                ],
+                "extended": ["doi", "url", "urldate", "isbn"],
+            },
+            "proceedings": {
+                "required": ["title", "year"],
+                "optional": [
+                    "editor",
+                    "volume",
+                    "number",
+                    "series",
+                    "publisher",
+                    "organization",
+                    "address",
+                    "month",
+                    "note",
+                ],
+                "extended": ["doi", "url", "urldate", "isbn"],
+            },
+            "incollection": {
+                "required": ["author", "title", "booktitle", "publisher", "year"],
+                "optional": [
+                    "editor",
+                    "volume",
+                    "number",
+                    "series",
+                    "type",
+                    "chapter",
+                    "pages",
+                    "address",
+                    "edition",
+                    "month",
+                    "note",
+                ],
+                "extended": ["doi", "url", "urldate", "isbn"],
+            },
+            "inbook": {
+                "required_any": [["author"], ["editor"]],
+                "required_any_2": [["chapter"], ["pages"]],
+                "required": ["title", "publisher", "year"],
+                "optional": [
+                    "volume",
+                    "number",
+                    "series",
+                    "address",
+                    "edition",
+                    "month",
+                    "note",
+                ],
+                "extended": ["doi", "url", "urldate", "isbn"],
+            },
+            "techreport": {
+                "required": ["author", "title", "institution", "year"],
+                "optional": ["type", "number", "address", "month", "note"],
+                "extended": ["doi", "url", "urldate"],
+            },
+            "manual": {
+                "required": ["title"],
+                "optional": [
+                    "author",
+                    "organization",
+                    "address",
+                    "edition",
+                    "month",
+                    "year",
+                    "note",
+                ],
+                "extended": ["doi", "url", "urldate"],
+            },
+            "mastersthesis": {
+                "required": ["author", "title", "school", "year"],
+                "optional": ["type", "address", "month", "note"],
+                "extended": ["doi", "url", "urldate"],
+            },
+            "phdthesis": {
+                "required": ["author", "title", "school", "year"],
+                "optional": ["type", "address", "month", "note"],
+                "extended": ["doi", "url", "urldate"],
+            },
+            "booklet": {
+                "required": ["title"],
+                "optional": [
+                    "author",
+                    "howpublished",
+                    "address",
+                    "month",
+                    "year",
+                    "note",
+                ],
+                "extended": ["doi", "url", "urldate"],
+            },
+            "unpublished": {
+                "required": ["author", "title", "note"],
+                "optional": ["month", "year"],
+                "extended": [
+                    "doi",
+                    "url",
+                    "urldate",
+                    "eprint",
+                    "archiveprefix",
+                    "primaryclass",
+                ],
+            },
+            "misc": {
+                "required": [],
+                "optional": [
+                    "author",
+                    "title",
+                    "howpublished",
+                    "month",
+                    "year",
+                    "note",
+                ],
+                "extended": [
+                    "doi",
+                    "url",
+                    "urldate",
+                    "eprint",
+                    "archiveprefix",
+                    "primaryclass",
+                ],
+            },
         },
     }
 
@@ -403,6 +344,50 @@ class BibTeXValidator:
         ]
 
         self.print_lock = threading.Lock()
+
+        # Compile schema
+        self._compile_schemas()
+
+    def _compile_schemas(self):
+        """Compile JSON schema into usable sets and lists"""
+        self.ALLOWED_FIELDS = {}
+        self.REQUIRED_FIELDS = {}
+        self.REQUIRED_ANY_FIELDS = {}  # list of lists of fields (one from each list must exist)
+
+        common_core = set(self.FIELD_SCHEMA["common"]["core"])
+        common_extended = set(self.FIELD_SCHEMA["common"]["extended"])
+        common_all = common_core.union(common_extended).union({"ID", "ENTRYTYPE"})
+        self.COMMON_FIELDS = common_all  # Expose common fields
+
+        for type_name, schema in self.FIELD_SCHEMA["types"].items():
+            # REQUIRED
+            self.REQUIRED_FIELDS[type_name] = schema.get("required", [])
+
+            # REQUIRED ANY
+            req_any = []
+            if "required_any" in schema:
+                req_any.append(schema["required_any"])
+            if "required_any_2" in schema:
+                req_any.append(schema["required_any_2"])
+            self.REQUIRED_ANY_FIELDS[type_name] = req_any
+
+            # ALLOWED
+            allowed = set(schema.get("required", []))
+            allowed.update(schema.get("optional", []))
+            allowed.update(schema.get("extended", []))
+
+            # Add required_choice fields to allowed
+            if "required_any" in schema:
+                for grp in schema["required_any"]:
+                    allowed.update(grp)
+            if "required_any_2" in schema:
+                for grp in schema["required_any_2"]:
+                    allowed.update(grp)
+
+            # Add common
+            allowed.update(common_all)
+
+            self.ALLOWED_FIELDS[type_name] = allowed
 
         # Load BibTeX file
         if not self.bib_file.exists():
@@ -1939,6 +1924,13 @@ class BibTeXValidator:
         for field_name in required:
             if not entry.get(field_name, "").strip():
                 result.fields_missing.append(field_name)
+
+        # Check required_any fields (at least one from each group must exist)
+        req_any_groups = self.REQUIRED_ANY_FIELDS.get(entry_type, [])
+        for group in req_any_groups:
+            # Check if at least one field in the group exists and is not empty
+            if not any(entry.get(f, "").strip() for f in group):
+                result.fields_missing.append(f"one of {group}")
         if result.fields_missing:
             logs.append(f"  Missing fields: {', '.join(result.fields_missing)}")
 
@@ -1991,7 +1983,16 @@ class BibTeXValidator:
                     # Update entry if requested - entry objects are distinct, so this is safe
                     if self.update_bib and result.fields_updated:
                         for field_name, value in result.fields_updated.items():
-                            entry[field_name] = value
+                            # Find existing key with same name (case-insensitive) to overwrite
+                            existing_key = next(
+                                (
+                                    k
+                                    for k in entry.keys()
+                                    if k.lower() == field_name.lower()
+                                ),
+                                field_name,
+                            )
+                            entry[existing_key] = value
                 except Exception as e:
                     print(f"\nError validating entry {idx}: {e}")
 
