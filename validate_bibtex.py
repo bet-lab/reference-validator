@@ -4015,7 +4015,9 @@ def create_gui_app(
         }
 
     # API: Get entry comparison
-    @app.get("/api/entry/{entry_key}")
+    # Use the `path` converter so entry keys containing "/" (e.g., DOI-style IDs)
+    # are correctly captured instead of causing a 404 at the router level.
+    @app.get("/api/entry/{entry_key:path}")
     async def get_entry(entry_key: str):
         """Get detailed comparison data for a specific entry"""
         from urllib.parse import unquote
