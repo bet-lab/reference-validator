@@ -2533,6 +2533,226 @@ class BibTeXValidator:
 
         return filtered_entry
 
+    # ------------------------------------------------------------------
+    # Surgical (minimal-diff) save helpers
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _find_field_span(text: str, start: int, end: int, field_name: str):
+        """
+        Find the start and end offsets of a field assignment within an entry
+        block (text[start:end]).  Handles multi-line values by counting brace
+        depth.
+
+        Returns (field_start, field_end) as absolute offsets into *text*,
+        or None if the field is not found.  field_end points past the
+        trailing comma (if any) and any newline that follows.
+        """
+        # Match:  fieldname  =  { ... }  ,?
+        # We search line-by-line so ^ works.
+        pattern = re.compile(
+            r"^([ \t]*)" + re.escape(field_name) + r"\s*=\s*",
+            re.MULTILINE | re.IGNORECASE,
+        )
+        m = pattern.search(text, start, end)
+        if m is None:
+            return None
+
+        field_start = m.start()
+        pos = m.end()
+
+        # Walk forward from '=' to consume the value.  The value may be
+        # brace-delimited, quote-delimited, or a bare token (number / macro).
+        # Skip any whitespace after '='.
+        while pos < end and text[pos] in " \t":
+            pos += 1
+
+        if pos >= end:
+            return None
+
+        if text[pos] == "{":
+            # Brace-delimited value: count depth.
+            depth = 0
+            while pos < end:
+                ch = text[pos]
+                if ch == "{":
+                    depth += 1
+                elif ch == "}":
+                    depth -= 1
+                    if depth == 0:
+                        pos += 1  # past closing brace
+                        break
+                pos += 1
+        elif text[pos] == '"':
+            # Quote-delimited value.
+            pos += 1  # past opening quote
+            while pos < end and text[pos] != '"':
+                if text[pos] == "\\":
+                    pos += 1  # skip escaped char
+                pos += 1
+            if pos < end:
+                pos += 1  # past closing quote
+        else:
+            # Bare token (number, macro name).
+            while pos < end and text[pos] not in ",\n}":
+                pos += 1
+
+        # Consume optional trailing comma and whitespace up to newline.
+        if pos < end and text[pos] == ",":
+            pos += 1
+        # Consume trailing spaces/tabs then one newline.
+        while pos < end and text[pos] in " \t":
+            pos += 1
+        if pos < end and text[pos] == "\n":
+            pos += 1
+
+        return (field_start, pos)
+
+    @staticmethod
+    def _find_entry_block(text: str, entry_key: str):
+        """
+        Return (entry_start, entry_end) for the entry with the given cite key.
+        entry_start points to the '@', entry_end points past the closing '}'.
+        Returns None if not found.
+        """
+        # Match @type{key  (key may contain special chars so we escape it)
+        pattern = re.compile(
+            r"@\w+\{\s*" + re.escape(entry_key) + r"\s*,",
+            re.IGNORECASE,
+        )
+        m = pattern.search(text)
+        if m is None:
+            return None
+
+        entry_start = m.start()
+        # Walk forward from the opening '{' counting brace depth.
+        brace_pos = text.index("{", entry_start)
+        depth = 0
+        pos = brace_pos
+        while pos < len(text):
+            ch = text[pos]
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    entry_end = pos + 1
+                    # Include trailing newline if present
+                    if entry_end < len(text) and text[entry_end] == "\n":
+                        entry_end += 1
+                    return (entry_start, entry_end)
+            pos += 1
+        return None
+
+    def surgical_save(self, changes: dict):
+        """
+        Save only specific field changes to the .bib file without rewriting
+        the entire file, so that ``git diff`` shows a minimal changeset.
+
+        Parameters
+        ----------
+        changes : dict
+            ``{entry_key: {field_name: new_value, ...}, ...}``
+            Use ``new_value=None`` to delete a field.
+            The special field name ``"entrytype"`` changes the ``@type``
+            prefix of the entry.
+
+        Raises
+        ------
+        RuntimeError
+            If the file cannot be read or an entry is not found (caller
+            should fall back to a full dump).
+        """
+        file_path = self.output_file
+        text = Path(file_path).read_text(encoding="utf-8")
+
+        for entry_key, field_changes in changes.items():
+            block = self._find_entry_block(text, entry_key)
+            if block is None:
+                raise RuntimeError(
+                    f"Entry '{entry_key}' not found in {file_path}"
+                )
+            entry_start, entry_end = block
+
+            for field_name, new_value in field_changes.items():
+                # Re-locate the entry block after each edit (offsets shift).
+                block = self._find_entry_block(text, entry_key)
+                if block is None:
+                    raise RuntimeError(
+                        f"Entry '{entry_key}' lost after edit"
+                    )
+                entry_start, entry_end = block
+
+                # --- entry type change ---
+                if field_name.lower() == "entrytype":
+                    type_pat = re.compile(
+                        r"@(\w+)(\{\s*" + re.escape(entry_key) + r")",
+                        re.IGNORECASE,
+                    )
+                    m = type_pat.search(text, entry_start, entry_end)
+                    if m:
+                        text = (
+                            text[: m.start(1)]
+                            + new_value
+                            + text[m.end(1):]
+                        )
+                    continue
+
+                # --- delete field ---
+                if new_value is None:
+                    span = self._find_field_span(
+                        text, entry_start, entry_end, field_name
+                    )
+                    if span:
+                        text = text[: span[0]] + text[span[1]:]
+                    continue
+
+                # --- update or insert field ---
+                span = self._find_field_span(
+                    text, entry_start, entry_end, field_name
+                )
+                if span:
+                    # Replace existing field line.
+                    # Detect the indent used on the original line.
+                    line_start = span[0]
+                    indent = ""
+                    idx = line_start
+                    while idx < span[1] and text[idx] in " \t":
+                        indent += text[idx]
+                        idx += 1
+                    if not indent:
+                        indent = "\t"
+                    replacement = (
+                        f"{indent}{field_name} = {{{new_value}}},\n"
+                    )
+                    text = text[: span[0]] + replacement + text[span[1]:]
+                else:
+                    # Insert new field before the closing '}'.
+                    # Find the last '}' of the entry block.
+                    block = self._find_entry_block(text, entry_key)
+                    if block is None:
+                        raise RuntimeError(
+                            f"Entry '{entry_key}' lost during insert"
+                        )
+                    _, entry_end = block
+                    # entry_end may include a trailing newline; the closing
+                    # '}' is at entry_end - 1 or entry_end - 2.
+                    close_pos = text.rindex("}", entry_start, entry_end)
+                    # Detect indent from a neighbouring field.
+                    prev_line_end = text.rfind("\n", entry_start, close_pos)
+                    if prev_line_end != -1:
+                        indent = ""
+                        idx = prev_line_end + 1
+                        while idx < close_pos and text[idx] in " \t":
+                            indent += text[idx]
+                            idx += 1
+                    if not indent:
+                        indent = "\t"
+                    new_line = f"{indent}{field_name} = {{{new_value}}},\n"
+                    text = text[:close_pos] + new_line + text[close_pos:]
+
+        Path(file_path).write_text(text, encoding="utf-8")
+
     def save_updated_bib(self, force=False):
         """Save updated BibTeX file"""
         if self.update_bib or force:
@@ -3932,27 +4152,11 @@ def create_gui_app(
         validator = app.state.validator
         results = app.state.results
         modified_count = 0
+        all_surgical_changes: dict = {}
 
         for result in results:
             entry_key = result.entry_key
-            # We skip conflicts for safety? Or just take API value?
-            # Usually 'Accept All' implies taking the suggested updates.
-            # We will take 'updated' and 'different' fields.
-            # Conflicts might be risky, but let's assume 'Accept All' means 'Trust API'.
 
-            # Re-calculate or use stored result.
-            # The result object has 'fields_updated', 'fields_conflict', etc. properties
-            # BUT these are computed on the fly in the validation loop usually.
-            # Here 'results' list contains the ValidationResult objects generated at startup.
-            # However, if we saved changes, we updated the DB but maybe not the Result object fully?
-            # Actually validate_bibtex modifies the validator.db in memory when save is called.
-            # So looking at result object might be stale if we already modified some entries.
-            # But accept_all_global is usually done at once.
-
-            # Let's collect changes from the result object (which represents the 'proposal')
-            # And apply them if they haven't been applied yet.
-
-            # Better approach: Iterate over all results, simulate "Accept All" for each.
             changes_to_apply = {}
 
             # 1. Updates (New fields)
@@ -3988,8 +4192,22 @@ def create_gui_app(
                     result.fields_conflict = {}
                     result.fields_different = {}
 
-        # Save to file
-        validator.save_updated_bib(force=True)
+                # Record for surgical save (only the actual changes).
+                surgical_entry: dict = {}
+                for f_name, val in changes_to_apply.items():
+                    if f_name == "entrytype":
+                        surgical_entry["entrytype"] = val
+                    else:
+                        surgical_entry[f_name] = val
+                if surgical_entry:
+                    all_surgical_changes[entry_key] = surgical_entry
+
+        # Save to file — use surgical save to keep git diffs minimal.
+        try:
+            if all_surgical_changes:
+                validator.surgical_save(all_surgical_changes)
+        except Exception:
+            validator.save_updated_bib(force=True)
 
         # Helper to regenerate entries list
         current_entries = []
@@ -4463,6 +4681,25 @@ def create_gui_app(
                 }
             )
 
+        # Build a surgical changes dict from what was actually applied above.
+        surgical_changes: dict = {}
+        for f_name in accepted_fields:
+            if not isinstance(f_name, str) or not f_name:
+                continue
+            if f_name == "entrytype":
+                surgical_changes["entrytype"] = entry.get("ENTRYTYPE", "")
+            else:
+                if f_name in entry:
+                    surgical_changes[f_name] = entry[f_name]
+        for f_name in rejected_fields:
+            if not isinstance(f_name, str) or not f_name:
+                continue
+            if f_name in entry:
+                surgical_changes[f_name] = entry[f_name]
+            elif f_name not in entry:
+                # Field was deleted (restored to "missing")
+                surgical_changes[f_name] = None
+
         # Save to file
         try:
             # Check if output directory is writable
@@ -4484,12 +4721,16 @@ def create_gui_app(
                     detail=f"Permission denied: Cannot write to {validator.output_file}",
                 )
 
-            writer = BibTexWriter()
-            writer.indent = "\t"
-            writer.comma_first = False
-
-            with open(validator.output_file, "w", encoding="utf-8") as f:
-                bibtexparser.dump(validator.db, f, writer=writer)
+            # Try surgical save first; fall back to full dump on failure.
+            try:
+                if surgical_changes:
+                    validator.surgical_save({entry_key: surgical_changes})
+            except Exception:
+                writer = BibTexWriter()
+                writer.indent = "\t"
+                writer.comma_first = False
+                with open(validator.output_file, "w", encoding="utf-8") as f:
+                    bibtexparser.dump(validator.db, f, writer=writer)
 
             return JSONResponse(
                 {
