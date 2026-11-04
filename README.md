@@ -198,7 +198,7 @@ optional arguments:
                         Delay between API requests in seconds (default: 1.0)
   --no-progress         Hide progress indicators
   --gui                 Launch web-based GUI interface 🖥️
-  --workers WORKERS     Number of threads for parallel validation (default: 10)
+  --workers WORKERS     Number of threads for parallel validation (default: 30)
   --port PORT           Port for GUI web server (default: 8010)
 ```
 
@@ -223,7 +223,7 @@ optional arguments:
 
 - **🔍 Data Sources**
 
-  - `scholarly` (>=1.7.0): For accessing Google Scholar data (optional).
+  - `scholarly` (>=1.7.0): For accessing Google Scholar data. Installed as a required project dependency; use of the Google Scholar lookup feature is optional.
 
 - **🖥️ GUI Components**
   - `fastapi` (>=0.104.0): Modern web framework for the GUI.
