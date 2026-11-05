@@ -1,0 +1,1824 @@
+@inproceedings{du2025sok,
+author = {Du, Jiacheng and Hu, Jiahui and Wang, Zhibo and Sun, Peng and Gong, Neil Zhenqiang and Ren, Kui and Chen, Chun},
+title = {SoK: on gradient leakage in federated learning},
+year = {2025},
+isbn = {978-1-939133-52-6},
+publisher = {USENIX Association},
+address = {USA},
+abstract = {Federated learning (FL) facilitates collaborative model training among multiple clients without raw data exposure. However, recent studies have shown that clients' private training data can be reconstructed from shared gradients in FL, a vulnerability known as gradient inversion attacks (GIAs). While GIAs have demonstrated effectiveness under ideal settings and auxiliary assumptions, their actual efficacy against practical FL systems remains under-explored. To address this gap, we conduct a comprehensive study on GIAs in this work. We start with a survey of GIAs that establishes a timeline to trace their evolution and develops a systematization to uncover their inherent threats. By rethinking GIA in practical FL systems, three fundamental aspects influencing GIA's effectiveness are identified: training setup, model, and post-processing. Guided by these aspects, we perform extensive theoretical and empirical evaluations of SOTA GIAs across diverse settings. Our findings highlight that GIA is notably constrained, fragile, and easily defensible. Specifically, GIAs exhibit inherent limitations against practical local training settings. Additionally, their effectiveness is highly sensitive to the trained model, and even simple post-processing techniques applied to gradients can serve as effective defenses. Our work provides crucial insights into the limited threats of GIAs in practical FL systems. By rectifying prior misconceptions, we hope to inspire more accurate and realistic investigations on this topic.},
+booktitle = {Proceedings of the 34th USENIX Conference on Security Symposium},
+articleno = {157},
+numpages = {20},
+location = {Seattle, WA, USA},
+series = {SEC '25}
+}
+
+@article{qu2022blockchain,
+  title        = {Blockchain-Enabled Federated Learning: A Survey},
+  author       = {Qu, Youyang and Uddin, Md Palash and Gan, Chenquan and Xiang, Yong and Gao, Longxiang and Yearwood, John},
+  journal      = {ACM Computing Surveys},
+  volume       = {55},
+  number       = {4},
+  article      = {70},
+  year         = {2022},
+  publisher    = {Association for Computing Machinery},
+  doi          = {10.1145/3524104},
+  url          = {https://doi.org/10.1145/3524104}
+}
+
+@INPROCEEDINGS{goldwasser2022planting,
+  author={Goldwasser, Shafi and Kim, Michael P. and Vaikuntanathan, Vinod and Zamir, Or},
+  booktitle={2022 IEEE 63rd Annual Symposium on Foundations of Computer Science (FOCS)}, 
+  title={Planting Undetectable Backdoors in Machine Learning Models : [Extended Abstract]}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={931-942},
+  keywords={Machine learning algorithms;Computational modeling;Perturbation methods;Training data;Machine learning;Observers;Robustness;machine learning;cryptography},
+  doi={10.1109/FOCS54457.2022.00092}}
+
+
+@inproceedings{fang2020local,
+  author    = {Minghong Fang and Xiaoyu Cao and Jinyuan Jia and Neil Gong},
+  title     = {Local Model Poisoning Attacks to {Byzantine-Robust} Federated Learning},
+  booktitle = {29th USENIX Security Symposium (USENIX Security 20)},
+  year      = {2020},
+  isbn      = {978-1-939133-17-5},
+  pages     = {1605--1622},
+  url       = {https://www.usenix.org/conference/usenixsecurity20/presentation/fang},
+  publisher = {USENIX Association},
+  month     = aug
+}
+
+@inproceedings{McMahan2016CommunicationEfficientLO,
+  title={Communication-Efficient Learning of Deep Networks from Decentralized Data},
+  author={H. B. McMahan and Eider Moore and Daniel Ramage and Seth Hampson and Blaise Ag{\"u}era y Arcas},
+  booktitle={International Conference on Artificial Intelligence and Statistics},
+  year={2016},
+  url={https://api.semanticscholar.org/CorpusID:14955348}
+}
+
+@article{menandas2025analysis,
+author = {Menandas, J. and Christo, Mary Subaja},
+year = {2025},
+month = {06},
+pages = {},
+title = {Analysis of various homomorphic encryption algorithms based on primitive functions and applications},
+journal = {OPSEARCH},
+doi = {10.1007/s12597-025-00965-3}
+}
+
+@misc{li2020federatedoptimizationheterogeneousnetworks,
+      title={Federated Optimization in Heterogeneous Networks}, 
+      author={Tian Li and Anit Kumar Sahu and Manzil Zaheer and Maziar Sanjabi and Ameet Talwalkar and Virginia Smith},
+      year={2020},
+      eprint={1812.06127},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/1812.06127}, 
+}
+
+@misc{wang2020tacklingobjectiveinconsistencyproblem,
+      title={Tackling the Objective Inconsistency Problem in Heterogeneous Federated Optimization}, 
+      author={Jianyu Wang and Qinghua Liu and Hao Liang and Gauri Joshi and H. Vincent Poor},
+      year={2020},
+      eprint={2007.07481},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2007.07481}, 
+}
+
+
+@InProceedings{pmlr-v119-karimireddy20a,
+  title = 	 {{SCAFFOLD}: Stochastic Controlled Averaging for Federated Learning},
+  author =       {Karimireddy, Sai Praneeth and Kale, Satyen and Mohri, Mehryar and Reddi, Sashank and Stich, Sebastian and Suresh, Ananda Theertha},
+  booktitle = 	 {Proceedings of the 37th International Conference on Machine Learning},
+  pages = 	 {5132--5143},
+  year = 	 {2020},
+  editor = 	 {III, Hal Daumé and Singh, Aarti},
+  volume = 	 {119},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {13--18 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v119/karimireddy20a/karimireddy20a.pdf},
+  url = 	 {https://proceedings.mlr.press/v119/karimireddy20a.html},
+  abstract = 	 {Federated learning is a key scenario in modern large-scale machine learning where the data remains distributed over a large number of clients and the task is to learn a centralized model without transmitting the client data. The standard optimization algorithm used in this setting is Federated Averaging (FedAvg) due to its low communication cost. We obtain a tight characterization of the convergence of FedAvg and prove that heterogeneity (non-iid-ness) in the client’s data results in a ‘drift’ in the local updates resulting in poor performance. As a solution, we propose a new algorithm (SCAFFOLD) which uses control variates (variance reduction) to correct for the ‘client drift’. We prove that SCAFFOLD requires significantly fewer communication rounds and is not affected by data heterogeneity or client sampling. Further, we show that (for quadratics) SCAFFOLD can take advantage of similarity in the client’s data yielding even faster convergence. The latter is the first result to quantify the usefulness of local-steps in distributed optimization.}
+}
+
+@misc{li2021modelcontrastivefederatedlearning,
+      title={Model-Contrastive Federated Learning}, 
+      author={Qinbin Li and Bingsheng He and Dawn Song},
+      year={2021},
+      eprint={2103.16257},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2103.16257}, 
+}
+
+@article{QI2024272,
+title = {Model aggregation techniques in federated learning: A comprehensive survey},
+journal = {Future Generation Computer Systems},
+volume = {150},
+pages = {272-293},
+year = {2024},
+issn = {0167-739X},
+doi = {https://doi.org/10.1016/j.future.2023.09.008},
+url = {https://www.sciencedirect.com/science/article/pii/S0167739X23003333},
+author = {Pian Qi and Diletta Chiaro and Antonella Guzzo and Michele Ianni and Giancarlo Fortino and Francesco Piccialli},
+keywords = {Model aggregation, Model fusion, Federated learning, Distributed machine learning, Machine learning, Artificial intelligence},
+abstract = {Federated learning (FL) is a distributed machine learning (ML) approach that enables models to be trained on client devices while ensuring the privacy of user data. Model aggregation, also known as model fusion, plays a vital role in FL. It involves combining locally generated models from client devices into a single global model while maintaining user data privacy. However, the accuracy and reliability of the resulting global model depend on the aggregation method chosen, making the selection of an appropriate method crucial. Initially, the simple averaging of model weights was the most commonly used method. However, due to its limitations in handling low-quality or malicious models, alternative techniques have been explored. As FL gains popularity in various domains, it is crucial to have a comprehensive understanding of the available model aggregation techniques and their respective strengths and limitations. However, there is currently a significant gap in the literature when it comes to systematic and comprehensive reviews of these techniques. To address this gap, this paper presents a systematic literature review encompassing 201 studies on model aggregation in FL. The focus is on summarizing the proposed techniques and the ones currently applied for model fusion. This survey serves as a valuable resource for researchers to enhance and develop new aggregation techniques, as well as for practitioners to select the most appropriate method for their FL applications.}
+}
+
+@misc{federated_learning_first,
+      title={Federated Learning: Strategies for Improving Communication Efficiency}, 
+      author={Jakub Konečný and H. Brendan McMahan and Felix X. Yu and Peter Richtárik and Ananda Theertha Suresh and Dave Bacon},
+      year={2017},
+      eprint={1610.05492},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/1610.05492}, 
+}
+
+@INPROCEEDINGS {10020431,
+    author = { Chen, Yao and Gui, Yijie and Lin, Hong and Gan, Wensheng and Wu, Yongdong },
+    booktitle = { 2022 IEEE International Conference on Big Data (Big Data) },
+    title = {{ Federated Learning Attacks and Defenses: A Survey }},
+    year = {2022},
+    volume = {},
+    ISSN = {},
+    pages = {4256-4265},
+    abstract = { In terms of artificial intelligence, there are several security and privacy deficiencies in the traditional centralized training methods of machine learning models by a server. To address this limitation, federated learning (FL) has been proposed and is known for breaking down "data silos" and protecting the privacy of users. However, FL has not yet gained popularity in the industry, mainly due to its security, privacy, and high cost of communication. For the purpose of advancing the research in this field, building a robust FL system, and realizing the wide application of FL, this paper sorts out the possible attacks and corresponding defenses of the current FL system systematically. Firstly, this paper briefly introduces the basic workflow of FL and related knowledge of attacks and defenses. It reviews a great deal of research about privacy theft and malicious attacks that have been studied in recent years. Most importantly, in view of the current three classification criteria, namely the three stages of machine learning, the three different roles in federated learning, and the CIA (Confidentiality, Integrity, and Availability) guidelines on privacy protection, we divide attack approaches into two categories according to the training stage and the prediction stage in machine learning. Furthermore, we also identify the CIA property violated for each attack method and potential attack role. Various defense mechanisms are then analyzed separately from the level of privacy and security. Finally, we summarize the possible challenges in the application of FL from the aspect of attacks and defenses and discuss the future development direction of FL systems. In this way, the designed FL system has the ability to resist different attacks and is more secure and stable. },
+    keywords = {Training;Privacy;Pediatrics;Systematics;Costs;Federated learning;Resists},
+    doi = {10.1109/BigData55660.2022.10020431},
+    url = {https://doi.ieeecomputersociety.org/10.1109/BigData55660.2022.10020431},
+    publisher = {IEEE Computer Society},
+    address = {Los Alamitos, CA, USA},
+    month =Dec
+}
+
+@article{survey_on_attacks,
+    author = {Sikandar, Hira and Waheed, Huda and Tahir, Sibgha and Malik, Saif Ur Rehman and Rafique, Waqas},
+    year = {2023},
+    month = {01},
+    pages = {260},
+    title = {A Detailed Survey on Federated Learning Attacks and Defenses},
+    volume = {12},
+    journal = {Electronics},
+    doi = {10.3390/electronics12020260}
+}
+
+@misc{survey_on_dp,
+      title={Differential Privacy and Machine Learning: a Survey and Review}, 
+      author={Zhanglong Ji and Zachary C. Lipton and Charles Elkan},
+      year={2014},
+      eprint={1412.7584},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/1412.7584}, 
+}
+
+@article{BontekoeKarastoyanovaTurkmen2025VerifiabilityPrivacyPreserving,
+  title        = {Verifiability for Privacy-Preserving Computing on Distributed Data — a Survey},
+  author       = {Bontekoe, Tariq and Karastoyanova, Dimka and Turkmen, Fatih},
+  journal      = {International Journal of Information Security},
+  volume       = {24},
+  number       = {3},
+  pages        = {141},
+  year         = {2025},
+  month        = may,
+  doi          = {10.1007/s10207-025-01047-7},
+  issn         = {1615-5262},
+  url          = {https://doi.org/10.1007/s10207-025-01047-7},
+}
+
+@misc{peng2025surveyzeroknowledgeproofbased,
+      title={A Survey of Zero-Knowledge Proof Based Verifiable Machine Learning}, 
+      author={Zhizhi Peng and Taotao Wang and Chonghe Zhao and Guofu Liao and Zibin Lin and Yifeng Liu and Bin Cao and Long Shi and Qing Yang and Shengli Zhang},
+      year={2025},
+      eprint={2502.18535},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2502.18535}, 
+}
+
+@misc{geyer2018differentiallyprivatefederatedlearning,
+      title={Differentially Private Federated Learning: A Client Level Perspective}, 
+      author={Robin C. Geyer and Tassilo Klein and Moin Nabi},
+      year={2018},
+      eprint={1712.07557},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/1712.07557}, 
+}
+
+@ARTICLE{9714350,
+  author={Ouadrhiri, Ahmed El and Abdelhadi, Ahmed},
+  journal={IEEE Access}, 
+  title={Differential Privacy for Deep and Federated Learning: A Survey}, 
+  year={2022},
+  volume={10},
+  number={},
+  pages={22359-22380},
+  keywords={Privacy;Training;Servers;Computational modeling;Differential privacy;Remuneration;Cryptography;Deep learning;federated learning;privacy protection;differential privacy;probability distribution},
+  doi={10.1109/ACCESS.2022.3151670}}
+
+@misc{jin2024fedmlheefficienthomomorphicencryptionbasedprivacypreserving,
+      title={FedML-HE: An Efficient Homomorphic-Encryption-Based Privacy-Preserving Federated Learning System}, 
+      author={Weizhao Jin and Yuhang Yao and Shanshan Han and Jiajun Gu and Carlee Joe-Wong and Srivatsan Ravi and Salman Avestimehr and Chaoyang He},
+      year={2024},
+      eprint={2303.10837},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2303.10837}, 
+}
+
+@Article{fang2021privacy,
+AUTHOR = {Fang, Haokun and Qian, Quan},
+TITLE = {Privacy Preserving Machine Learning with Homomorphic Encryption and Federated Learning},
+JOURNAL = {Future Internet},
+VOLUME = {13},
+YEAR = {2021},
+NUMBER = {4},
+ARTICLE-NUMBER = {94},
+URL = {https://www.mdpi.com/1999-5903/13/4/94},
+ISSN = {1999-5903},
+ABSTRACT = {Privacy protection has been an important concern with the great success of machine learning. In this paper, it proposes a multi-party privacy preserving machine learning framework, named PFMLP, based on partially homomorphic encryption and federated learning. The core idea is all learning parties just transmitting the encrypted gradients by homomorphic encryption. From experiments, the model trained by PFMLP has almost the same accuracy, and the deviation is less than 1%. Considering the computational overhead of homomorphic encryption, we use an improved Paillier algorithm which can speed up the training by 25–28%. Moreover, comparisons on encryption key length, the learning network structure, number of learning clients, etc. are also discussed in detail in the paper.},
+DOI = {10.3390/fi13040094}
+}
+
+
+
+
+@ARTICLE{9919758,
+  author={Kalapaaking, Aditya Pribadi and Stephanie, Veronika and Khalil, Ibrahim and Atiquzzaman, Mohammed and Yi, Xun and Almashor, Mahathir},
+  journal={IEEE Network}, 
+  title={SMPC-Based Federated Learning for 6G-Enabled Internet of Medical Things}, 
+  year={2022},
+  volume={36},
+  number={4},
+  pages={182-189},
+  keywords={6G mobile communication;Performance evaluation;Cloud computing;Hospitals;Federated learning;Computational modeling;Internet of Medical Things;Telecommunication network performance;Telecommunication network reliability;Quality of service},
+  doi={10.1109/MNET.007.2100717}}
+
+@misc{wei2019federatedlearningdifferentialprivacy,
+      title={Federated Learning with Differential Privacy: Algorithms and Performance Analysis}, 
+      author={Kang Wei and Jun Li and Ming Ding and Chuan Ma and Howard H. Yang and Farokhi Farhad and Shi Jin and Tony Q. S. Quek and H. Vincent Poor},
+      year={2019},
+      eprint={1911.00222},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/1911.00222}, 
+}
+
+@inproceedings {OzdemirB22-0,
+author = {Alex Ozdemir and Dan Boneh},
+title = {Experimenting with Collaborative {zk-SNARKs}: {Zero-Knowledge} Proofs for Distributed Secrets},
+booktitle = {31st USENIX Security Symposium (USENIX Security 22)},
+year = {2022},
+isbn = {978-1-939133-31-1},
+address = {Boston, MA},
+pages = {4291--4308},
+url = {https://www.usenix.org/conference/usenixsecurity22/presentation/ozdemir},
+publisher = {USENIX Association},
+month = aug
+}
+
+@misc{garg2025malicious,
+      author = {Sanjam Garg and Aarushi Goel and Abhishek Jain and Bhaskar Roberts and Sruthi Sekar},
+      title = {Malicious Security in Collaborative zk-{SNARKs}: More than Meets the Eye},
+      howpublished = {Cryptology {ePrint} Archive, Paper 2025/1026},
+      year = {2025},
+      url = {https://eprint.iacr.org/2025/1026}
+}
+
+@misc{garg2025jigsaw,
+      author = {Sanjam Garg and Aarushi Goel and Dimitris Kolonelos and Rohit Sinha},
+      title = {Jigsaw: Doubly Private Smart Contracts},
+      howpublished = {Cryptology {ePrint} Archive, Paper 2025/1147},
+      year = {2025},
+      url = {https://eprint.iacr.org/2025/1147}
+}
+
+@online{Long2024DecentralizedTraining,
+  author       = {Alexander Long},
+  title        = {Decentralized Training Looms},
+  year         = {2024},
+  month        = {jul},
+  day          = {8},
+  organization = {Pluralis Research},
+  url          = {https://blog.pluralis.ai/p/decentralized-ai-looms}
+}
+
+@misc{ajanthan2025nesterov,
+      title={Nesterov Method for Asynchronous Pipeline Parallel Optimization}, 
+      author={Thalaiyasingam Ajanthan and Sameera Ramasinghe and Yan Zuo and Gil Avraham and Alexander Long},
+      year={2025},
+      eprint={2505.01099},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2505.01099}, 
+}
+
+@misc{ramasinghe2025protocol,
+      title={Protocol Models: Scaling Decentralized Training with Communication-Efficient Model Parallelism}, 
+      author={Sameera Ramasinghe and Thalaiyasingam Ajanthan and Gil Avraham and Yan Zuo and Alexander Long},
+      year={2025},
+      eprint={2506.01260},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2506.01260}, 
+}
+
+% Papers we analyze
+
+@misc{xing2023zeroknowledgeproofbasedpracticalfederated,
+      title={Zero-Knowledge Proof-based Practical Federated Learning on Blockchain}, 
+      author={Zhibo Xing and Zijian Zhang and Meng Li and Jiamou Liu and Liehuang Zhu and Giovanni Russello and Muhammad Rizwan Asghar},
+      year={2023},
+      eprint={2304.05590},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2304.05590}, 
+}
+
+@article{DBLP:journals/fgcs/XuPTTMN22,
+title = {Non-interactive verifiable privacy-preserving federated learning},
+journal = {Future Generation Computer Systems},
+volume = {128},
+pages = {365-380},
+year = {2022},
+issn = {0167-739X},
+doi = {https://doi.org/10.1016/j.future.2021.10.017},
+url = {https://www.sciencedirect.com/science/article/pii/S0167739X21004131},
+author = {Yi Xu and Changgen Peng and Weijie Tan and Youliang Tian and Minyao Ma and Kun Niu},
+keywords = {Non-interactive, Verifiable, Privacy-preserving, Federated learning, Dual-servers},
+abstract = {Federated Learning (FL) has received widespread attention for its ability to conduct collaborative learning without collecting raw data. Recently, it has became a reality that more accurate model training is achieved through the large-scale deployment of FL on resource-constrained device, where the communication is expensive and clients dropping out is common, such as mobile phone or IoT devices etc. However, shared local gradients make the privacy of local data in FL vulnerable, and the client is easily deceived by the server for the returned forged results. To solve these problems, the existing schemes either only consider the privacy protection requirements under the communication-limited but not involving verifiability, or consider the privacy-protection and verification separately, which incurs expensive computation and communication costs. It is a challenge to design a lightweight verifiable privacy preserving gradient aggregation scheme for large-scale resource-constrained clients under the communication-limited condition. In this paper, we proposed a non-interactive verifiable privacy-preserving FL based on dual-servers (NIVP-DS) architecture, which improves the efficiency and security of the system and is robust to clients dropping out, based on the constraints that the communication overhead between client and server not more than 2× that of plaintext computation. Based on NIVP-DS, an efficient privacy gradient aggregation scheme is presented by exploiting random matrix coding and secure 2-party computation. The scheme only costs O(M) fully linear operation in the client side under the communication constraints. In order to realize the verifiability, a cross-verification method is introduce, which is based on credible matrix exchange to extend the privacy aggregation scheme to a verifiable scheme. The method only costs little additional overhead, meanwhile, guarantees that one dishonest server cannot forge the aggregate results to deceive the honest client, even if it colludes with multiple clients. The effectiveness of NIVP-DS in practice is corroborated by experiments. The results show that the performance of both secure aggregation and verification are efficiency, and the additional overhead of verification is minimal.}
+}
+
+@inproceedings{10.1145/3133956.3133982,
+author = {Bonawitz, Keith and Ivanov, Vladimir and Kreuter, Ben and Marcedone, Antonio and McMahan, H. Brendan and Patel, Sarvar and Ramage, Daniel and Segal, Aaron and Seth, Karn},
+title = {Practical Secure Aggregation for Privacy-Preserving Machine Learning},
+year = {2017},
+isbn = {9781450349468},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3133956.3133982},
+doi = {10.1145/3133956.3133982},
+abstract = {We design a novel, communication-efficient, failure-robust protocol for secure aggregation of high-dimensional data. Our protocol allows a server to compute the sum of large, user-held data vectors from mobile devices in a secure manner (i.e. without learning each user's individual contribution), and can be used, for example, in a federated learning setting, to aggregate user-provided model updates for a deep neural network. We prove the security of our protocol in the honest-but-curious and active adversary settings, and show that security is maintained even if an arbitrarily chosen subset of users drop out at any time. We evaluate the efficiency of our protocol and show, by complexity analysis and a concrete implementation, that its runtime and communication overhead remain low even on large data sets and client pools. For 16-bit input values, our protocol offers $1.73 x communication expansion for 210 users and 220-dimensional vectors, and 1.98 x expansion for 214 users and 224-dimensional vectors over sending data in the clear.},
+booktitle = {Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security},
+pages = {1175–1191},
+numpages = {17},
+keywords = {federated learning, machine learning, privacy-preserving protocols, secure aggregation},
+location = {Dallas, Texas, USA},
+series = {CCS '17}
+}
+
+@ARTICLE{10535217,
+  author={Wang, Zhipeng and Dong, Nanqing and Sun, Jiahao and Knottenbelt, William and Guo, Yike},
+  journal={IEEE Transactions on Big Data}, 
+  title={$ \tt {zkFL}$zkFL: Zero-Knowledge Proof-Based Gradient Aggregation for Federated Learning}, 
+  year={2025},
+  volume={11},
+  number={2},
+  pages={447-460},
+  keywords={Blockchains;Big Data;Training;Computational modeling;Data models;Privacy;Arithmetic;Federated learning;security;trustworthy machine learning;zero-knowledge proof},
+  doi={10.1109/TBDATA.2024.3403370}}
+
+@article{VPFL,
+author = {Ma, Juan and Liu, Hao and Zhang, Mingyue and Liu, Zhiming},
+year = {2024},
+month = {06},
+pages = {112115},
+title = {VPFL: Enabling verifiability and privacy in federated learning with zero-knowledge proofs},
+volume = {299},
+journal = {Knowledge-Based Systems},
+doi = {10.1016/j.knosys.2024.112115}
+}
+
+@INPROCEEDINGS{10433831,
+  author={Ahmadi, Mojtaba and Nourmohammadi, Reza},
+  booktitle={2024 IEEE 3rd International Conference on AI in Cybersecurity (ICAIC)}, 
+  title={zkFDL: An efficient and privacy-preserving decentralized federated learning with zero knowledge proof}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={1-10},
+  keywords={Costs;Federated learning;Smart contracts;Blockchains;Servers;Zero knowledge proof;Task analysis;federated learning;blockchain;zero knowledge proof;aggregator algorithm;scaling systems},
+  doi={10.1109/ICAIC60265.2024.10433831}}
+
+@article{Federify,
+author = {Keshavarzkalhori, Ghazaleh and Pérez-Solà, Cristina and Navarro-Arribas, Guillermo and Herrera-Joancomartí, Jordi and Yajam, Habib},
+year = {2023},
+month = {01},
+pages = {1-1},
+title = {Federify: A Verifiable Federated Learning Scheme Based on zkSNARKs and Blockchain},
+volume = {PP},
+journal = {IEEE Access},
+doi = {10.1109/ACCESS.2023.3347039}
+}
+
+@misc{bellachia2025verifbflleveragingzksnarksverifiable,
+      title={VerifBFL: Leveraging zk-SNARKs for A Verifiable Blockchained Federated Learning}, 
+      author={Ahmed Ayoub Bellachia and Mouhamed Amine Bouchiha and Yacine Ghamri-Doudane and Mourad Rabah},
+      year={2025},
+      eprint={2501.04319},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2501.04319}, 
+}
+
+@INPROCEEDINGS{9284684,
+  author={Ramanan, Paritosh and Nakayama, Kiyoshi},
+  booktitle={2020 IEEE International Conference on Blockchain (Blockchain)}, 
+  title={BAFFLE : Blockchain Based Aggregator Free Federated Learning}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={72-81},
+  keywords={Scalability;Conferences;Smart contracts;Blockchain;Benchmark testing;Collaborative work;Task analysis;Blockchain based decentralization;Aggregator Free Federated Learning;Ethereum driven Smart Contracts},
+  doi={10.1109/Blockchain50366.2020.00017}}
+
+@inproceedings{hegeds:hal-02319574,
+  TITLE = {{Gossip Learning as a Decentralized Alternative to Federated Learning}},
+  AUTHOR = {Hegedűs, Istv{\'a}n and Danner, G{\'a}bor and Jelasity, M{\'a}rk},
+  URL = {https://inria.hal.science/hal-02319574},
+  BOOKTITLE = {{Lecture Notes in Computer Science}},
+  ADDRESS = {Kongens Lyngby, Denmark},
+  EDITOR = {Jos{\'e} Pereira and Laura Ricci},
+  PUBLISHER = {{Springer International Publishing}},
+  SERIES = {Distributed Applications and Interoperable Systems},
+  VOLUME = {LNCS-11534},
+  PAGES = {74-90},
+  YEAR = {2019},
+  MONTH = Jun,
+  DOI = {10.1007/978-3-030-22496-7\_5},
+  PDF = {https://inria.hal.science/hal-02319574v1/file/485766_1_En_5_Chapter.pdf},
+  HAL_ID = {hal-02319574},
+  HAL_VERSION = {v1},
+}
+
+@misc{hu2019decentralizedfederatedlearningsegmented,
+      title={Decentralized Federated Learning: A Segmented Gossip Approach}, 
+      author={Chenghao Hu and Jingyan Jiang and Zhi Wang},
+      year={2019},
+      eprint={1908.07782},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/1908.07782}, 
+}
+
+@article{Decentralized_learning_works,
+author = {Hegedűs, István and Danner, Gábor and Jelasity, Márk},
+year = {2021},
+month = {02},
+pages = {109-124},
+title = {Decentralized learning works: An empirical comparison of gossip learning and federated learning},
+volume = {148},
+journal = {Journal of Parallel and Distributed Computing},
+doi = {10.1016/j.jpdc.2020.10.006}
+}
+
+@INPROCEEDINGS{8416353,
+  author={Danner, Gábor and Jelasity, Márk},
+  booktitle={2018 IEEE 38th International Conference on Distributed Computing Systems (ICDCS)}, 
+  title={Token Account Algorithms: The Best of the Proactive and Reactive Worlds}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={885-895},
+  keywords={Peer-to-peer computing;Protocols;Chaotic communication;Fault tolerance;Fault tolerant systems;Convergence;Message passing;gossip learning;chaotic iteration;gossip based broadcast;token account algorithm},
+  doi={10.1109/ICDCS.2018.00090}}
+
+@INPROCEEDINGS{1238221,
+  author={Kempe, D. and Dobra, A. and Gehrke, J.},
+  booktitle={44th Annual IEEE Symposium on Foundations of Computer Science, 2003. Proceedings.}, 
+  title={Gossip-based computation of aggregate information}, 
+  year={2003},
+  volume={},
+  number={},
+  pages={482-491},
+  keywords={Aggregates;Peer to peer computing;Protocols;Large-scale systems;Temperature sensors;Distributed computing;Computer science;Scalability;Fault tolerant systems;Stress},
+  doi={10.1109/SFCS.2003.1238221}}
+
+% One shot Fl papers
+
+@misc{liu2025oneshotfederatedlearningmethods,
+      title={One-shot Federated Learning Methods: A Practical Guide}, 
+      author={Xiang Liu and Zhenheng Tang and Xia Li and Yijun Song and Sijie Ji and Zemin Liu and Bo Han and Linshan Jiang and Jialin Li},
+      year={2025},
+      eprint={2502.09104},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2502.09104}, 
+}
+
+@misc{guha2019oneshotfederatedlearning,
+      title={One-Shot Federated Learning}, 
+      author={Neel Guha and Ameet Talwalkar and Virginia Smith},
+      year={2019},
+      eprint={1902.11175},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/1902.11175}, 
+}
+
+@inproceedings{NEURIPS2022_868f2266,
+ author = {Zhang, Jie and Chen, Chen and Li, Bo and Lyu, Lingjuan and Wu, Shuang and Ding, Shouhong and Shen, Chunhua and Wu, Chao},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {S. Koyejo and S. Mohamed and A. Agarwal and D. Belgrave and K. Cho and A. Oh},
+ pages = {21414--21428},
+ publisher = {Curran Associates, Inc.},
+ title = {DENSE: Data-Free One-Shot Federated Learning},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2022/file/868f2266086530b2c71006ea1908b14a-Paper-Conference.pdf},
+ volume = {35},
+ year = {2022}
+}
+
+
+@inproceedings{10.1145/3658644.3670316,
+author = {Abbaszadeh, Kasra and Pappas, Christodoulos and Katz, Jonathan and Papadopoulos, Dimitrios},
+title = {Zero-Knowledge Proofs of Training for Deep Neural Networks},
+year = {2024},
+isbn = {9798400706363},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3658644.3670316},
+doi = {10.1145/3658644.3670316},
+abstract = {A zero-knowledge proof of training (zkPoT) enables a party to prove that they have correctly trained a committed model based on a committed dataset without revealing any additional information about the model or the dataset. An ideal zkPoT should offer provable security and privacy guarantees, succinct proof size and verifier runtime, and practical prover efficiency. In this work, we present Kaizen, a zkPoT targeted for deep neural networks (DNNs) that achieves all these goals at once. Our construction enables a prover to iteratively train their model via (mini-batch) gradient descent, where the number of iterations need not be fixed in advance; at the end of each iteration, the prover generates a commitment to the trained model parameters attached with a succinct zkPoT, attesting to the correctness of the executed iterations. The proof size and verifier time are independent of the number of iterations.Our construction relies on two building blocks. First, we propose an optimized GKR-style (sumcheck-based) proof system for the gradient-descent algorithm with concretely efficient prover cost; this allows the prover to generate a proof for each iteration. We then show how to recursively compose these proofs across multiple iterations to attain succinctness. As of independent interest, we propose a generic framework for efficient recursive composition of GKR-style proofs, along with aggregatable polynomial commitments.Benchmarks indicate that Kaizen can handle the training of complex models such as VGG-11 with 10 million parameters and batch size 16. The prover runtime is 15 minutes per iteration, which is 24\texttimes{} faster than generic recursive proofs, with prover memory overhead 27\texttimes{} lower. The proof size is 1.63 megabytes, and the verifier runtime is only 130 milliseconds, where both are independent of the number of iterations and the size of the dataset.},
+booktitle = {Proceedings of the 2024 on ACM SIGSAC Conference on Computer and Communications Security},
+pages = {4316–4330},
+numpages = {15},
+keywords = {deep neural networks, incrementally verifiable computation, machine learning, proof of training, zero-knowledge proofs},
+location = {Salt Lake City, UT, USA},
+series = {CCS '24}
+}
+
+
+@misc{waiwitlikhit2024trustlessauditsrevealingdata,
+      title={Trustless Audits without Revealing Data or Models}, 
+      author={Suppakit Waiwitlikhit and Ion Stoica and Yi Sun and Tatsunori Hashimoto and Daniel Kang},
+      year={2024},
+      eprint={2404.04500},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2404.04500}, 
+}
+
+@misc{sun2023zkdlefficientzeroknowledgeproofs,
+      title={zkDL: Efficient Zero-Knowledge Proofs of Deep Learning Training}, 
+      author={Haochen Sun and Tonghe Bai and Jason Li and Hongyang Zhang},
+      year={2023},
+      eprint={2307.16273},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2307.16273}, 
+}
+
+@INPROCEEDINGS {10992417,
+    author = { Eisenhofer, Thorsten and Riepel, Doreen and Chandrasekaran, Varun and Ghosh, Esha and Ohrimenko, Olga and Papernot, Nicolas },
+    booktitle = { 2025 IEEE Conference on Secure and Trustworthy Machine Learning (SaTML) },
+    title = {{ Verifiable and Provably Secure Machine Unlearning }},
+    year = {2025},
+    volume = {},
+    ISSN = {},
+    pages = {479-496},
+    abstract = { Machine unlearning aims to remove points from the training dataset of a machine learning model after training: e.g., when a user requests their data to be deleted. While many unlearning methods have been proposed, none of them enable users to audit the procedure. Furthermore, recent work shows a user is unable to verify whether their data was unlearnt from an inspection of the model parameter alone. Rather than reasoning about parameters, we propose to view verifiable unlearning as a security problem. To this end, we present the first cryptographic definition of verifiable unlearning to formally capture the guarantees of an unlearning system. In this framework, the server first computes a proof that the model was trained on a dataset $D$. Given a user's data point $d$ requested to be deleted, the server updates the model using an unlearning algorithm. It then provides a proof of the correct execution of unlearning and that $d\not\in D^{\prime}$, where $D^{\prime}$ is the new training dataset (i.e., $d$ has been removed). Our framework is generally applicable to different unlearning techniques that we abstract as admissible functions. We instantiate a protocol in the framework, based on cryptographic assumptions, using SNARKs and hash chains. Finally, we implement the protocol for three different unlearning techniques and validate its feasibility for linear regression, logistic regression, and neural networks. },
+    keywords = {Training;Logistic regression;Protocols;Computational modeling;Neural networks;Linear regression;Machine learning;Data models;Servers;Cryptography},
+    doi = {10.1109/SaTML64287.2025.00033},
+    url = {https://doi.ieeecomputersociety.org/10.1109/SaTML64287.2025.00033},
+    publisher = {IEEE Computer Society},
+    address = {Los Alamitos, CA, USA},
+    month =apr
+}
+
+@InProceedings{gennaro2010non,
+author="Gennaro, Rosario
+and Gentry, Craig
+and Parno, Bryan",
+editor="Rabin, Tal",
+title="Non-interactive Verifiable Computing: Outsourcing Computation to Untrusted Workers",
+booktitle="Advances in Cryptology -- CRYPTO 2010",
+year="2010",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="465--482",
+abstract="We introduce and formalize the notion of Verifiable Computation, which enables a computationally weak client to ``outsource'' the computation of a function F on various dynamically-chosen inputs x1,...,xkto one or more workers. The workers return the result of the function evaluation, e.g., yi{\thinspace}={\thinspace}F(xi), as well as a proof that the computation of F was carried out correctly on the given value xi. The primary constraint is that the verification of the proof should require substantially less computational effort than computing F(xi) from scratch.",
+isbn="978-3-642-14623-7"
+}
+
+
+@article{lund1992algebraic,
+  title={Algebraic methods for interactive proof systems},
+  author={Lund, Carsten and Fortnow, Lance and Karloff, Howard and Nisan, Noam},
+  journal={Journal of the ACM (JACM)},
+  volume={39},
+  number={4},
+  pages={859--868},
+  year={1992},
+  publisher={ACM New York, NY, USA}
+}
+
+@article{goldwasser2015delegating,
+  title={Delegating computation: interactive proofs for muggles},
+  author={Goldwasser, Shafi and Kalai, Yael Tauman and Rothblum, Guy N},
+  journal={Journal of the ACM (JACM)},
+  volume={62},
+  number={4},
+  pages={1--64},
+  year={2015},
+  publisher={ACM New York, NY, USA}
+}
+
+@inproceedings{fiat1986prove,
+  title={How to prove yourself: Practical solutions to identification and signature problems},
+  author={Fiat, Amos and Shamir, Adi},
+  booktitle={Conference on the theory and application of cryptographic techniques},
+  pages={186--194},
+  year={1986},
+  organization={Springer}
+}
+
+@inproceedings{kate2010constant,
+  author    = {Aniket Kate and Gregory M. Zaverucha and Ian Goldberg},
+  title     = {Constant-Size Commitments to Polynomials and Their Applications},
+  booktitle = {Advances in Cryptology – ASIACRYPT 2010},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {6477},
+  pages     = {177--194},
+  publisher = {Springer},
+  year      = {2010},
+  doi       = {10.1007/978-3-642-17373-8_11},
+  url       = {https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf}
+}
+
+@inproceedings{benSasson2018fri,
+  author    = {Eli Ben{-}Sasson and Iddo Bentov and Yinon Horesh and Michael Riabzev},
+  title     = {Fast Reed--Solomon Interactive Oracle Proofs of Proximity},
+  booktitle = {45th International Colloquium on Automata, Languages, and Programming (ICALP 2018)},
+  series    = {Leibniz International Proceedings in Informatics (LIPIcs)},
+  volume    = {107},
+  pages     = {14:1--14:17},
+  publisher = {Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  year      = {2018},
+  doi       = {10.4230/LIPIcs.ICALP.2018.14},
+  url       = {https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14}
+}
+
+@inproceedings{goldwasser1985knowledge,
+author = {Goldwasser, S and Micali, S and Rackoff, C},
+title = {The knowledge complexity of interactive proof-systems},
+year = {1985},
+isbn = {0897911512},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/22145.22178},
+doi = {10.1145/22145.22178},
+booktitle = {Proceedings of the Seventeenth Annual ACM Symposium on Theory of Computing},
+pages = {291–304},
+numpages = {14},
+location = {Providence, Rhode Island, USA},
+series = {STOC '85}
+}
+
+@INPROCEEDINGS{parno2013pinocchio,
+  author={Parno, Bryan and Howell, Jon and Gentry, Craig and Raykova, Mariana},
+  booktitle={2013 IEEE Symposium on Security and Privacy}, 
+  title={Pinocchio: Nearly Practical Verifiable Computation}, 
+  year={2013},
+  volume={},
+  number={},
+  pages={238-252},
+  keywords={Logic gates;Polynomials;Protocols;Wires;Cryptography;Encoding},
+  doi={10.1109/SP.2013.47}}
+
+@misc{groth2016size,
+      author = {Jens Groth},
+      title = {On the Size of Pairing-based Non-interactive Arguments},
+      howpublished = {Cryptology {ePrint} Archive, Paper 2016/260},
+      year = {2016},
+      url = {https://eprint.iacr.org/2016/260}
+}
+
+@misc{cryptoeprint:2019/1047,
+  author       = {Alessandro Chiesa and Yuncong Hu and Mary Maller and Pratyush Mishra and Psi Vesely and Nicholas Ward},
+  title        = {Marlin: Preprocessing {zkSNARKs} with Universal and Updatable {SRS}},
+  howpublished = {Cryptology {ePrint} Archive, Paper 2019/1047},
+  year         = {2019},
+  url          = {https://eprint.iacr.org/2019/1047}
+}
+
+@misc{cryptoeprint:2019/953,
+  author       = {Ariel Gabizon and Zachary J.  Williamson and Oana Ciobotaru},
+  title        = {{PLONK}: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge},
+  howpublished = {Cryptology {ePrint} Archive, Paper 2019/953},
+  year         = {2019},
+  url          = {https://eprint.iacr.org/2019/953}
+}
+
+@misc{8418611,
+  author       = {Benedikt Bünz and Jonathan Bootle and Dan Boneh and Andrew Poelstra and Pieter Wuille and Greg Maxwell},
+  title        = {Bulletproofs: Short Proofs for Confidential Transactions and More},
+  howpublished = {Cryptology {ePrint} Archive, Paper 2017/1066},
+  year         = {2017},
+  url          = {https://eprint.iacr.org/2017/1066}
+}
+
+@misc{cryptoeprint:2018/046,
+  author       = {Eli Ben-Sasson and Iddo Bentov and Yinon Horesh and Michael Riabzev},
+  title        = {Scalable, transparent, and post-quantum secure computational integrity},
+  howpublished = {Cryptology {ePrint} Archive, Paper 2018/046},
+  year         = {2018},
+  url          = {https://eprint.iacr.org/2018/046}
+}
+
+@misc{cryptoeprint:2019/550,
+  author       = {Srinath Setty},
+  title        = {Spartan: Efficient and general-purpose {zkSNARKs} without trusted setup},
+  howpublished = {Cryptology {ePrint} Archive, Paper 2019/550},
+  year         = {2019},
+  url          = {https://eprint.iacr.org/2019/550}
+}
+
+@inproceedings{eurocrypt-2013-25043,
+  title     = {Quadratic Span Programs and Succinct NIZKs without PCPs},
+  author    = {Rosario Gennaro and Craig Gentry and Bryan Parno and Mariana Raykova},
+  booktitle = {Advances in Cryptology – EUROCRYPT 2013},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {7881},
+  pages     = {626--645},
+  publisher = {Springer},
+  year      = {2013},
+  doi       = {10.1007/978-3-642-38348-9_37},
+  url       = {https://www.iacr.org/archive/eurocrypt2013/78810623/78810623.pdf}
+}
+
+@InProceedings{BCGTV13,
+author="Ben-Sasson, Eli
+and Chiesa, Alessandro
+and Genkin, Daniel
+and Tromer, Eran
+and Virza, Madars",
+editor="Canetti, Ran
+and Garay, Juan A.",
+title="SNARKs for C: Verifying Program Executions Succinctly and in Zero Knowledge",
+booktitle="Advances in Cryptology -- CRYPTO 2013",
+year="2013",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="90--108",
+abstract="An argument system for NP is a proof system that allows efficient verification of NP statements, given proofs produced by an untrusted yet computationally-bounded prover. Such a system is non-interactive and publicly-verifiable if, after a trusted party publishes a proving key and a verification key, anyone can use the proving key to generate non-interactive proofs for adaptively-chosen NP statements, and proofs can be verified by anyone by using the verification key.",
+isbn="978-3-642-40084-1"
+}
+
+
+@misc{cryptoeprint:2020/315,
+  author       = {Ariel Gabizon and Zachary J. Williamson},
+  title        = {plookup: A Simplified Polynomial Protocol for Lookup Tables},
+  howpublished = {Cryptology ePrint Archive, Paper 2020/315},
+  year         = {2020},
+  url          = {https://eprint.iacr.org/2020/315}
+}
+
+@misc{cryptoeprint:2022/1565,
+  author       = {Arantxa Zapico and Ariel Gabizon and Dmitry Khovratovich and Mary Maller and Carla Ràfols},
+  title        = {Baloo: Nearly Optimal Lookup Arguments},
+  howpublished = {Cryptology ePrint Archive, Paper 2022/1565},
+  year         = {2022},
+  url          = {https://eprint.iacr.org/2022/1565}
+}
+
+@inproceedings{lu2024efficient,
+  title={An Efficient and Extensible Zero-knowledge Proof Framework for Neural Networks},
+  author={Tao Lu and Haoyu Wang and Wenjie Qu and Zonghui Wang and Jinye He and Tianyang Tao and Wenzhi Chen and Jiaheng Zhang},
+  booktitle={ACM Conference on Computer and Communications Security (CCS)},
+  year={2024}
+}
+@inproceedings{kothapalli2022nova,
+  title={Nova: Recursive zero-knowledge arguments from folding schemes},
+  author={Kothapalli, Abhiram and Setty, Srinath and Tzialla, Ioanna},
+  booktitle={Annual International Cryptology Conference},
+  pages={359--388},
+  year={2022},
+  organization={Springer}
+}
+@inproceedings{jia2021proof,
+  title={Proof-of-learning: Definitions and practice},
+  author={Jia, Hengrui and Yaghini, Mohammad and Choquette-Choo, Christopher A and Dullerud, Natalie and Thudi, Anvith and Chandrasekaran, Varun and Papernot, Nicolas},
+  booktitle={2021 IEEE Symposium on Security and Privacy (SP)},
+  pages={1039--1056},
+  year={2021},
+  organization={IEEE}
+}
+
+@article{Bowe2019HaloRP,
+  title={Halo: Recursive Proof Composition without a Trusted Setup},
+  author={Sean Bowe and Jack Grigg and Daira Hopwood},
+  journal={IACR Cryptol. ePrint Arch.},
+  year={2019},
+  volume={2019},
+  pages={1021},
+  url={https://api.semanticscholar.org/CorpusID:202670380}
+}
+
+
+
+@inproceedings{Groth2016,
+  author    = {Jens Groth},
+  title     = {On the Size of Pairing-Based Non-Interactive Arguments},
+  booktitle = {Advances in Cryptology – EUROCRYPT 2016},
+  editor    = {Marc Fischlin and Jean-Sébastien Coron},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {9665},
+  pages     = {305--326},
+  year      = {2016},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-662-49896-5_11},
+  url       = {https://doi.org/10.1007/978-3-662-49896-5_11}
+}
+
+@misc{Damgard2002Sigma,
+  author       = {Ivan Damgård},
+  title        = {On $\sigma$-protocols},
+  howpublished = {Lecture Notes, University of Aarhus, Department for Computer Science},
+  year         = {2002},
+  note         = {p. 84},
+}
+
+@InProceedings{goldwasser2021interactive,
+  author =	{Goldwasser, Shafi and Rothblum, Guy N. and Shafer, Jonathan and Yehudayoff, Amir},
+  title =	{{Interactive Proofs for Verifying Machine Learning}},
+  booktitle =	{12th Innovations in Theoretical Computer Science Conference (ITCS 2021)},
+  pages =	{41:1--41:19},
+  series =	{Leibniz International Proceedings in Informatics (LIPIcs)},
+  ISBN =	{978-3-95977-177-1},
+  ISSN =	{1868-8969},
+  year =	{2021},
+  volume =	{185},
+  editor =	{Lee, James R.},
+  publisher =	{Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  address =	{Dagstuhl, Germany},
+  URL =		{https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ITCS.2021.41},
+  URN =		{urn:nbn:de:0030-drops-135806},
+  doi =		{10.4230/LIPIcs.ITCS.2021.41},
+  annote =	{Keywords: PAC learning, Fourier analysis of boolean functions, Complexity gaps, Complexity lower bounds, Goldreich-Levin algorithm, Kushilevitz-Mansour algorithm, Distribution testing}
+}
+
+@misc{halo2book2023,
+  title  = {The \textit{halo2} Book},
+  author = {Electric Coin Company},
+  year   = {2023},
+  howpublished = {\url{https://zcash.github.io/halo2/}}
+}
+
+@techreport{polygonzero2022plonky2,
+  title        = {Plonky2: Fast Recursive Arguments with PLONK and FRI},
+  author       = {{Polygon Zero Team}},
+  institution  = {Polygon Zero},
+  month        = {September},
+  year         = {2022},
+  note         = {\url{https://docs.rs/crate/plonky2/latest/source/plonky2.pdf}}
+}
+
+@article{choi2023tools,
+  title={Tools for verifying neural models' training data},
+  author={Choi, Dami and Shavit, Yonadav and Duvenaud, David K},
+  journal={Advances in Neural Information Processing Systems},
+  volume={36},
+  pages={1154--1188},
+  year={2023}
+}
+
+@article{sano2025ownership,
+  title={Ownership Verification of DNN Models Using White-Box Adversarial Attacks with Specified Probability Manipulation},
+  author={Sano, Teruki and Kuribayashi, Minoru and Sakai, Masao and Ishobe, Shuji and Koizumi, Eisuke},
+  journal={arXiv preprint arXiv:2505.17579},
+  year={2025}
+}
+
+@INPROCEEDINGS{8418611,
+  author={Bünz, Benedikt and Bootle, Jonathan and Boneh, Dan and Poelstra, Andrew and Wuille, Pieter and Maxwell, Greg},
+  booktitle={2018 IEEE Symposium on Security and Privacy (SP)}, 
+  title={Bulletproofs: Short Proofs for Confidential Transactions and More}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={315-334},
+  keywords={Protocols;Bitcoin;Contracts;Aggregates;Privacy;Bitcoin;Blockchain;Zero Knowledge proof of knowledge;confidential transactions;privacy},
+  doi={10.1109/SP.2018.00020}}
+
+@inproceedings{Nova,
+author = {Kothapalli, Abhiram and Setty, Srinath and Tzialla, Ioanna},
+title = {Nova: Recursive Zero-Knowledge Arguments from Folding Schemes},
+year = {2022},
+isbn = {978-3-031-15984-8},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/978-3-031-15985-5_13},
+doi = {10.1007/978-3-031-15985-5_13},
+abstract = {We introduce a new approach to realize incrementally verifiable computation (IVC), in which the prover recursively proves the correct execution of incremental computations of the form y=F(ℓ)(x), where F is a (potentially non-deterministic) computation, x is the input, y is the output, and ℓ>0. Unlike prior approaches to realize IVC, our approach avoids succinct non-interactive arguments of knowledge&nbsp;(SNARKs) entirely and arguments of knowledge in general. Instead, we introduce and employ folding schemes, a weaker, simpler, and more efficiently-realizable primitive, which reduces the task of checking two instances in some relation to the task of checking a single instance. We construct a folding scheme for a characterization of NP and show that it implies an IVC scheme with improved efficiency characteristics: (1) the “recursion overhead” (i.e., the number of steps that the prover proves in addition to proving the execution of F) is a constant and it is dominated by two group scalar multiplications expressed as a circuit (this is the smallest recursion overhead in the literature), and (2) the prover’s work at each step is dominated by two multiexponentiations of size O(|F|), providing the fastest prover in the literature. The size of a proof is O(|F|) group elements, but we show that using a variant of an existing zkSNARK, the prover can prove the knowledge of a valid proof succinctly and in zero-knowledge with O(log|F|) group elements. Finally, our approach neither requires a trusted setup nor FFTs, so it can be instantiated efficiently with any cycles of elliptic curves where DLOG is hard.},
+booktitle = {Advances in Cryptology – CRYPTO 2022: 42nd Annual International Cryptology Conference, CRYPTO 2022, Santa Barbara, CA, USA, August 15–18, 2022, Proceedings, Part IV},
+pages = {359–388},
+numpages = {30},
+location = {Santa Barbara, CA, USA}
+}
+
+@article{bitcoin,
+  abstract = {A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution. Digital signatures provide part of the solution, but the main benefits are lost if a trusted third party is still required to prevent double-spending. We propose a solution to the double-spending problem using a peer-to-peer network. The network timestamps transactions by hashing them into an ongoing chain of hash-based proof-of-work, forming a record that cannot be changed without redoing the proof-of-work. The longest chain not only serves as proof of the sequence of events witnessed, but proof that it came from the largest pool of CPU power. As long as a majority of CPU power is controlled by nodes that are not cooperating to attack the network, they'll generate the longest chain and outpace attackers. The network itself requires minimal structure. Messages are broadcast on a best effort basis, and nodes can leave and rejoin the network at will, accepting the longest proof-of-work chain as proof of what happened while they were gone.},
+  added-at = {2022-06-15T13:43:05.000+0200},
+  author = {Nakamoto, Satoshi},
+  biburl = {https://www.bibsonomy.org/bibtex/2974d35fdb27dea57296ed2245556aa18/daniel_grm9},
+  interhash = {423c2cdff70ba0cd0bca55ebb164d770},
+  intrahash = {974d35fdb27dea57296ed2245556aa18},
+  keywords = {itsecseminar},
+  month = may,
+  timestamp = {2022-06-15T13:43:05.000+0200},
+  title = {Bitcoin: A Peer-to-Peer Electronic Cash System},
+  url = {http://www.bitcoin.org/bitcoin.pdf},
+  year = 2009
+}
+
+
+@misc{benet2014ipfscontentaddressed,
+      title={IPFS - Content Addressed, Versioned, P2P File System}, 
+      author={Juan Benet},
+      year={2014},
+      eprint={1407.3561},
+      archivePrefix={arXiv},
+      primaryClass={cs.NI},
+      url={https://arxiv.org/abs/1407.3561}, 
+}
+
+@inproceedings{Buterin2015ANG,
+  title={A NEXT GENERATION SMART CONTRACT \& DECENTRALIZED APPLICATION PLATFORM},
+  author={Vitalik Buterin},
+  year={2015},
+  url={https://api.semanticscholar.org/CorpusID:19568665}
+}
+
+@article{Szabo1997FormalizingAS,
+  title={Formalizing and Securing Relationships on Public Networks},
+  author={Nick Szabo},
+  journal={First Monday},
+  year={1997},
+  volume={2},
+  url={https://api.semanticscholar.org/CorpusID:33773111}
+}
+
+@misc{he2015deepresiduallearningimage,
+      title={Deep Residual Learning for Image Recognition}, 
+      author={Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
+      year={2015},
+      eprint={1512.03385},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/1512.03385}, 
+}
+
+@misc{huang2018denselyconnectedconvolutionalnetworks,
+      title={Densely Connected Convolutional Networks}, 
+      author={Gao Huang and Zhuang Liu and Laurens van der Maaten and Kilian Q. Weinberger},
+      year={2018},
+      eprint={1608.06993},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/1608.06993}, 
+}
+
+@inproceedings{Krizhevsky2009LearningML,
+  title={Learning Multiple Layers of Features from Tiny Images},
+  author={Alex Krizhevsky},
+  year={2009},
+  url={https://api.semanticscholar.org/CorpusID:18268744}
+}
+
+@misc{daily_and_sports_activities_256,
+  author       = {Barshan, Billur and Altun, Kerem},
+  title        = {{Daily and Sports Activities}},
+  year         = {2010},
+  howpublished = {UCI Machine Learning Repository},
+  note         = {{DOI}: https://doi.org/10.24432/C5C59F}
+}
+
+
+
+@article{lecun2010mnist,
+         title={MNIST handwritten digit database},
+         author={LeCun, Yann and Cortes, Corinna and Burges, CJ},
+         journal={ATT Labs [Online]. Available: http://yann.lecun.com/exdb/mnist},
+         volume={2},
+         year={2010}
+}
+
+@inproceedings{10.1145/2810103.2813677,
+author = {Fredrikson, Matt and Jha, Somesh and Ristenpart, Thomas},
+title = {Model Inversion Attacks that Exploit Confidence Information and Basic Countermeasures},
+year = {2015},
+isbn = {9781450338325},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2810103.2813677},
+doi = {10.1145/2810103.2813677},
+abstract = {Machine-learning (ML) algorithms are increasingly utilized in privacy-sensitive applications such as predicting lifestyle choices, making medical diagnoses, and facial recognition. In a model inversion attack, recently introduced in a case study of linear classifiers in personalized medicine by Fredrikson et al., adversarial access to an ML model is abused to learn sensitive genomic information about individuals. Whether model inversion attacks apply to settings outside theirs, however, is unknown. We develop a new class of model inversion attack that exploits confidence values revealed along with predictions. Our new attacks are applicable in a variety of settings, and we explore two in depth: decision trees for lifestyle surveys as used on machine-learning-as-a-service systems and neural networks for facial recognition. In both cases confidence values are revealed to those with the ability to make prediction queries to models. We experimentally show attacks that are able to estimate whether a respondent in a lifestyle survey admitted to cheating on their significant other and, in the other context, show how to recover recognizable images of people's faces given only their name and access to the ML model. We also initiate experimental exploration of natural countermeasures, investigating a privacy-aware decision tree training algorithm that is a simple variant of CART learning, as well as revealing only rounded confidence values. The lesson that emerges is that one can avoid these kinds of MI attacks with negligible degradation to utility.},
+booktitle = {Proceedings of the 22nd ACM SIGSAC Conference on Computer and Communications Security},
+pages = {1322–1333},
+numpages = {12},
+keywords = {privacy, machine learning, attacks},
+location = {Denver, Colorado, USA},
+series = {CCS '15}
+}
+
+@misc{bagdasaryan2019backdoorfederatedlearning,
+      title={How To Backdoor Federated Learning}, 
+      author={Eugene Bagdasaryan and Andreas Veit and Yiqing Hua and Deborah Estrin and Vitaly Shmatikov},
+      year={2019},
+      eprint={1807.00459},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/1807.00459}, 
+}
+
+@misc{chen2022federatedlearningattacksdefenses,
+      title={Federated Learning Attacks and Defenses: A Survey}, 
+      author={Yao Chen and Yijie Gui and Hong Lin and Wensheng Gan and Yongdong Wu},
+      year={2022},
+      eprint={2211.14952},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2211.14952}, 
+}
+
+@inproceedings{10.5555/2671225.2671227,
+author = {Fredrikson, Matthew and Lantz, Eric and Jha, Somesh and Lin, Simon and Page, David and Ristenpart, Thomas},
+title = {Privacy in pharmacogenetics: an end-to-end case study of personalized warfarin dosing},
+year = {2014},
+isbn = {9781931971157},
+publisher = {USENIX Association},
+address = {USA},
+abstract = {We initiate the study of privacy in pharmacogenetics, wherein machine learning models are used to guide medical treatments based on a patient's genotype and background. Performing an in-depth case study on privacy in personalized warfarin dosing, we show that suggested models carry privacy risks, in particular because attackers can perform what we call model inversion: an attacker, given the model and some demographic information about a patient, can predict the patient's genetic markers.As differential privacy (DP) is an oft-proposed solution for medical settings such as this, we evaluate its effectiveness for building private versions of pharmacogenetic models. We show that DP mechanisms prevent our model inversion attacks when the privacy budget is carefully selected. We go on to analyze the impact on utility by performing simulated clinical trials with DP dosing models. We find that for privacy budgets effective at preventing attacks, patients would be exposed to increased risk of stroke, bleeding events, and mortality. We conclude that current DP mechanisms do not simultaneously improve genomic privacy while retaining desirable clinical efficacy, highlighting the need for new mechanisms that should be evaluated in situ using the general methodology introduced by our work.},
+booktitle = {Proceedings of the 23rd USENIX Conference on Security Symposium},
+pages = {17–32},
+numpages = {16},
+location = {San Diego, CA},
+series = {SEC'14}
+}
+
+@inproceedings{10.5555/3241094.3241142,
+author = {Tram\`{e}r, Florian and Zhang, Fan and Juels, Ari and Reiter, Michael K. and Ristenpart, Thomas},
+title = {Stealing machine learning models via prediction APIs},
+year = {2016},
+isbn = {9781931971324},
+publisher = {USENIX Association},
+address = {USA},
+abstract = {Machine learning (ML) models may be deemed confidential due to their sensitive training data, commercial value, or use in security applications. Increasingly often, confidential ML models are being deployed with publicly accessible query interfaces. ML-as-a-service ("predictive analytics") systems are an example: Some allow users to train models on potentially sensitive data and charge others for access on a pay-per-query basis.The tension between model confidentiality and public access motivates our investigation of model extraction attacks. In such attacks, an adversary with black-box access, but no prior knowledge of an ML model's parameters or training data, aims to duplicate the functionality of (i.e., "steal") the model. Unlike in classical learning theory settings, ML-as-a-service offerings may accept partial feature vectors as inputs and include confidence values with predictions. Given these practices, we show simple, efficient attacks that extract target ML models with near-perfect fidelity for popular model classes including logistic regression, neural networks, and decision trees. We demonstrate these attacks against the online services of BigML and Amazon Machine Learning. We further show that the natural countermeasure of omitting confidence values from model outputs still admits potentially harmful model extraction attacks. Our results highlight the need for careful ML model deployment and new model extraction countermeasures.},
+booktitle = {Proceedings of the 25th USENIX Conference on Security Symposium},
+pages = {601–618},
+numpages = {18},
+location = {Austin, TX, USA},
+series = {SEC'16}
+}
+
+@inproceedings{Tolpegin2020DataPA,
+  title={Data Poisoning Attacks Against Federated Learning Systems},
+  author={Vale Tolpegin and Stacey Truex and Mehmet Emre Gursoy and Ling Liu},
+  booktitle={European Symposium on Research in Computer Security},
+  year={2020},
+  url={https://api.semanticscholar.org/CorpusID:220546077}
+}
+
+@article{10.1504/IJSN.2015.071829,
+author = {Ateniese, Giuseppe and Mancini, Luigi V. and Spognardi, Angelo and Villani, Antonio and Vitali, Domenico and Felici, Giovanni},
+title = {Hacking smart machines with smarter ones: How to extract meaningful data from machine learning classifiers},
+year = {2015},
+issue_date = {September 2015},
+publisher = {Inderscience Publishers},
+address = {Geneva 15, CHE},
+volume = {10},
+number = {3},
+issn = {1747-8405},
+url = {https://doi.org/10.1504/IJSN.2015.071829},
+doi = {10.1504/IJSN.2015.071829},
+abstract = {Machine-learning ML enables computers to learn how to recognise patterns, make unintended decisions, or react to a dynamic environment. The effectiveness of trained machines varies because of more suitable ML algorithms or because superior training sets. Although ML algorithms are known and publicly released, training sets may not be reasonably ascertainable and, indeed, may be guarded as trade secrets. In this paper we focus our attention on ML classifiers and on the statistical information that can be unconsciously or maliciously revealed from them. We show that it is possible to infer unexpected but useful information from ML classifiers. In particular, we build a novel meta-classifier and train it to hack other classifiers, obtaining meaningful information about their training sets. Such information leakage can be exploited, for example, by a vendor to build more effective classifiers or to simply acquire trade secrets from a competitor's apparatus, potentially violating its intellectual property rights.},
+journal = {Int. J. Secur. Netw.},
+month = sep,
+pages = {137–150},
+numpages = {14}
+}
+
+@INPROCEEDINGS {7958568,
+author = { Shokri, Reza and Stronati, Marco and Song, Congzheng and Shmatikov, Vitaly },
+booktitle = { 2017 IEEE Symposium on Security and Privacy (SP) },
+title = {{ Membership Inference Attacks Against Machine Learning Models }},
+year = {2017},
+volume = {},
+ISSN = {2375-1207},
+pages = {3-18},
+abstract = { We quantitatively investigate how machine learning models leak information about the individual data records on which they were trained. We focus on the basic membership inference attack: given a data record and black-box access to a model, determine if the record was in the model's training dataset. To perform membership inference against a target model, we make adversarial use of machine learning and train our own inference model to recognize differences in the target model's predictions on the inputs that it trained on versus the inputs that it did not train on. We empirically evaluate our inference techniques on classification models trained by commercial "machine learning as a service" providers such as Google and Amazon. Using realistic datasets and classification tasks, including a hospital discharge dataset whose membership is sensitive from the privacy perspective, we show that these models can be vulnerable to membership inference attacks. We then investigate the factors that influence this leakage and evaluate mitigation strategies. },
+keywords = {Training;Data models;Predictive models;Privacy;Sociology;Statistics;Google},
+doi = {10.1109/SP.2017.41},
+url = {https://doi.ieeecomputersociety.org/10.1109/SP.2017.41},
+publisher = {IEEE Computer Society},
+address = {Los Alamitos, CA, USA},
+month =May}
+
+@InProceedings{10.1007/3-540-46766-1_9,
+author="Pedersen, Torben Pryds",
+editor="Feigenbaum, Joan",
+title="Non-Interactive and Information-Theoretic Secure Verifiable Secret Sharing",
+booktitle="Advances in Cryptology --- CRYPTO '91",
+year="1992",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="129--140",
+abstract="It is shown how to distribute a secret to n persons such that each person can verify that he has received correct information about the secret without talking with other persons. Any k of these persons can later find the secret (1 ≤ k ≤ n), whereas fewer than k persons get no (Shannon) information about the secret. The information rate of the scheme is 1/2 and the distribution as well as the verification requires approximately 2k modular multiplications pr. bit of the secret. It is also shown how a number of persons can choose a secret ``in the well'' and distribute it verifiably among themselves.",
+isbn="978-3-540-46766-3"
+}
+
+
+@InProceedings{10.1007/978-3-662-53887-6_7,
+author="Albrecht, Martin
+and Grassi, Lorenzo
+and Rechberger, Christian
+and Roy, Arnab
+and Tiessen, Tyge",
+editor="Cheon, Jung Hee
+and Takagi, Tsuyoshi",
+title="MiMC: Efficient Encryption and Cryptographic Hashing with Minimal Multiplicative Complexity",
+booktitle="Advances in Cryptology -- ASIACRYPT 2016",
+year="2016",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="191--219",
+abstract="We explore cryptographic primitives with low multiplicative complexity. This is motivated by recent progress in practical applications of secure multi-party computation (MPC), fully homomorphic encryption (FHE), and zero-knowledge proofs (ZK) where primitives from symmetric cryptography are needed and where linear computations are, compared to non-linear operations, essentially ``free''. Starting with the cipher design strategy ``LowMC'' from Eurocrypt 2015, a number of bit-oriented proposals have been put forward, focusing on applications where the multiplicative depth of the circuit describing the cipher is the most important optimization goal.",
+isbn="978-3-662-53887-6"
+}
+
+@misc{azad2024publication,
+      title={Publication Trends in Artificial Intelligence Conferences: The Rise of Super Prolific Authors}, 
+      author={Ariful Azad and Afeefa Banu},
+      year={2024},
+      eprint={2412.07793},
+      archivePrefix={arXiv},
+      primaryClass={cs.DL},
+      url={https://arxiv.org/abs/2412.07793}, 
+}
+
+@InProceedings{10.1007/978-3-540-78524-8_1,
+author="Valiant, Paul",
+editor="Canetti, Ran",
+title="Incrementally Verifiable Computation or Proofs of Knowledge Imply Time/Space Efficiency",
+booktitle="Theory of Cryptography",
+year="2008",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="1--18",
+abstract="A probabilistically checkable proof (PCP) system enables proofs to be verified in time polylogarithmic in the length of a classical proof. Computationally sound (CS) proofs improve upon PCPs by additionally shortening the length of the transmitted proof to be polylogarithmic in the length of the classical proof.",
+isbn="978-3-540-78524-8"
+}
+
+@ARTICLE{Chronis2024SurveyFLPR,
+  author={Chronis, Christos and Varlamis, Iraklis and Himeur, Yassine and Sayed, Aya N. and AL-Hasan, Tamim M. and Nhlabatsi, Armstrong and Bensaali, Faycal and Dimitrakopoulos, George},
+  journal={IEEE Open Journal of the Computer Society}, 
+  title={A Survey on the use of Federated Learning in Privacy-Preserving Recommender Systems}, 
+  year={2024},
+  volume={5},
+  number={},
+  pages={227-247},
+  keywords={Recommender systems;Data privacy;Surveys;Security;Privacy;Federated learning;Computer architecture;Recommender systems;federated learning (FL);privacy-preserving techniques;distributed learning},
+  doi={10.1109/OJCS.2024.3396344}}
+
+
+@article{Chen2024WhenFLPrivacy,
+author = {Chen, Jingxue and Yan, Hang and Liu, Zhiyuan and Zhang, Min and Xiong, Hu and Yu, Shui},
+title = {When Federated Learning Meets Privacy-Preserving Computation},
+year = {2024},
+issue_date = {December 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {56},
+number = {12},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3679013},
+doi = {10.1145/3679013},
+abstract = {Nowadays, with the development of artificial intelligence (AI), privacy issues attract wide attention from society and individuals. It is desirable to make the data available but invisible, i.e., to realize data analysis and calculation without disclosing the data to unauthorized entities. Federated learning (FL) has emerged as a promising privacy-preserving computation method for AI. However, new privacy issues have arisen in FL-based application, because various inference attacks can still infer relevant information about the raw data from local models or gradients. This will directly lead to the privacy disclosure. Therefore, it is critical to resist these attacks to achieve complete privacy-preserving computation. In light of the overwhelming variety and a multitude of privacy-preserving computation protocols, we survey these protocols from a series of perspectives to supply better comprehension for researchers and scholars. Concretely, the classification of attacks is discussed, including four kinds of inference attacks as well as malicious server and poisoning attack. Besides, this article systematically captures the state-of-the-art of privacy-preserving computation protocols by analyzing the design rationale, reproducing the experiment of classic schemes, and evaluating all discussed protocols in terms of efficiency and security properties. Finally, this survey identifies a number of interesting future directions.},
+journal = {ACM Comput. Surv.},
+month = oct,
+articleno = {319},
+numpages = {36},
+keywords = {Federated learning, privacy-preserving computation}
+}
+
+@inproceedings{Sharma2023SoKFLAttacks,
+author = {Sharma, Geetanjli and Chamikara, M.A.P. and Chhetri, Mohan Baruwal and Chen, Yi-Ping Phoebe},
+title = {SoK: Systematizing Attack Studies in Federated Learning – From Sparseness to Completeness},
+year = {2023},
+isbn = {9798400700989},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3579856.3590328},
+doi = {10.1145/3579856.3590328},
+abstract = {Federated Learning (FL) is a machine learning technique that enables multiple parties to collaboratively train a model using their private datasets. Given its decentralized nature, FL has inherent vulnerabilities that make it susceptible to adversarial attacks. The success of an attack on FL depends upon several (latent) factors, including the adversary’s strength, the chosen attack strategy, and the effectiveness of the defense measures in place. There is a growing body of literature on empirical attack studies on FL, but no systematic way to compare and evaluate the completeness of these studies, which raises questions about their validity. To address this problem, we introduce a causal model that captures the relationship between the different (latent) factors, and their reflexive indicators, that can impact the success of an attack on FL. The proposed model, inspired by structural equation modeling, helps systematize the existing literature on FL attack studies and provides a way to compare and contrast their completeness. We validate the model and demonstrate its utility through experimental evaluation of select attack studies. Our aim is to help researchers in the FL domain design more complete attack studies and improve the understanding of FL vulnerabilities.},
+booktitle = {Proceedings of the 2023 ACM Asia Conference on Computer and Communications Security},
+pages = {579–592},
+numpages = {14},
+keywords = {Adversarial Attacks, Defenses, Federated Learning, Security and Privacy, Systematization of Knowledge},
+location = {Melbourne, VIC, Australia},
+series = {ASIA CCS '23}
+}
+
+@ARTICLE{Chai2024FederatedEvalSurvey,
+  author={Chai, Di and Wang, Leye and Yang, Liu and Zhang, Junxue and Chen, Kai and Yang, Qiang},
+  journal={IEEE Transactions on Knowledge and Data Engineering}, 
+  title={A Survey for Federated Learning Evaluations: Goals and Measures}, 
+  year={2024},
+  volume={36},
+  number={10},
+  pages={5007-5024},
+  keywords={Data models;Surveys;Security;Training;Data privacy;Computational modeling;Privacy;Efficiency;evaluation;introduction and survey;performance measures;security and privacy protection},
+  doi={10.1109/TKDE.2024.3382002}}
+
+@article{Yuan2024DecentralizedFL,
+  author       = {Liangqi Yuan and Ziran Wang and Lichao Sun and Philip S. Yu and Christopher G. Brinton},
+  title        = {Decentralized Federated Learning: A Survey and Perspective},
+  journal      = {IEEE Internet of Things Journal},
+  volume       = {11},
+  number       = {21},
+  pages        = {34617--34638},
+  year         = {2024},
+  publisher    = {Institute of Electrical and Electronics Engineers (IEEE)},
+  doi          = {10.1109/JIOT.2024.3407584}
+}
+
+@article{Liu2024FLMPCSurvey,
+author = {Liu, Fengxia and Zheng, Zhiming and Shi, Yexuan and Tong, Yongxin and Zhang, Yi},
+year = {2023},
+month = {12},
+pages = {},
+title = {A survey on federated learning: a perspective from multi-party computation},
+volume = {18},
+journal = {Frontiers of Computer Science},
+doi = {10.1007/s11704-023-3282-7}
+}
+
+@inbook{Carletti2025SoKGradientInversion,
+author = {Carletti, Vincenzo and Foggia, Pasquale and Mazzocca, Carlo and Parrella, Giuseppe and Vento, Mario},
+title = {SoK: gradient inversion attacks in federated learning},
+year = {2025},
+isbn = {978-1-939133-52-6},
+publisher = {USENIX Association},
+address = {USA},
+abstract = {Federated Learning (FL) is a promising paradigm for collaboratively training Machine Learning (ML) models while preserving the privacy of data owners. By allowing participants to maintain their data on-site, FL avoids sending client local data to a central server for model training. However, despite its evident privacy benefits, it is not immune to security and privacy threats. Among these, Gradient Inversion Attacks (GIAs) stand out as one of the most critical as they exploit client's model updates to reconstruct local training data, breaking participant's privacy. This work presents a comprehensive systematization of GIAs in FL. First, we identify various threat models defining the adversary's knowledge and capabilities to perform these attacks. Then, we propose a systematic taxonomy to categorize GIAs, providing practical insights into their methods and applicability. Additionally, we explore defensive mechanisms designed to mitigate these attacks. We also systematize evaluation metrics used to measure the success of GIAs and assess the model's vulnerability before an attack. Finally, based on a thorough analysis of the existing literature, we identify key challenges and outline promising future research directions.},
+booktitle = {Proceedings of the 34th USENIX Conference on Security Symposium},
+articleno = {331},
+numpages = {21}
+}
+
+@article{Bellavista2021DecentralisedLearning,
+author = {Bellavista, Paolo and Foschini, Luca and Mora, Alessio},
+title = {Decentralised Learning in Federated Deployment Environments: A System-Level Survey},
+year = {2021},
+issue_date = {January 2022},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {54},
+number = {1},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3429252},
+doi = {10.1145/3429252},
+abstract = {Decentralised learning is attracting more and more interest because it embodies the principles of data minimisation and focused data collection, while favouring the transparency of purpose specification (i.e., the objective for which a model is built). Cloud-centric-only processing and deep learning are no longer strict necessities to train high-fidelity models; edge devices can actively participate in the decentralised learning process by exchanging meta-level information in place of raw data, thus paving the way for better privacy guarantees. In addition, these new possibilities can relieve the network backbone from unnecessary data transfer and allow it to meet strict low-latency requirements by leveraging on-device model inference. This survey provides a detailed and up-to-date overview of the most recent contributions available in the state-of-the-art decentralised learning literature. In particular, it originally provides the reader audience with a clear presentation of the peculiarities of federated settings, with a novel taxonomy of decentralised learning approaches, and with a detailed description of the most relevant and specific system-level contributions of the surveyed solutions for privacy, communication efficiency, non-IIDness, device heterogeneity, and poisoning defense.},
+journal = {ACM Comput. Surv.},
+month = feb,
+articleno = {15},
+numpages = {38},
+keywords = {Decentralised learning, communication efficiency, federated deployment, poisoning defense, privacy}
+}
+
+@article{Arbaoui2024FLSurveyTIST,
+author = {Arbaoui, Meriem and Brahmia, Mohamed-el-Amine and Rahmoun, Abdellatif and Zghal, Mourad},
+title = {Federated Learning Survey: A Multi-Level Taxonomy of Aggregation Techniques, Experimental Insights, and Future Frontiers},
+year = {2024},
+issue_date = {December 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {15},
+number = {6},
+issn = {2157-6904},
+url = {https://doi.org/10.1145/3678182},
+doi = {10.1145/3678182},
+abstract = {The emerging integration of Internet of Things (IoT) and AI has unlocked numerous opportunities for innovation across diverse industries. However, growing privacy concerns and data isolation issues have inhibited this promising advancement. Unfortunately, traditional centralized Machine Learning (ML) methods have demonstrated their limitations in addressing these hurdles. In response to this ever-evolving landscape, Federated Learning (FL) has surfaced as a cutting-edge ML paradigm, enabling collaborative training across decentralized devices. FL allows users to jointly construct AI models without sharing their local raw data, ensuring data privacy, network scalability, and minimal data transfer. One essential aspect of FL revolves around proficient knowledge aggregation within a heterogeneous environment. Yet, the inherent characteristics of FL have amplified the complexity of its practical implementation compared to centralized ML. This survey delves into three prominent clusters of FL research contributions: personalization, optimization, and robustness. The objective is to provide a well-structured and fine-grained classification scheme related to these research areas through a unique methodology for selecting related work. Unlike other survey papers, we employed a hybrid approach that amalgamates bibliometric analysis and systematic scrutinizing to find the most influential work in the literature. Therefore, we examine challenges and contemporary techniques related to heterogeneity, efficiency, security, and privacy. Another valuable asset of this study is its comprehensive coverage of FL aggregation strategies, encompassing architectural features, synchronization methods, and several federation motivations. To further enrich our investigation, we provide practical insights into evaluating novel FL proposals and conduct experiments to assess and compare aggregation methods under IID and non-IID data distributions. Finally, we present a compelling set of research avenues that call for further exploration to open up a treasure of advancement.},
+journal = {ACM Trans. Intell. Syst. Technol.},
+month = nov,
+articleno = {113},
+numpages = {69},
+keywords = {Federated Learning, Aggregation Methods, Privacy-Preserving, Security, Heterogeneity, Efficiency, Optimization, Personalization, Multilevel Classification}
+}
+
+
+@article{Almanifi2023CommCompFL,
+title = {Communication and computation efficiency in Federated Learning: A survey},
+journal = {Internet of Things},
+volume = {22},
+pages = {100742},
+year = {2023},
+issn = {2542-6605},
+doi = {https://doi.org/10.1016/j.iot.2023.100742},
+url = {https://www.sciencedirect.com/science/article/pii/S2542660523000653},
+author = {Omair Rashed Abdulwareth Almanifi and Chee-Onn Chow and Mau-Luen Tham and Joon Huang Chuah and Jeevan Kanesan},
+keywords = {Federated Learning, Internet of Things, Communication efficiency, Computation efficiency, Machine learning},
+abstract = {Federated Learning is a much-needed technology in this golden era of big data and Artificial Intelligence, due to its vital role in preserving data privacy, and eliminating the need to transfer and process huge amounts of data, while maintaining the numerous benefits of Machine Learning. As opposed to the typical central training process, Federated Learning involves the collaborative training of statistical models by exchanging learned parameter updates. However, wide adoption of the technology is hindered by the communication and computation overhead forming due to the demanding computational cost of training, and the large-sized parameter updates exchanged. In popular applications such as those involving Internet of Things, the effects of the overhead are exacerbated due to the low computational prowess of edge and fog devices, limited bandwidth, and data capacity of internet connections. Over the years, many research activities that target this particular issue were conducted but a comprehensive review of the fragmented literature is still missing. This paper aims at filling this gap by providing a systematic review of recent work conducted to improve the communication and/or computation efficiency in Federated Learning. We begin by introducing the essentials of Federated Learning and its variations, followed by the literature review placed according to an encompassing, easy-to-follow taxonomy. Lastly, the work sheds light on the current challenges faced by the technology and possible directions for future work.}
+}
+
+@article{Bai2024MembershipInferenceFL,
+author = {Bai, Li and Hu, Haibo and Ye, Qingqing and Li, Haoyang and Wang, Leixia and Xu, Jianliang},
+title = {Membership Inference Attacks and Defenses in Federated Learning: A Survey},
+year = {2024},
+issue_date = {April 2025},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {57},
+number = {4},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3704633},
+doi = {10.1145/3704633},
+abstract = {Federated learning is a decentralized machine learning approach where clients train models locally and share model updates to develop a global model. This enables low-resource devices to collaboratively build a high-quality model without requiring direct access to the raw training data. However, despite only sharing model updates, federated learning still faces several privacy vulnerabilities. One of the key threats is membership inference attacks, which target clients’ privacy by determining whether a specific example is part of the training set. These attacks can compromise sensitive information in real-world applications, such as medical diagnoses within a healthcare system. Although there has been extensive research on membership inference attacks, a comprehensive and up-to-date survey specifically focused on it within federated learning is still absent. To fill this gap, we categorize and summarize membership inference attacks and their corresponding defense strategies based on their characteristics in this setting. We introduce a unique taxonomy of existing attack research and provide a systematic overview of various countermeasures. For these studies, we thoroughly analyze the strengths and weaknesses of different approaches. Finally, we identify and discuss key future research directions for readers interested in advancing the field.},
+journal = {ACM Comput. Surv.},
+month = dec,
+articleno = {89},
+numpages = {35},
+keywords = {Membership inference attacks, federated learning, deep leaning, privacy risk}
+}
+
+@article{Kummari2024AdversarialFLSurvey,
+  author       = {Kummari, Naveen Kumar and Chalavadi, Krishna Mohan and Cenkeramaddi, Linga Reddy},
+  title        = {The Impact of Adversarial Attacks on Federated Learning: A Survey},
+  journal      = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume       = {46},
+  number       = {5},
+  pages        = {2672--2691},
+  year         = {2024},
+  month        = {May},
+  publisher    = {IEEE},
+  doi          = {10.1109/TPAMI.2023.3322785},
+  issn         = {0162-8828},
+  pmid         = {37812561}
+}
+
+@article{Qammar2023SecuringFLBlockchain,
+  author       = {Qammar, Attia and Karim, Ahmad and Ning, Huansheng and Ding, Jianguo},
+  title        = {Securing federated learning with blockchain: a systematic literature review},
+  journal      = {Artificial Intelligence Review},
+  volume       = {56},
+  number       = {5},
+  pages        = {3951--3985},
+  year         = {2023},
+  publisher    = {Springer},
+  doi          = {10.1007/s10462-022-10271-9},
+  pmid         = {36160367}
+}
+
+@article{Zhang2023FLSurveyChallenges,
+  title={A survey on federated learning: challenges and applications},
+  author={Jie Wen and Zhixia Zhang and Yang Lan and Zhi-sheng Cui and Jianghui Cai and Wensheng Zhang},
+  journal={International Journal of Machine Learning and Cybernetics},
+  year={2022},
+  volume={14},
+  pages={513 - 535},
+  url={https://api.semanticscholar.org/CorpusID:253496346}
+}
+
+@article{article,
+author = {Wen, Jie and Zhang, Zhixia and Lan, Yang and Cui, Zhihua and Cai, Jianghui and Zhang, Wensheng},
+year = {2022},
+month = {11},
+pages = {513-535},
+title = {A survey on federated learning: challenges and applications},
+volume = {14},
+journal = {International Journal of Machine Learning and Cybernetics},
+doi = {10.1007/s13042-022-01647-y}
+}
+
+@article{Yin2022PrivacyPreservingFL,
+author = {Yin, Xuefei and Zhu, Yanming and Hu, Jiankun},
+title = {A Comprehensive Survey of Privacy-preserving Federated Learning: A Taxonomy, Review, and Future Directions},
+year = {2021},
+issue_date = {July 2022},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {54},
+number = {6},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3460427},
+doi = {10.1145/3460427},
+abstract = {The past four years have witnessed the rapid development of federated learning (FL). However, new privacy concerns have also emerged during the aggregation of the distributed intermediate results. The emerging privacy-preserving FL (PPFL) has been heralded as a solution to generic privacy-preserving machine learning. However, the challenge of protecting data privacy while maintaining the data utility through machine learning still remains. In this article, we present a comprehensive and systematic survey on the PPFL based on our proposed 5W-scenario-based taxonomy. We analyze the privacy leakage risks in the FL from five aspects, summarize existing methods, and identify future research directions.},
+journal = {ACM Comput. Surv.},
+month = jul,
+articleno = {131},
+numpages = {36},
+keywords = {Privacy-preserving federated learning, anonymization techniques, cryptographic encryption, data privacy, federated transfer learning, horizontal federated learning, perturbation techniques, vertical federated learning}
+}
+
+@article{Benarba2025BiasFLSurvey,
+author = {Benarba, Nawel and Bouchenak, Sara},
+title = {Bias in Federated Learning: A Comprehensive Survey},
+year = {2025},
+issue_date = {November 2025},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {57},
+number = {11},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3735125},
+doi = {10.1145/3735125},
+abstract = {Federated Learning (FL) enables collaborative model training over multiple clients’ data, without sharing these data for better privacy. Addressing bias in FL remains a challenge. In this article, we first present a taxonomy of FL bias, presenting the causes and the different types of FL bias, namely demographic bias, performance-related bias, and contribution-related bias. We then categorize FL bias mitigation, in terms of used methods and provided guarantees, before providing a comprehensive and comparative analysis of existing works. Finally, we highlight key challenges and open research directions, including the impact of FL bias mitigation on model utility, privacy, and robustness.},
+journal = {ACM Comput. Surv.},
+month = jun,
+articleno = {291},
+numpages = {36},
+keywords = {Federated learning, bias, fairness}
+}
+
+@ARTICLE{Tan2023PersonalizedFL,
+  author={Tan, Alysa Ziying and Yu, Han and Cui, Lizhen and Yang, Qiang},
+  journal={IEEE Transactions on Neural Networks and Learning Systems}, 
+  title={Towards Personalized Federated Learning}, 
+  year={2023},
+  volume={34},
+  number={12},
+  pages={9587-9603},
+  keywords={Data models;Training;Adaptation models;Collaborative work;Data privacy;Servers;Edge computing;Federated learning;Edge computing;federated learning (FL);non-IID data;personalized FL (PFL);privacy preservation;statistical heterogeneity},
+  doi={10.1109/TNNLS.2022.3160699}}
+
+
+@article{Mo2024MachineLearningConfidentialComputing,
+author = {Mo, Fan and Tarkhani, Zahra and Haddadi, Hamed},
+title = {Machine Learning with Confidential Computing: A Systematization of Knowledge},
+year = {2024},
+issue_date = {November 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {56},
+number = {11},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3670007},
+doi = {10.1145/3670007},
+abstract = {Privacy and security challenges in Machine Learning (ML) have become increasingly severe, along with ML’s pervasive development and the recent demonstration of large attack surfaces. As a mature system-oriented approach, Confidential Computing has been utilized in both academia and industry to mitigate privacy and security issues in various ML scenarios. In this article, the conjunction between ML and Confidential Computing is investigated. We systematize the prior work on Confidential Computing-assisted ML techniques that provide (i)&nbsp;confidentiality guarantees and (ii)&nbsp;integrity assurances and discuss their advanced features and drawbacks. Key challenges are further identified, and we provide dedicated analyses of the limitations in existing Trusted Execution Environment (TEE) systems for ML use cases. Finally, prospective works are discussed, including grounded privacy definitions for closed-loop protection, partitioned executions of efficient ML, dedicated TEE-assisted designs for ML, TEE-aware ML, and ML full pipeline guarantees. By providing these potential solutions in our systematization of knowledge, we aim to build the bridge to help achieve a much stronger TEE-enabled ML for privacy guarantees without introducing computation and system costs.},
+journal = {ACM Comput. Surv.},
+month = jun,
+articleno = {281},
+numpages = {40},
+keywords = {Privacy-preserving machine learning, confidential computing, trusted execution environment}
+}
+
+@article{KorneevRamon2025VerifiableCrossSiloFL,
+  title        = {A Survey on Verifiable Cross-Silo Federated Learning},
+  author       = {Korneev, Aleksei and Ramon, Jan},
+  journal      = {Transactions on Machine Learning Research},
+  year         = {2025},
+  month        = jun,
+  doi          = {10.1000/TMLR.2025.XXXX}, 
+  url          = {https://openreview.net/forum?id=uMir8UIHST},
+  eprint       = {2410.09124},
+}
+
+@ARTICLE{Xing2025ZKPVerifiableDML,
+  author={Xing, Zhibo and Zhang, Zijian and Zhang, Ziang and Li, Zhen and Li, Meng and Liu, Jiamou and Zhang, Zongyang and Zhao, Yi and Sun, Qi and Zhu, Liehuang and Russello, Giovanni},
+  journal={IEEE Communications Surveys & Tutorials}, 
+  title={Zero-Knowledge Proof-Based Verifiable Decentralized Machine Learning in Communication Network: A Comprehensive Survey}, 
+  year={2026},
+  volume={28},
+  number={},
+  pages={985-1024},
+  keywords={Machine learning;Surveys;Data privacy;Privacy;Training;Data models;Cryptography;Tutorials;Federated learning;Artificial intelligence;Verifiability;decentralized machine learning;zero-knowledge proof;communication network},
+  doi={10.1109/COMST.2025.3561657}}
+
+
+@article{Kersic2024OnChainZKML,
+  author    = {Vid Keršič and Sašo Karakatič and Muhamed Turkanovi\'{c}},
+  title     = {On-chain Zero-Knowledge Machine Learning: An Overview and Comparison},
+  journal   = {Journal of King Saud University -- Computer and Information Sciences},
+  volume    = {36},
+  number    = {9},
+  year      = {2024},
+  pages     = {102207},
+  doi       = {10.1016/j.jksuci.2024.102207},
+  url       = {https://www.sciencedirect.com/science/article/pii/S1319157824002969}
+}
+
+@misc{Shumailov2025TrustedMLPrivateInference,
+      title={Trusted Machine Learning Models Unlock Private Inference for Problems Currently Infeasible with Cryptography}, 
+      author={Ilia Shumailov and Daniel Ramage and Sarah Meiklejohn and Peter Kairouz and Florian Hartmann and Borja Balle and Eugene Bagdasarian},
+      year={2025},
+      eprint={2501.08970},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2501.08970}, 
+}
+
+
+@article{Rafi2024FairnessPrivacyFL,
+  author       = {Taki Hasan Rafi and Faiza Anan Noor and Tahmid Hussain and Dong-Kyu Chae},
+  title        = {Fairness and privacy preserving in federated learning: A survey},
+  journal      = {Information Fusion},
+  volume       = {105},
+  pages        = {102198},
+  year         = {2024},
+  publisher    = {Elsevier},
+  doi          = {10.1016/j.inffus.2023.102198}
+}
+
+
+
+
+
+@inproceedings{10.1145/3372297.3417885,
+author = {Bell, James Henry and Bonawitz, Kallista A. and Gasc\'{o}n, Adri\`{a} and Lepoint, Tancr\`{e}de and Raykova, Mariana},
+title = {Secure Single-Server Aggregation with (Poly)Logarithmic Overhead},
+year = {2020},
+isbn = {9781450370899},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3372297.3417885},
+doi = {10.1145/3372297.3417885},
+abstract = {Secure aggregation is a cryptographic primitive that enables a server to learn the sum of the vector inputs of many clients. Bonawitz et al. (CCS 2017) presented a construction that incurs computation and communication for each client linear in the number of parties. While this functionality enables a broad range of privacy preserving computational tasks, scaling concerns limit its scope of use. We present the first constructions for secure aggregation that achieve polylogarithmic communication and computation per client. Our constructions provide security in the semi-honest and the semi-malicious settings where the adversary controls the server and a δ-fraction of the clients, and correctness with up to δ-fraction dropouts among the clients. Our constructions show how to replace the complete communication graph of Bonawitz et al., which entails the linear overheads, with a k-regular graph of logarithmic degree while maintaining the security guarantees. Beyond improving the known asymptotics for secure aggregation, our constructions also achieve very efficient concrete parameters. The semi-honest secure aggregation can handle a billion clients at the per-client cost of the protocol of Bonawitz et al. for a thousand clients. In the semi-malicious setting with 10 4 clients, each client needs to communicate only with 3\% of the clients to have a guarantee that its input has been added together with the inputs of at least 5000 other clients, while withstanding up to 5\% corrupt clients and 5\% dropouts. We also show an application of secure aggregation to the task of secure shuffling which enables the first cryptographically secure instantiation of the shuffle model of differential privacy.},
+booktitle = {Proceedings of the 2020 ACM SIGSAC Conference on Computer and Communications Security},
+pages = {1253–1269},
+numpages = {17},
+keywords = {multi-party computation, secure aggregation, secure shuffling},
+location = {Virtual Event, USA},
+series = {CCS '20}
+}
+
+@inproceedings {291112,
+author = {James Bell and Adri{\`a} Gasc{\'o}n and Tancr{\`e}de Lepoint and Baiyu Li and Sarah Meiklejohn and Mariana Raykova and Cathie Yun},
+title = {{ACORN}: Input Validation for Secure Aggregation},
+booktitle = {32nd USENIX Security Symposium (USENIX Security 23)},
+year = {2023},
+isbn = {978-1-939133-37-3},
+address = {Anaheim, CA},
+pages = {4805--4822},
+url = {https://www.usenix.org/conference/usenixsecurity23/presentation/bell},
+publisher = {USENIX Association},
+month = aug
+}
+
+
+@inproceedings{10.1145/3701717.3730543,
+author = {de Laage, Romain and Yuhala, Peterson and Wicht, Fran\c{c}ois-Xavier and Felber, Pascal and Cachin, Christian and Schiavoni, Valerio},
+title = {Practical Secure Aggregation by Combining Cryptography and Trusted Execution Environments},
+year = {2025},
+isbn = {9798400713323},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3701717.3730543},
+doi = {10.1145/3701717.3730543},
+abstract = {Secure aggregation enables a group of mutually distrustful parties, each holding private inputs, to collaboratively compute an aggregate value while preserving the privacy of their individual inputs. However, a major challenge in adopting secure aggregation approaches for practical applications is the significant computational overhead of the underlying cryptographic protocols, e.g. fully homomorphic encryption. This overhead makes secure aggregation protocols impractical, especially for large datasets. In contrast, hardware-based security techniques such as trusted execution environments (TEEs) enable computation at near-native speeds, making them a promising alternative for reducing the computational burden typically associated with purely cryptographic techniques. Yet, in many scenarios, parties may opt for either cryptographic or hardware-based security mechanisms, highlighting the need for hybrid approaches. In this work, we introduce several secure aggregation architectures that integrate both cryptographic and TEE-based techniques, analyzing the trade-offs between security and performance.},
+booktitle = {Proceedings of the 19th ACM International Conference on Distributed and Event-Based Systems},
+pages = {152–163},
+numpages = {12},
+keywords = {Homomorphic Encryption, Trusted Execution Environment, Oblivious Transfer, Privacy-Preserving Aggregation, OpenFHE, Occlum},
+location = {
+},
+series = {DEBS '25}
+}
+
+@inproceedings{10.1145/3458864.3466628,
+author = {Mo, Fan and Haddadi, Hamed and Katevas, Kleomenis and Marin, Eduard and Perino, Diego and Kourtellis, Nicolas},
+title = {PPFL: privacy-preserving federated learning with trusted execution environments},
+year = {2021},
+isbn = {9781450384438},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3458864.3466628},
+doi = {10.1145/3458864.3466628},
+booktitle = {Proceedings of the 19th Annual International Conference on Mobile Systems, Applications, and Services},
+pages = {94–108},
+numpages = {15},
+location = {Virtual Event, Wisconsin},
+series = {MobiSys '21}
+}
+
+@article{VFLEX,
+author = {Bouamama, Jaouhara and Benkaouz, Yahya and Ouzzif, Mohammed},
+year = {2025},
+month = {07},
+pages = {},
+title = {V-FLEX: Verifiable cross-silo federated learning using trusted execution environment},
+journal = {Progress in Artificial Intelligence},
+doi = {10.1007/s13748-025-00386-9}
+}
+
+@misc{Woisetschlager2024FLAIAct,
+      title={Federated Learning and AI Regulation in the European Union: Who is Responsible? -- An Interdisciplinary Analysis}, 
+      author={Herbert Woisetschläger and Simon Mertel and Christoph Krönke and Ruben Mayer and Hans-Arno Jacobsen},
+      year={2024},
+      eprint={2407.08105},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2407.08105}, 
+}
+
+@INPROCEEDINGS{Kuznetsov2021SecureFL,
+  author={Kuznetsov, Eugene and Chen, Yitao and Zhao, Ming},
+  booktitle={2021 IEEE/ACM Symposium on Edge Computing (SEC)}, 
+  title={SecureFL: Privacy Preserving Federated Learning with SGX and TrustZone}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={55-67},
+  keywords={Performance evaluation;Deep learning;Privacy;Data privacy;Statistical analysis;Training data;Collaborative work;Federated Learning;Privacy;Edge Computing;Trusted Execution Environment},
+  doi={10.1145/3453142.3491287}}
+
+
+
+@ARTICLE{9763363,
+  author={Kalapaaking, Aditya Pribadi and Khalil, Ibrahim and Rahman, Mohammad Saidur and Atiquzzaman, Mohammed and Yi, Xun and Almashor, Mahathir},
+  journal={IEEE Transactions on Industrial Informatics}, 
+  title={Blockchain-Based Federated Learning With Secure Aggregation in Trusted Execution Environment for Internet-of-Things}, 
+  year={2023},
+  volume={19},
+  number={2},
+  pages={1703-1714},
+  keywords={Blockchains;Collaborative work;Servers;Machine learning;Training;Data models;Machine learning algorithms;Blockchain;deep learning;federated learning (FL);Intel Software Guard Extension (SGX);Internet-of-Things (IoT);secure aggregation;trusted execution environment (TEE)},
+  doi={10.1109/TII.2022.3170348}}
+
+@misc{zhang2025enablingtrustworthyfederatedlearning,
+      title={Enabling Trustworthy Federated Learning via Remote Attestation for Mitigating Byzantine Threats}, 
+      author={Chaoyu Zhang and Heng Jin and Shanghao Shi and Hexuan Yu and Sydney Johns and Y. Thomas Hou and Wenjing Lou},
+      year={2025},
+      eprint={2509.00634},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2509.00634}, 
+}
+
+@misc{guo2025verifiableflverifiableclaimsfederated,
+      title={VerifiableFL: Verifiable Claims for Federated Learning using Exclaves}, 
+      author={Jinnan Guo and Kapil Vaswani and Andrew Paverd and Peter Pietzuch},
+      year={2025},
+      eprint={2412.10537},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2412.10537}, 
+}
+
+@INPROCEEDINGS{10773815,
+  author={Li, Jiarui and Chen, Nan and Yu, Shucheng and Srivatanakul, Thitima},
+  booktitle={MILCOM 2024 - 2024 IEEE Military Communications Conference (MILCOM)}, 
+  title={Efficient and Privacy-Preserving Integrity Verification for Federated Learning with TEEs}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={999-1004},
+  keywords={Training;Military communication;Privacy;Federated learning;Computational modeling;Graphics processing units;Distributed databases;Outsourcing;Reliability;Edge computing;federated learning;verifiable computation;data privacy;computation outsourcing},
+  doi={10.1109/MILCOM61039.2024.10773815}}
+
+@misc{unknown,
+      title={Can You Really Backdoor Federated Learning?}, 
+      author={Ziteng Sun and Peter Kairouz and Ananda Theertha Suresh and H. Brendan McMahan},
+      year={2019},
+      eprint={1911.07963},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/1911.07963}, 
+}
+
+@INPROCEEDINGS{9155414,
+  author={Zhang, Xiaoli and Li, Fengting and Zhang, Zeyu and Li, Qi and Wang, Cong and Wu, Jianping},
+  booktitle={IEEE INFOCOM 2020 - IEEE Conference on Computer Communications}, 
+  title={Enabling Execution Assurance of Federated Learning at Untrusted Participants}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={1877-1886},
+  keywords={Training;Task analysis;Data models;Graphics processing units;Servers;Computational modeling;Data privacy},
+  doi={10.1109/INFOCOM41043.2020.9155414}}
+
+
+@inproceedings{10.1145/3372297.3417885,
+author = {Bell, James Henry and Bonawitz, Kallista A. and Gasc\'{o}n, Adri\`{a} and Lepoint, Tancr\`{e}de and Raykova, Mariana},
+title = {Secure Single-Server Aggregation with (Poly)Logarithmic Overhead},
+year = {2020},
+isbn = {9781450370899},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3372297.3417885},
+doi = {10.1145/3372297.3417885},
+abstract = {Secure aggregation is a cryptographic primitive that enables a server to learn the sum of the vector inputs of many clients. Bonawitz et al. (CCS 2017) presented a construction that incurs computation and communication for each client linear in the number of parties. While this functionality enables a broad range of privacy preserving computational tasks, scaling concerns limit its scope of use. We present the first constructions for secure aggregation that achieve polylogarithmic communication and computation per client. Our constructions provide security in the semi-honest and the semi-malicious settings where the adversary controls the server and a δ-fraction of the clients, and correctness with up to δ-fraction dropouts among the clients. Our constructions show how to replace the complete communication graph of Bonawitz et al., which entails the linear overheads, with a k-regular graph of logarithmic degree while maintaining the security guarantees. Beyond improving the known asymptotics for secure aggregation, our constructions also achieve very efficient concrete parameters. The semi-honest secure aggregation can handle a billion clients at the per-client cost of the protocol of Bonawitz et al. for a thousand clients. In the semi-malicious setting with 10 4 clients, each client needs to communicate only with 3\% of the clients to have a guarantee that its input has been added together with the inputs of at least 5000 other clients, while withstanding up to 5\% corrupt clients and 5\% dropouts. We also show an application of secure aggregation to the task of secure shuffling which enables the first cryptographically secure instantiation of the shuffle model of differential privacy.},
+booktitle = {Proceedings of the 2020 ACM SIGSAC Conference on Computer and Communications Security},
+pages = {1253–1269},
+numpages = {17},
+keywords = {secure shuffling, secure aggregation, multi-party computation},
+location = {Virtual Event, USA},
+series = {CCS '20}
+}
+
+@inproceedings{Cheon2017HomomorphicEF,
+  title={Homomorphic Encryption for Arithmetic of Approximate Numbers},
+  author={Jung Hee Cheon and Andrey Kim and Miran Kim and Yongsoo Song},
+  booktitle={International Conference on the Theory and Application of Cryptology and Information Security},
+  year={2017},
+  url={https://api.semanticscholar.org/CorpusID:3164123}
+}
+
+@inproceedings{10.1007/3-540-46416-6_47,
+author = {Pedersen, Torben Pryds},
+title = {A threshold cryptosystem without a trusted party},
+year = {1991},
+isbn = {3540546200},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+abstract = {In a threshold cryptosystem n members share the secret key of an organization such that k members (1 ≤ k ≤ n) must cooperate in order to decipher a given ciphertext. In this note it is shown how to implement such a scheme without having a trusted party, which selects the secret key and distributes it to the members. In stead, the members choose the secret key and distributes it verifiably among themselves. Subsequently, this key can be used for authentication as well as secret communication.},
+booktitle = {Proceedings of the 10th Annual International Conference on Theory and Application of Cryptographic Techniques},
+pages = {522–526},
+numpages = {5},
+location = {Brighton, UK},
+series = {EUROCRYPT'91}
+}
+
+@article{munoz2023insecurity,
+title = {A survey on the (in)security of trusted execution environments},
+journal = {Computers & Security},
+volume = {129},
+pages = {103180},
+year = {2023},
+issn = {0167-4048},
+doi = {https://doi.org/10.1016/j.cose.2023.103180},
+url = {https://www.sciencedirect.com/science/article/pii/S0167404823000901},
+author = {Antonio Muñoz and Ruben Ríos and Rodrigo Román and Javier López},
+keywords = {Computer security, Secure hardware, Trusted execution environments, Hardware attacks, Software attacks, Side-channel attacks},
+abstract = {As the number of security and privacy attacks continue to grow around the world, there is an ever increasing need to protect our personal devices. As a matter of fact, more and more manufactures are relying on Trusted Execution Environments (TEEs) to shield their devices. In particular, ARM TrustZone (TZ) is being widely used in numerous embedded devices, especially smartphones, and this technology is the basis for secure solutions both in industry and academia. However, as shown in this paper, TEE is not bullet-proof and it has been successfully attacked numerous times and in very different ways. To raise awareness among potential stakeholders interested in this technology, this paper provides an extensive analysis and categorization of existing vulnerabilities in TEEs and highlights the design flaws that led to them. The presented vulnerabilities, which are not only extracted from existing literature but also from publicly available exploits and databases, are accompanied by some effective countermeasures to reduce the likelihood of new attacks. The paper ends with some appealing challenges and open issues.}
+}
+
+@article{zhao2024hardware,
+author = {Zhao, Lianying and Shuang, He and Xu, Shengjie and Huang, Wei and Cui, Rongzhen and Bettadpur, Pushkar and Lie, David},
+title = {A Survey of Hardware Improvements to Secure Program Execution},
+year = {2024},
+issue_date = {December 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {56},
+number = {12},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3672392},
+doi = {10.1145/3672392},
+abstract = {Hardware has been constantly augmented for security considerations since the advent of computers. There is also a common perception among computer users that hardware does a relatively better job on security assurance compared with software. Yet, the community has long lacked a comprehensive study to answer questions such as how hardware security support contributes to security, what kind of improvements have been introduced to improve such support and what its advantages/disadvantages are.By generalizing various security goals, we taxonomize hardware security features and their security properties that can aid in securing program execution, considered as three aspects, i.e., state correctness, runtime protection and input/output protection. Based on this taxonomy, the survey systematically examines (1) the roles: how hardware is applied to achieve security; and (2) the problems: how reported attacks have exploited certain defects in hardware. We see that hardware’s unique advantages and problems co-exist and it highly depends on the desired security purpose as to which type to use. Among the survey findings are also that code as part of hardware (aka. firmware) should be treated differently to ensure security by design; and how research proposals have driven the advancement of commodity hardware features.},
+journal = {ACM Comput. Surv.},
+month = oct,
+articleno = {311},
+numpages = {37},
+keywords = {Hardware security support, trusted execution environments}
+}
+
+@techreport{anssi2025coco,
+  author       = {{ANSSI}},
+  title        = {Technical Position Paper on Confidential Computing},
+  institution  = {Agence nationale de la s{\'e}curit{\'e} des syst{\`e}mes d'information (ANSSI)},
+  year         = {2025},
+  month        = oct,
+  url          = {https://messervices.cyber.gouv.fr/documents-guides/anssi-technical-position-paper-coco-v1.0.pdf}
+}
+
+@article{ProxyZKP,
+author = {Li, Tan and Cheng, Samuel and Chan, Tak and Hu, Haibo},
+year = {2024},
+month = {11},
+pages = {},
+title = {A polynomial proxy model approach to verifiable decentralized federated learning},
+volume = {14},
+journal = {Scientific Reports},
+doi = {10.1038/s41598-024-79798-x}
+}
+
+@inproceedings{Narayan2015VerDP,
+  author       = {Narayan, Arjun and Feldman, Ariel and Papadimitriou, Antonis and Haeberlen, Andreas},
+  title        = {Verifiable Differential Privacy},
+  booktitle    = {Proceedings of the 10th European Conference on Computer Systems (EuroSys ’15)},
+  series       = {EuroSys},
+  year         = {2015},
+  pages        = {28:1--28:14},
+  publisher    = {ACM},
+  address      = {Bordeaux, France},
+  doi          = {10.1145/2741948.2741978},
+  url          = {https://doi.org/10.1145/2741948.2741978}
+}
+
+
+@article{Wei2025VerifiableDP,
+  author       = {Wei, Jianqi and Chen, Yuling and Yang, Xiuzhang and Luo, Yun and Pei, Xintao},
+  title        = {A verifiable scheme for differential privacy based on zero-knowledge proofs},
+  journal      = {Journal of King Saud University – Computer and Information Sciences},
+  volume       = {37},
+  number       = {14},
+  year         = {2025},
+  doi          = {10.1007/s44443-025-00028-z},
+  url          = {https://doi.org/10.1007/s44443-025-00028-z}
+}
+
+@techreport{zkverify2024tr,
+  author      = {{Horizen Labs Research}},
+  title       = {zkVerify Protocol: A Modular \& Decentralized Proof Verification Network},
+  institution = {Horizen Labs},
+  year        = {2024},
+  month       = {May},
+  note        = {Draft v0.1.0},
+  url         = {https://downloads.horizenlabs.io/file/labs-web-assets/zkverify-protocol-whitepaper.pdf}
+}
