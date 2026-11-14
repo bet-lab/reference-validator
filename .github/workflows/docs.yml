@@ -30,8 +30,8 @@ concurrency:
 
 jobs:
   build:
-    # Untrusted PR code runs on an isolated hosted runner.
-    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && '["ubuntu-24.04"]' || '["self-hosted", "ml-main"]') }}
+    # Public repository: every event runs on a GitHub-hosted runner (free for public repos).
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -71,7 +71,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: [self-hosted, ml-main]
+    runs-on: ubuntu-24.04
     needs: build
     steps:
       - name: Setup Pages
